@@ -1,1 +1,4 @@
-# Databases
+# Database labs
+
+Ермаков А. В., гр. 053502
+Тема проекта - аналог soundcloud.com (музыкальный сервис)
