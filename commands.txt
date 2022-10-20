@@ -1,0 +1,5 @@
+Создать базу данных:
+create database task3;
+use task3;
+
+
