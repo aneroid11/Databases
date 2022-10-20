@@ -2,4 +2,47 @@
 create database task3;
 use task3;
 
+Создание таблиц:
 
+Пользователи (Users):
+create table Users (
+    idUsers int,
+    email varchar(255),
+    password_hash varchar(255),
+    role enum('artist', 'admin', 'moderator')
+);
+
+Артисты (Artists):
+create table Artists (
+    idArtists int,
+    nickname varchar(100),
+    date_of_birth date,
+    gender enum('male', 'female', 'nonbinary'),
+    country varchar(45),
+    premium_subscription_id int,
+    card_details_id int
+);
+
+Данные банковских карт (CardDetails):
+create table CardDetails (
+    idCardDetails int,
+    first_name varchar(60),
+    last_name varchar(80),
+    card_number varchar(16),
+    expiration date
+);
+
+Премиум-подписки:
+create table PremiumSubscriptions (
+    idPremiumSubscriptions int,
+    start_datetime datetime,
+    end_datetime datetime,
+    active boolean,
+    id_tariff int
+);
+
+Тарифы:
+create table Tariffs (
+    idTariffs int,
+    monthly_payment_dollars float
+);
