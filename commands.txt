@@ -46,3 +46,93 @@ create table Tariffs (
     idTariffs int,
     monthly_payment_dollars float
 );
+
+Платежи:
+create table Payments (
+    idPayments int,
+    subscription_id int,
+    timestamp datetime,
+    status enum('pending', 'failed', 'successful'),
+    sum float,
+    transaction_id varchar(100)
+);
+
+Жалобы:
+create table Reports (
+    idReports int,
+    title varchar(50),
+    contents varchar(200),
+    author_id int,
+    report_type enum('Tracks', 'Artists'),
+    object_id int
+);
+
+Лайки:
+create table Likes (
+    idLikes int,
+    artist_id int,
+    track_id int
+);
+
+Теги:
+create table Tags (
+    idTags int,
+    name varchar(45)
+);
+
+Треки:
+create table Tracks (
+    idTracks int,
+    timestamp datetime,
+    title varchar(100),
+    length_seconds int,
+    artist_id int
+);
+
+Комментарии:
+create table Comments (
+    idComments int,
+    timestamp datetime,
+    contents varchar(500),
+    artist_id int,
+    track_id int
+);
+
+Плейлисты:
+create table Playlists (
+    idPlaylists int,
+    title varchar(100),
+    artist_id int
+);
+
+Альбомы:
+create table Albums (
+    idAlbums int,
+    release_date date
+);
+
+Журнал действий пользователей:
+create table Actions (
+    idActions int,
+    timestamp datetime,
+    user_id int,
+    object_type enum('Users', 'Artists', 'CardDetails', 'Likes', 'Comments', 'Reports', 'PremiumSubscriptions', 'Payments', 'Tags', 'Tracks', 'Playlists', 'Albums'),
+    object_id int,
+    action_type enum('create', 'read', 'update', 'delete')
+);
+
+
+
+
+индексы - те самые индексы, которые чисто для оптимизации. Скорее всего, их надо проставить уже после того, как будет создан пул запросов, чтобы оптимизировалось то, что надо.
+констрейнты - это и есть те проверки, check, not null, unique и так далее:
+https://www.w3schools.com/sql/sql_constraints.asp
+
+прочие ограничения - мб домены.
+
+индексы
+есть таблица, например, таблица первичных ключей и соответствующих им "ссылок" (хз, как они работают) на объекты с такими первичными ключами
+
+если происходит select * from table where pk=2, то 
+без индекса: проходим по всем строкам таблицы, сравниваем первичный ключ с 2 и если совпадает, то это то, что нужно
+с индексом: смотрим в таблице индексов, переходим по ссылке и находим нужный объект.
