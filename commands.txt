@@ -6,96 +6,127 @@ use task3;
 
 Пользователи (Users):
 create table Users (
-    idUsers int,
-    email varchar(255),
-    password_hash varchar(255),
-    role enum('artist', 'admin', 'moderator')
+    idUsers int not null auto_increment,
+    email varchar(255) not null,
+    password_hash varchar(255) not null,
+    role enum('artist', 'admin', 'moderator') not null,
+
+    primary key(idUsers)
 );
 
 Артисты (Artists):
 create table Artists (
-    idArtists int,
-    nickname varchar(100),
+    idArtists int not null auto_increment,
+    nickname varchar(100) not null,
     date_of_birth date,
-    gender enum('male', 'female', 'nonbinary'),
+    gender enum('male', 'female', 'nonbinary') not null,
     country varchar(45),
     premium_subscription_id int,
-    card_details_id int
+    card_details_id int,
+
+    primary key(idArtists),
+    foreign key(premium_subscription_id) references PremiumSubscriptions(idPremiumSubscriptions),
+    foreign key(card_details_id) references CardDetails(idCardDetails)
 );
 
 Данные банковских карт (CardDetails):
 create table CardDetails (
-    idCardDetails int,
-    first_name varchar(60),
-    last_name varchar(80),
-    card_number varchar(16),
-    expiration date
+    idCardDetails int not null auto_increment,
+    first_name varchar(60) not null,
+    last_name varchar(80) not null,
+    card_number varchar(16) not null,
+    expiration date not null,
+    
+    primary key(idCardDetails)
 );
 
 Премиум-подписки:
 create table PremiumSubscriptions (
-    idPremiumSubscriptions int,
-    start_datetime datetime,
-    end_datetime datetime,
-    active boolean,
-    id_tariff int
+    idPremiumSubscriptions int not null auto_increment,
+    start_datetime datetime not null,
+    end_datetime datetime not null,
+    active boolean not null,
+    id_tariff int not null,
+    
+    primary key(idPremiumSubscriptions),
+    foreign key(id_tariff) references Tariffs(idTariffs)
 );
 
 Тарифы:
 create table Tariffs (
-    idTariffs int,
-    monthly_payment_dollars float
+    idTariffs int not null auto_increment,
+    monthly_payment_dollars float not null,
+
+    primary key(idTariffs)
 );
 
 Платежи:
 create table Payments (
-    idPayments int,
-    subscription_id int,
-    timestamp datetime,
-    status enum('pending', 'failed', 'successful'),
-    sum float,
-    transaction_id varchar(100)
+    idPayments int not null auto_increment,
+    subscription_id int not null,
+    timestamp datetime not null,
+    status enum('pending', 'failed', 'successful') not null,
+    sum float not null,
+    transaction_id varchar(100) not null
+
+    primary key(idPayments)
 );
 
 Жалобы:
 create table Reports (
-    idReports int,
-    title varchar(50),
+    idReports int not null auto_increment,
+    title varchar(50) not null,
     contents varchar(200),
-    author_id int,
-    report_type enum('Tracks', 'Artists'),
-    object_id int
+    author_id int not null,
+    report_type enum('Tracks', 'Artists') not null,
+    object_id int not null
+
+    primary key(idReports),
+    foreign key(author_id) references Artists(idArtists)
 );
 
 Лайки:
 create table Likes (
-    idLikes int,
+    idLikes int not null,
     artist_id int,
-    track_id int
+    track_id int not null,
+    
+    primary key(idLikes),
+    foreign key(artist_id) references Artists(idArtists),
+    foreign key(track_id) references Tracks(idTracks)
 );
 
 Теги:
 create table Tags (
-    idTags int,
-    name varchar(45)
+    idTags int not null,
+    name varchar(45) not null,
+
+    primary key(idTags)
 );
 
 Треки:
 create table Tracks (
-    idTracks int,
-    timestamp datetime,
-    title varchar(100),
-    length_seconds int,
-    artist_id int
+    idTracks int not null,
+    timestamp datetime not null,
+    title varchar(100) not null,
+    length_seconds int not null,
+    artist_id int not null,
+
+    primary key(idTracks),
+    foreign key(artist_id) references Artists(idArtists)
 );
 
 Комментарии:
 create table Comments (
-    idComments int,
-    timestamp datetime,
-    contents varchar(500),
+    idComments int not null,
+    timestamp datetime not null,
+    contents varchar(500) not null,
     artist_id int,
-    track_id int
+    track_id int not null,
+
+    primary key(idComments),
+    foreign key(artist_id) references Artists(idArtists),
+    foreign key(
 );
 
 Плейлисты:
