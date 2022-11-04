@@ -7,9 +7,11 @@ use task3;
 Пользователи (Users):
 create table Users (
     id int not null auto_increment,
-    email varchar(255) not null unique check(email REGEXP '(\w|\.)+@[a-z]+\.[a-z]+'),
+    email varchar(255) not null unique,
     password_hash varchar(255) not null,
     role enum('artist', 'admin', 'moderator') not null,
+
+    check(email REGEXP '(\w|\.)+@[a-z]+\.[a-z]+'),
 
     primary key(idUsers)
 );
@@ -19,29 +21,17 @@ create table Artists (
     id int not null auto_increment,
     nickname varchar(100) not null unique,
     date_of_birth date,
-    gender enum('male', 'female', 'nonbinary') not null,
+    gender enum('male', 'female', 'other') not null,
     premium_subscription_id int unique,     -- one to one relation
     card_details_id int unique,             -- the same here
 
-    check(date_of_birth > '1900-01-01'),
+    check(date_of_birth between '1900-01-01' and sysdate()),
 
     primary key(id),
     foreign key(id) references Users(id),
     foreign key(premium_subscription_id) references PremiumSubscriptions(id),
     foreign key(card_details_id) references CardDetails(id)
 );
-
-/* is not executed for some reason
-
-create trigger date_check
-before insert on CardDetails
-for each row
-begin
-    if new.expiration_date <= curdate() then
-        signal sqlstate '45000' 
-            set message_text = 'Card expiration date <= current date!';
-    end if;
-end;*/
 
 Данные банковских карт (CardDetails):
 create table CardDetails (
@@ -52,7 +42,7 @@ create table CardDetails (
     expiration date not null,
     
     check (card_number regexp '[0-9]{16}'),
-    -- check (expiration > curdate()), -- так сделать нельзя, т. к. curdate() не детерминирована
+    check (expiration > sysdate()),
 
     primary key(id)
 );
@@ -66,7 +56,7 @@ create table PremiumSubscriptions (
     id_tariff int not null,
     
     check (start_datetime < end_datetime and cast(start_datetime as date) > '1900-01-01'),   -- гггг-мм-дд
-    -- check(end_datetime > getdate()),
+    check (end_datetime > sysdate()),
 
     primary key(id),
     foreign key(id_tariff) references Tariffs(id)
@@ -92,7 +82,7 @@ create table Payments (
     transaction_id varchar(100) not null unique,
 
     check (sum > 0.0),
-    -- check (timestamp <= getdate())
+    check (timestamp <= sysdate()),
 
     primary key(id)
 );
@@ -106,7 +96,7 @@ create table Reports (
     report_type enum('Tracks', 'Artists') not null,
     object_id int not null,
 
-    check (not (report_type = 'Artists' and object_id = author_id))  -- you cannot report yourself
+    check (not (report_type = 'Artists' and object_id = author_id))  -- нельзя репортнуть себя
 
     primary key(id),
     foreign key(author_id) references Artists(id)
@@ -118,8 +108,7 @@ create table Likes (
     artist_id int,
     track_id int not null,
     
-    -- check for self-like?
-    -- check (not ()),
+    -- самолайк разрешён
 
     primary key(id),
     foreign key(artist_id) references Artists(id),
@@ -142,8 +131,8 @@ create table Tracks (
     length_seconds int not null,
     artist_id int not null,
 
-    -- check (timestamp <= getdate()),
     check (length_seconds > 0),
+    check (timestamp <= sysdate()),
 
     primary key(id),
     foreign key(artist_id) references Artists(id)
@@ -154,6 +143,8 @@ create table TagsToTracks (
     id int not null auto_increment,
     id_tag int not null,
     id_track int not null,
+
+    unique(id_tag, id_track),
 
     primary key(id),
     foreign key(id_tag) references Tags(id),
@@ -168,8 +159,7 @@ create table Comments (
     artist_id int,
     track_id int not null,
 
-    -- check (timestamp <= curdate()),
-    -- проверять, что комментарий появился позже трека
+    check (timestamp <= sysdate()),
 
     primary key(id),
     foreign key(artist_id) references Artists(id),
@@ -213,86 +203,201 @@ create table Albums (
     id int not null auto_increment,
     release_date date not null,
 
-    -- check (release_date <= cast(getdate() as date)),
+    check (release_date <= sysdate()),
 
     primary key(id),
     foreign key(id) references Playlists(id)
 );
 
-
-
 Журнал действий пользователей:
 create table Actions (
-    idActions int not null auto_increment,
+    id int not null auto_increment,
     timestamp datetime not null,
     user_id int,     -- если юзер удаляется, то его действия всё равно сохраняются
     object_type enum('Users', 'Artists', 'CardDetails', 'Likes', 'Comments', 'Reports', 'PremiumSubscriptions', 'Payments', 'Tags', 'Tracks', 'Playlists', 'Albums') not null,
     object_id int,   -- если объект удаляется, то действия над ним всё равно остаются
     action_type enum('create', 'read', 'update', 'delete') not null,
 
-    -- check (timestamp <= getdate())
+    check (timestamp <= sysdate()),
 
-    primary key(idActions),
-    foreign key(user_id) references Users(idUsers)
+    primary key(id),
+    foreign key(user_id) references Users(id)
 );
+
+
+
 
 
 ТЕСТОВЫЕ ЗНАЧЕНИЯ:
 
-
+----------------------
 Users:
 insert into Users (email, password_hash, role) values ('user1@example.com', 'aaaa1111aaaa1111', 'artist');
 insert into Users (email, password_hash, role) values ('user2@example.com', 'aaaa1111aaaa1111', 'artist');
+insert into Users (email, password_hash, role) values ('musicserviceadmin@example.com', '9ba827640bde', 'admin');
+insert into Users values (4, 'mod-1@example.com', '99aaa99a9a', 'moderator');
+insert into Users values (5, 'mod-2@example.com', '194590afe0', 'moderator');
+insert into Users values (6, 'junoreactor@yopmail.com', '312312311', 'artist');
+insert into Users values (7, 'daniellicht@example.com', '3123aaa12', 'artist');
+insert into Users values (8, 'suse@example.com', '123456', 'artist');
 
-CardDetails:
-insert into CardDetails (first_name, last_name, card_number, expiration) values ('John', 'John', '0000000000010000', '2023-01-01');
-
-Tariffs:
-insert into Tariffs (monthly_payment_dollars) values (10.3);
-
-PremiumSubscriptions:
-insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values ('2022-11-03 11:17:02', '2022-12-03 11:17:02', true, 1);
-
+----------------------
 Artists:
 insert into Artists values (1, "Zob Rombie", null, 'male', 1, 1);
 insert into Artists values (2, "User2", '1999-01-02', 'male', null, null);
+insert into Artists values (6, "Juno Reactor", null, 'male', null, null);
+insert into Artists values (7, "Daniel Licht", '1957-03-13', 'male', null, null);
+insert into Artists values (8, "Suse", null, 'other', null, null);
 
+----------------------
+Tariffs:
+insert into Tariffs (monthly_payment_dollars) values (10.3);
+
+----------------------
+CardDetails:
+insert into CardDetails (first_name, last_name, card_number, expiration) values ('John', 'John', '0000000000010000', '2023-01-01');
+insert into CardDetails (first_name, last_name, card_number, expiration) values ('Batt', 'Mellamy', '1111000011110000', '2026-01-01');
+
+----------------------
+PremiumSubscriptions:
+insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values ('2022-11-03 11:17:02', '2022-12-03 11:17:02', true, 1);
+insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values ('2022-09-20 05:05:05', '2022-12-01 01:02:03', true, 1);
+
+----------------------
 Payments:
+Подписка Zob Rombie:
 insert into Payments values (1, 1, '2022-11-03 11:10:03', 'failed', 10.3, '1a2bcd3');
 insert into Payments values (2, 1, '2022-11-03 11:17:02', 'successful', 10.3, '1aadc33');
 
+Подписка Suse:
+insert into Payments values (3, 2, '2021-09-20 05:05:05', 'successful', 10.3, '11213ac');
+insert into Payments values (4, 2, '2022-11-01 01:02:03', 'successful', 10.3, '21aa3ac');
+
+----------------------
 Reports:
 insert into Reports values (1, "Offensive title", "I am not worried at all", 1, 'Tracks', 1);
 insert into Reports values (2, "Offensive offense", "I am offended by that offensive person", 2, 'Artists', 1);
 
-Tracks:
+----------------------
+TRACKS:
+User2:
 insert into Tracks values (1, '2022-03-30 12:00:01', 'Don\'t worry', 200, 2);
-insert into Tracks values (1, '2022-02-29 12:30:01', 'Some song', 125, 1);
+insert into Tracks values (3, '2022-04-01 13:20:20', 'HDMI', 119, 2);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2018-06-06 00:31:00', 'Drive My Car', 164, 2);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2019-09-10 00:31:00', 'Everytime, 199, 2);
 
+Zob Rombie:
+insert into Tracks values (2, '2022-02-29 12:30:01', 'Some song', 125, 1);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2021-06-06 12:00:00', 'Dragula', 222, 1);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2020-03-01 09:00:00', 'Feel So Numb', 243, 1);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2022-03-01 09:30:00', 'Iron Head', 250, 1);
+
+Juno Reactor:
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2020-03-01 09:30:00', 'Control', 250, 6);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2021-01-03 19:30:30', 'Mona Lisa Overdrive', 300, 6);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2011-01-03 19:22:30', 'Dakota', 120, 6);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2015-02-03 15:22:30', 'Guardian Angel', 230, 6);
+
+Daniel Licht:
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2021-05-05 10:30:00', 'Wink', 129, 7);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2022-06-03 20:31:30', 'Empress Death', 65, 7);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2014-02-03 19:22:30', 'Flooded Suspense', 185, 7);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2015-03-03 15:22:30', 'Corvo Attano\'s Theme', 102, 7);
+
+Suse:
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2010-02-05 09:30:00', 'Supermassive Black Hole', 212, 8);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2015-03-03 20:31:30', 'Hysteria', 226, 8);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2016-02-03 19:22:30', 'New Born', 170, 8);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2017-03-03 15:22:30', 'Feeling Good', 192, 8);
+
+----------------------
 Likes:
 insert into Likes values (1, 1, 1);
+insert into Likes (artist_id, track_id) values (1, 19);
+insert into Likes (artist_id, track_id) values (1, 10);
+insert into Likes (artist_id, track_id) values (1, 14);
+insert into Likes (artist_id, track_id) values (1, 16);
 
+insert into Likes (artist_id, track_id) values (2, 6);
+insert into Likes (artist_id, track_id) values (2, 7);
+insert into Likes (artist_id, track_id) values (2, 8);
+insert into Likes (artist_id, track_id) values (2, 14);
+
+insert into Likes (artist_id, track_id) values (6, 13);
+insert into Likes (artist_id, track_id) values (6, 14);
+insert into Likes (artist_id, track_id) values (6, 15);
+
+insert into Likes (artist_id, track_id) values (7, 4);
+insert into Likes (artist_id, track_id) values (7, 5);
+insert into Likes (artist_id, track_id) values (7, 6);
+
+insert into Likes (artist_id, track_id) values (8, 11);
+insert into Likes (artist_id, track_id) values (8, 13);
+insert into Likes (artist_id, track_id) values (8, 14);
+insert into Likes (artist_id, track_id) values (8, 15);
+
+----------------------
 Tags:
 insert into Tags values (1, "rock");
 insert into Tags values (2, "indie");
 insert into Tags values (3, "pop");
+insert into Tags (name) values ("transe");
+insert into Tags (name) values ("instrumental");
+insert into Tags (name) values ("soundtrack");
 
+----------------------
 TagsToTracks:
 insert into TagsToTracks (id_tag, id_track) values (2, 1);
 insert into TagsToTracks (id_tag, id_track) values (1, 1);
 insert into TagsToTracks (id_tag, id_track) values (3, 2);
 
+insert into TagsToTracks (id_tag, id_track) values (1, 4);
+insert into TagsToTracks (id_tag, id_track) values (1, 5);
+insert into TagsToTracks (id_tag, id_track) values (1, 6);
+insert into TagsToTracks (id_tag, id_track) values (1, 10);
+insert into TagsToTracks (id_tag, id_track) values (1, 17);
+insert into TagsToTracks (id_tag, id_track) values (1, 18);
+insert into TagsToTracks (id_tag, id_track) values (1, 19);
+insert into TagsToTracks (id_tag, id_track) values (1, 20);
+
+insert into TagsToTracks (id_tag, id_track) values (2, 3);
+insert into TagsToTracks (id_tag, id_track) values (2, 7);
+insert into TagsToTracks (id_tag, id_track) values (2, 8);
+
+insert into TagsToTracks (id_tag, id_track) values (3, 9);
+insert into TagsToTracks (id_tag, id_track) values (3, 11);
+
+insert into TagsToTracks (id_tag, id_track) values (4, 9);
+insert into TagsToTracks (id_tag, id_track) values (4, 12);
+
+insert into TagsToTracks (id_tag, id_track) values (5, 13);
+insert into TagsToTracks (id_tag, id_track) values (5, 14);
+insert into TagsToTracks (id_tag, id_track) values (5, 15);
+insert into TagsToTracks (id_tag, id_track) values (5, 16);
+
+insert into TagsToTracks (id_tag, id_track) values (6, 13);
+insert into TagsToTracks (id_tag, id_track) values (6, 14);
+insert into TagsToTracks (id_tag, id_track) values (6, 15);
+insert into TagsToTracks (id_tag, id_track) values (6, 16);
+
+----------------------
 Comments:
 insert into Comments values (1, '2022-03-30 12:00:30', 'I am not worried, I am going to report this track', 1, 1);
 
+----------------------
 Playlists:
 insert into Playlists values (1, "Good tracks", 1);
+insert into Playlists values (2, "Example album containing two tracks", 2);
 
+----------------------
 TracksToPlaylists:
 insert into TracksToPlaylists values (1, 1, 1);
 insert into TracksToPlaylists values (2, 2, 1);
 
+----------------------
 TagsToPlaylists:
 insert into TagsToPlaylists (id_tag, id_playlist) values (1, 1);
 
-
+----------------------
+Albums:
+insert into Albums values (2, '2022-04-01');
