@@ -245,6 +245,14 @@ insert into Users values (7, 'daniellicht@example.com', '3123aaa12', 'artist');
 insert into Users values (8, 'suse@example.com', '123456', 'artist');
 
 ----------------------
+
+Артисты, регистрация:
+2 - 2010-01-15 13:01:00
+7 - 2010-01-16 11:00:30
+6 - 2010-01-16 13:01:00
+8 - 2010-01-17 11:00:30
+1 - 2010-02-10 12:01:00
+
 Artists:
 insert into Artists values (1, "Zob Rombie", null, 'male', 1, 1);
 insert into Artists values (2, "User2", '1999-01-02', 'male', null, null);
@@ -287,7 +295,7 @@ User2:
 insert into Tracks values (1, '2022-03-30 12:00:01', 'Don\'t worry', 200, 2);
 insert into Tracks values (3, '2022-04-01 13:20:20', 'HDMI', 119, 2);
 insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2018-06-06 00:31:00', 'Drive My Car', 164, 2);
-insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2019-09-10 00:31:00', 'Everytime, 199, 2);
+insert into Tracks (timestamp, title, length_seconds, artist_id) values ('2019-09-10 00:31:00', 'Everytime', 199, 2);
 
 Zob Rombie:
 insert into Tracks values (2, '2022-02-29 12:30:01', 'Some song', 125, 1);
@@ -476,5 +484,68 @@ insert into Actions (timestamp, user_id, object_type, object_id, action_type) va
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2014-02-03 19:22:30', 7, 'Tags', 6, 'create');
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-02-03 15:22:30', 6, 'Tags', 4, 'create');
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2018-06-06 00:31:00', 2, 'Tags', 2, 'create');
+
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-03-30 12:00:01', 2, 'TagsToTracks', 1, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-03-30 12:00:01', 2, 'TagsToTracks', 2, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-02-28 12:30:01', 1, 'TagsToTracks', 3, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-04-01 13:20:20', 2, 'TagsToTracks', 15, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2021-06-06 12:00:00', 1, 'TagsToTracks', 7, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2020-03-01 09:00:00', 1, 'TagsToTracks', 8, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-03-01 09:30:00', 1, 'TagsToTracks', 9, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2018-06-06 00:31:00', 2, 'TagsToTracks', 16, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2019-09-10 00:31:00', 2, 'TagsToTracks', 17, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2020-03-01 09:30:00', 6, 'TagsToTracks', 18, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2020-03-01 09:30:00', 6, 'TagsToTracks', 20, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2021-01-03 19:30:30', 6, 'TagsToTracks', 10, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2011-01-03 19:22:30', 6, 'TagsToTracks', 19, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-02-03 15:22:30', 6, 'TagsToTracks', 21, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-02-03 15:22:30', 7, 'TagsToTracks', 23, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2021-05-05 10:30:00', 7, 'TagsToTracks', 27, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-03 20:31:30', 7, 'TagsToTracks', 24, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-03 20:31:30', 7, 'TagsToTracks', 28, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2014-02-03 19:22:30', 7, 'TagsToTracks', 25, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2014-02-03 19:22:30', 7, 'TagsToTracks', 29, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-03-03 15:22:30', 7, 'TagsToTracks', 26, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-03-03 15:22:30', 7, 'TagsToTracks', 30, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2010-02-05 09:30:00', 8, 'TagsToTracks', 11, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-03-03 20:31:30', 8, 'TagsToTracks', 12, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2016-02-03 19:22:30', 8, 'TagsToTracks', 13, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2017-03-03 15:22:30', 8, 'TagsToTracks', 14, 'create');
+
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-04-30 12:00:01', 1, 'Likes', 1, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2016-04-03 19:22:30', 1, 'Likes', 2, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2021-02-03 19:30:30', 1, 'Likes', 3, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-07-03 20:31:30', 1, 'Likes', 4, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2015-04-03 15:22:30', 1, 'Likes', 5, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-03-01 09:30:00', 2, 'Likes', 6, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2018-07-06 00:31:00', 2, 'Likes', 7, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2019-10-10 00:31:00', 2, 'Likes', 8, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-07-03 20:31:30', 2, 'Likes', 9, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-04 20:31:30', 6, 'Likes', 10, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-05 20:31:30', 6, 'Likes', 11, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-06 20:31:30', 6, 'Likes', 12, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-07 20:31:30', 7, 'Likes', 13, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-08 20:31:30', 7, 'Likes', 14, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-09 20:31:30', 7, 'Likes', 15, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-10 20:31:30', 8, 'Likes', 16, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-11 20:31:30', 8, 'Likes', 17, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-12 20:31:30', 8, 'Likes', 18, 'create');
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values ('2022-06-13 20:31:30', 8, 'Likes', 19, 'create');
+
+-------------------------------------------------------------------------
+
+ПУЛ ЗАПРОСОВ:
+
+Регистрация артиста:
+insert into Users (email, password_hash, role) values (<email>, <password hash>, 'artist');
+insert into Artists values (<user id>, <nickname>, <date of birth>, <gender>, <premium subscription id>, <card details id>)
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <user id>, 'Artists', <user id>, 'create');
+
+Просмотреть всю информацию об артисте:
+
+
+Изменить информацию об артисте:
+update Artists set nickname = <nickname> where id = <artist id>
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'edit');
 
 
