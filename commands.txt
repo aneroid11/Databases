@@ -28,9 +28,9 @@ create table Artists (
     check(date_of_birth between '1900-01-01' and sysdate()),
 
     primary key(id),
-    foreign key(id) references Users(id),
-    foreign key(premium_subscription_id) references PremiumSubscriptions(id),
-    foreign key(card_details_id) references CardDetails(id)
+    foreign key(id) references Users(id) on update cascade on delete cascade,
+    foreign key(premium_subscription_id) references PremiumSubscriptions(id) on update cascade on delete set null,
+    foreign key(card_details_id) references CardDetails(id) on update cascade on delete set null
 );
 
 Данные банковских карт (CardDetails):
@@ -59,7 +59,7 @@ create table PremiumSubscriptions (
     check (end_datetime > sysdate()),
 
     primary key(id),
-    foreign key(id_tariff) references Tariffs(id)
+    foreign key(id_tariff) references Tariffs(id) on update cascade on delete restrict
 );
 
 Тарифы:
@@ -84,7 +84,8 @@ create table Payments (
     check (sum > 0.0),
     check (timestamp <= sysdate()),
 
-    primary key(id)
+    primary key(id),
+    foreign key(subscription_id) references PremiumSubscriptions(id) on update cascade on delete cascade
 );
 
 Жалобы:
@@ -96,10 +97,12 @@ create table Reports (
     report_type enum('Tracks', 'Artists') not null,
     object_id int not null,
 
-    check (not (report_type = 'Artists' and object_id = author_id))  -- нельзя репортнуть себя
+    -- check (not (report_type = 'Artists' and object_id = author_id))  -- нельзя репортнуть себя
+    -- и такой чек нельзя использовать вместе с on update ... или on delete ...
+    -- это нужно проверять с помощью триггеров. или делать referential actions с помощью триггеров.
 
     primary key(id),
-    foreign key(author_id) references Artists(id)
+    foreign key(author_id) references Artists(id) on update cascade on delete cascade
 );
 
 Лайки:
@@ -111,14 +114,14 @@ create table Likes (
     -- самолайк разрешён
 
     primary key(id),
-    foreign key(artist_id) references Artists(id),
-    foreign key(track_id) references Tracks(id)
+    foreign key(artist_id) references Artists(id) on update cascade on delete set null,
+    foreign key(track_id) references Tracks(id) on update cascade on delete cascade
 );
 
 Теги:
 create table Tags (
     id int not null auto_increment,
-    name varchar(45) not null,
+    name varchar(45) not null unique,
 
     primary key(id)
 );
@@ -135,7 +138,7 @@ create table Tracks (
     check (timestamp <= sysdate()),
 
     primary key(id),
-    foreign key(artist_id) references Artists(id)
+    foreign key(artist_id) references Artists(id) on update cascade on delete cascade
 );
 
 Связь между тегами и треками:
@@ -147,8 +150,8 @@ create table TagsToTracks (
     unique(id_tag, id_track),
 
     primary key(id),
-    foreign key(id_tag) references Tags(id),
-    foreign key(id_track) references Tracks(id)
+    foreign key(id_tag) references Tags(id) on update cascade on delete cascade,
+    foreign key(id_track) references Tracks(id) on update cascade on delete cascade
 );
 
 Комментарии:
@@ -162,8 +165,8 @@ create table Comments (
     check (timestamp <= sysdate()),
 
     primary key(id),
-    foreign key(artist_id) references Artists(id),
-    foreign key(track_id) references Tracks(id)
+    foreign key(artist_id) references Artists(id) on delete set null on update cascade,
+    foreign key(track_id) references Tracks(id) on delete cascade on update cascade
 );
 
 Плейлисты:
@@ -173,7 +176,7 @@ create table Playlists (
     artist_id int not null,
 
     primary key(id),
-    foreign key(artist_id) references Artists(id)
+    foreign key(artist_id) references Artists(id) on delete cascade on update cascade
 );
 
 Связь тегов с плейлистами:
@@ -185,8 +188,8 @@ create table TagsToPlaylists (
     unique(id_tag, id_playlist),
 
     primary key(id),
-    foreign key(id_tag) references Tags(id),
-    foreign key(id_playlist) references Playlists(id)
+    foreign key(id_tag) references Tags(id) on delete cascade on update cascade,
+    foreign key(id_playlist) references Playlists(id) on delete cascade on update cascade
 );
 
 Связь плейлистов с треками:
@@ -198,8 +201,8 @@ create table TracksToPlaylists (
     unique (track_id, playlist_id),
 
     primary key(id),
-    foreign key(track_id) references Tracks(id),
-    foreign key(playlist_id) references Playlists(id)
+    foreign key(track_id) references Tracks(id) on delete cascade on update cascade,
+    foreign key(playlist_id) references Playlists(id) on delete cascade on update cascade
 );
 
 Альбомы:
@@ -210,7 +213,7 @@ create table Albums (
     check (release_date <= sysdate()),
 
     primary key(id),
-    foreign key(id) references Playlists(id)
+    foreign key(id) references Playlists(id) on update cascade on delete cascade
 );
 
 Журнал действий пользователей:
@@ -225,7 +228,7 @@ create table Actions (
     check (timestamp <= sysdate()),
 
     primary key(id),
-    foreign key(user_id) references Users(id)
+    foreign key(user_id) references Users(id) on update cascade on delete set null
 );
 
 
@@ -542,10 +545,30 @@ insert into Artists values (<user id>, <nickname>, <date of birth>, <gender>, <p
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <user id>, 'Artists', <user id>, 'create');
 
 Просмотреть всю информацию об артисте:
-
+select Users.id, Users.email, Users.password_hash, Artists.nickname, Artists.date_of_birth, Artists.gender, Artists.premium_subscription_id, Artists.card_details_id 
+    from Users 
+    right join Artists on Users.id = Artists.id;
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
+(можно вьюшку для этого создать)
 
 Изменить информацию об артисте:
 update Artists set nickname = <nickname> where id = <artist id>
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'edit');
 
+Удалить аккаунт артиста:
+delete from Artists where id = <artist id>;
+-- delete all orphaned PremiumSubscriptions and CardDetails:
+delete from PremiumSubscriptions where id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);
+delete from CardDetails where id not in (select card_details_id from Artists where card_details_id is not null);
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'delete');
+
+Загрузка артистом треков на сайт:
+insert into Tracks (timestamp, title, length_seconds, artist_id) values (<current timestamp>, <title>, <length>, <artist id>);
+insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Tracks', LAST_INSERT_ID(), 'create');
+
+Прикрепить тег <tag name> к треку <track id>:
+insert into Tags (name) values ("<tag name>"); -- will fail if the tag exists
+insert into TagsToTracks (id_tag, id_track) select id, <track id> from Tags where name = <tag name>;
+
+Просмотреть всю информацию о треке:
 
