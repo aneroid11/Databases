@@ -621,7 +621,7 @@ inner join Tracks
 on Tracks.id = TracksToPlaylists.track_id;
 
 Просмотреть все треки в плейлисте <playlist id>:
-select * from TracksPlaylistsInfo where playlist_id = <playlist id>;
+select * from TracksPlaylistsInfo where playlist_id = <playlist id>; -- index for playlist_id?
 
 Создать альбом <title>, <release date> от <artist id>:
 insert into Playlists (title, artist_id) values (<title>, <artist id>);
