@@ -570,5 +570,99 @@ insert into Actions (timestamp, user_id, object_type, object_id, action_type) va
 insert into Tags (name) values ("<tag name>"); -- will fail if the tag exists
 insert into TagsToTracks (id_tag, id_track) select id, <track id> from Tags where name = <tag name>;
 
-Просмотреть всю информацию о треке:
+Просмотреть всю информацию о треке <track id>:
+Вьюшка для этого:
+create view TracksInfo as 
+select Tracks.id, Tracks.timestamp, Tracks.title, Tracks.length_seconds, Artists.nickname 
+from Tracks 
+right join Artists 
+on Tracks.artist_id = Artists.id;
+
+select * from TracksInfo where Tracks.id = <track id>;
+
+Комментировать трек <track id> от <artist id>:
+insert into Comments (timestamp, contents, artist_id, track_id) values (<current timestamp>, <contents>, <artist id>, <track id>);
+
+Отредактировать трек <track id>:
+update Tracks set timestamp = <current timestamp>, title = <new title>, length_seconds = <new length> where id = <track id>;
+
+Удалить трек <track id>:
+delete from Tracks where id = <track id>;
+
+Лайкнуть трек <track id> от <artist id>:
+insert into Likes (artist_id, track_id) values (<artist id>, <track id>);
+
+Пожаловаться на трек <track id> от <artist id>:
+insert into Reports (title, contents, author_id, report_type, object_id) values (<title>, <contents>, <author id>, 'Tracks', <track id>);
+
+Пожаловаться на артиста <reported artist id> от <reporting artist id>:
+insert into Reports (title, contents, author_id, report_type, object_id) values (<title>, <contents>, <reporting artist id>, 'Artists', <reported artist id>);
+
+Создать плейлист от <artist id>:
+insert into Playlists (title, artist_id) values (<playlist title>, <artist id>);
+
+Отредактировать плейлист:
+update Playlists set title = <new title> where id = <playlist id>;
+
+Удалить плейлист:
+delete from Playlists where id = <playlist id>;
+
+Добавить трек <track id> в плейлист <playlist id>:
+insert into TracksToPlaylists (track_id, artist_id) values (<track id>, <playlist id>);
+
+Удалить трек <track id> из плейлиста <playlist id>:
+delete from TracksToPlaylists where track_id = <track id> and playlist_id = <playlist_id>;
+
+Информация о треках, принадлежащих плейлистам:
+create view TracksPlaylistsInfo as
+select TracksToPlaylists.playlist_id, TracksToPlaylists.track_id, Tracks.timestamp, Tracks.title, Tracks.length_seconds, Tracks.artist_id 
+from TracksToPlaylists 
+inner join Tracks 
+on Tracks.id = TracksToPlaylists.track_id;
+
+Просмотреть все треки в плейлисте <playlist id>:
+select * from TracksPlaylistsInfo where playlist_id = <playlist id>;
+
+Создать альбом <title>, <release date> от <artist id>:
+insert into Playlists (title, artist_id) values (<title>, <artist id>);
+insert into Albums values (last_inserted_id(), <release date>);
+
+Вьюшка для информации об альбомах:
+create view AlbumsInfo as 
+select Albums.id, Albums.release_date, Playlists.title, Artists.nickname as author_name 
+from Albums 
+inner join Playlists on Albums.id = Playlists.id 
+inner join Artists on Playlists.artist_id = Artists.id;
+
+Просмотреть информацию об альбоме:
+select * from AlbumsInfo where id = <album id>;
+
+Удалить альбом:
+delete from Playlists where id = <album id>;
+
+Приобрести премиум-подписку:
+insert into CardDetails (first_name, last_name, card_number, expiration) values (<first name>, <last name>, <card number>, <expiration date>);
+update Artists set card_details_id = last_inserted_id() where id = <artist id>; -- а что, если инсерт зафейлился? например, card_number уже существует.
+
+insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values (<current timestamp>, <current timestamp>, FALSE, <tariff id>);
+
+insert into Payments (subscription_id, timestamp, status, sum, transaction_id) 
+select last_insert_id(), <current timestamp>, 'successful', monthly_payment_dollars 
+from Tariffs where id = <tariff id>;
+
+-- после успешной оплаты:
+update PremiumSubscriptions set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE where id = <subscription id>;
+
+Просмотреть все жалобы:
+select * from Reports;
+
+Просмотреть жалобы на пользователя <user id>:
+select * from Reports where object_id = <user id> and report_type = "Artists";
+
+Просмотреть жалобы на трек <track id>:
+select * from Reports where object_id = <track id> and report_type = 'Tracks';
+
+Просмотреть действия пользователя:
+select * from Actions where user_id = <user id> order by timestamp;
+
 
