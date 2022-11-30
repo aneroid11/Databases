@@ -674,7 +674,7 @@ select Tracks.id, Tracks.title, count(Likes.id) as likes_count,
     case
         when count(Likes.id) > 2 then "superstar"
         else ""
-    end as likes_commentary
+    end as commentary
 from Likes 
 inner join Tracks on Tracks.id = Likes.track_id 
 group by Likes.track_id 
