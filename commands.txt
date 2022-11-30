@@ -538,22 +538,50 @@ insert into Actions (timestamp, user_id, object_type, object_id, action_type) va
 
 -------------------------------------------------------------------------
 
-ПУЛ ЗАПРОСОВ:
+ЗАПРОСЫ:
+
+Процедура для логирования:
+
+delimiter //
+
+create procedure Log (user_id int, object_type enum('Users', 'Artists', 'CardDetails', 'Likes', 'Comments', 'Reports', 'PremiumSubscriptions', 'Payments', 'Tags', 'Tracks', 'Playlists', 'Albums', 'TagsToTracks', 'TagsToPlaylists', 'TracksToPlaylists'), object_id int, action_type enum('create', 'read', 'update', 'delete'))
+begin
+    insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (CURRENT_TIMESTAMP(), user_id, object_type, object_id, action_type);
+end//
+
 
 Регистрация артиста:
-insert into Users (email, password_hash, role) values (<email>, <password hash>, 'artist');
-insert into Artists values (<user id>, <nickname>, <date of birth>, <gender>, <premium subscription id>, <card details id>)
-insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <user id>, 'Artists', <user id>, 'create');
 
-Просмотреть всю информацию об артисте:
+id int not null auto_increment,
+email varchar(255) not null unique,
+password_hash varchar(255) not null,
+nickname varchar(100) not null unique,
+date_of_birth date,
+gender enum('male', 'female', 'other') not null,
+
+create procedure RegisterArtist(email varchar(255), password_hash varchar(255), nickname varchar(100), date_of_birth date, gender enum('male', 'female', 'other'))
+begin
+    insert into Users (email, password_hash, role) values (email, password_hash, 'artist');
+    
+    if row_count() > 0 then
+        -- previous insert was successful
+        insert into Artists values (last_insert_id(), nickname, date_of_birth, gender, NULL, NULL);
+    end if;
+end//
+
+
+Создать вьюшку для информации об артисте:
+
 create view ArtistsInfo as 
 select Users.id, Users.email, Users.password_hash, Artists.nickname, Artists.date_of_birth, Artists.gender, Artists.premium_subscription_id, Artists.card_details_id 
 from Users 
 right join Artists on Users.id = Artists.id;
 
-select * from ArtistInfo where id = <artist id>;
 
-insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
+Просмотреть всю информацию об артисте:
+
+select * from ArtistInfo where id = <artist id>;
+-- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
 
 Поиск артиста по никнейму:
 select * from Artists where LOWER(nickname) like LOWER("%<search>%");
