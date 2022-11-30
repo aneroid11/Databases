@@ -1,10 +1,10 @@
-Создать базу данных:
+--Создать базу данных:
 create database task3;
 use task3;
 
-Создание таблиц:
+--Создание таблиц:
 
-Пользователи (Users):
+--Пользователи (Users):
 create table Users (
     id int not null auto_increment,
     email varchar(255) not null unique,
@@ -235,10 +235,10 @@ create table Actions (
 
 
 
-ТЕСТОВЫЕ ЗНАЧЕНИЯ:
+--ТЕСТОВЫЕ ЗНАЧЕНИЯ:
 
 ----------------------
-Users:
+--Users:
 insert into Users (email, password_hash, role) values ('user1@example.com', 'aaaa1111aaaa1111', 'artist');
 insert into Users (email, password_hash, role) values ('user2@example.com', 'aaaa1111aaaa1111', 'artist');
 insert into Users (email, password_hash, role) values ('musicserviceadmin@example.com', '9ba827640bde', 'admin');
@@ -250,14 +250,7 @@ insert into Users values (8, 'suse@example.com', '123456', 'artist');
 
 ----------------------
 
-Артисты, регистрация:
-2 - 2010-01-15 13:01:00
-7 - 2010-01-16 11:00:30
-6 - 2010-01-16 13:01:00
-8 - 2010-01-17 11:00:30
-1 - 2010-02-10 12:01:00
-
-Artists:
+--Artists:
 insert into Artists values (1, "Zob Rombie", null, 'male', 1, 1);
 insert into Artists values (2, "User2", '1999-01-02', 'male', null, null);
 insert into Artists values (6, "Juno Reactor", null, 'male', null, null);
@@ -538,9 +531,9 @@ insert into Actions (timestamp, user_id, object_type, object_id, action_type) va
 
 -------------------------------------------------------------------------
 
-ЗАПРОСЫ:
+--ЗАПРОСЫ:
 
-Процедура для логирования:
+--Процедура для логирования:
 
 delimiter //
 
@@ -570,7 +563,7 @@ begin
 end//
 
 
-Создать вьюшку для информации об артисте:
+--Создать вьюшку для информации об артисте:
 
 create view ArtistsInfo as 
 select Users.id, Users.email, Users.password_hash, Artists.nickname, Artists.date_of_birth, Artists.gender, Artists.premium_subscription_id, Artists.card_details_id 
@@ -578,33 +571,54 @@ from Users
 right join Artists on Users.id = Artists.id;
 
 
-Просмотреть всю информацию об артисте:
+--Просмотреть всю информацию об артисте:
 
 select * from ArtistInfo where id = <artist id>;
 -- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
 
-Поиск артиста по никнейму:
+--Поиск артиста по никнейму:
 select * from Artists where LOWER(nickname) like LOWER("%<search>%");
 select * from ArtistsInfo where LOWER(nickname) like LOWER("%<search>%");
 
-Изменить информацию об артисте:
+
+-- Изменить информацию об артисте:
 update Artists set nickname = <nickname> where id = <artist id>
-insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'edit');
+-- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'edit');
 
-Удалить аккаунт артиста:
-delete from Artists where id = <artist id>;
--- delete all orphaned PremiumSubscriptions and CardDetails:
-delete from PremiumSubscriptions where id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);
-delete from CardDetails where id not in (select card_details_id from Artists where card_details_id is not null);
-insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'delete');
 
-Загрузка артистом треков на сайт:
-insert into Tracks (timestamp, title, length_seconds, artist_id) values (<current timestamp>, <title>, <length>, <artist id>);
-insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Tracks', LAST_INSERT_ID(), 'create');
+-- Удалить аккаунт артиста:
+create procedure DeleteArtistAccount(id int)
+begin
+    delete from Artists where Artists.id = id;
+    
+    -- delete all orphaned PremiumSubscriptions and CardDetails:
+    delete from PremiumSubscriptions where PremiumSubscriptions.id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);    
+    delete from CardDetails where CardDetails.id not in (select card_details_id from Artists where card_details_id is not null);
+    -- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'delete');
+end//
 
-Прикрепить тег <tag name> к треку <track id>:
-insert into Tags (name) values ("<tag name>"); -- will fail if the tag exists
-insert into TagsToTracks (id_tag, id_track) select id, <track id> from Tags where name = <tag name>;
+
+id int not null auto_increment,
+    timestamp datetime not null,
+    title varchar(100) not null, -- index for title
+    length_seconds int not null,
+    artist_id int not null,
+
+-- Загрузка артистом треков на сайт:
+create procedure UploadTrack(title varchar(100), length_seconds int, artist_id int)
+begin
+    insert into Tracks (timestamp, title, length_seconds, artist_id) values (CURRENT_TIMESTAMP(), title, length_seconds, artist_id);
+    -- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Tracks', LAST_INSERT_ID(), 'create');
+end//
+
+
+-- Прикрепить тег <tag name> к треку <track id>:
+create procedure AttachTagToTrack(tag_name varchar(45), track_id int)
+begin
+    insert into Tags (name) values (tag_name); -- will fail if the tag exists
+    insert into TagsToTracks (id_tag, id_track) select id, track_id from Tags where name = tag_name;
+end//
+
 
 Просмотреть всю информацию о треке <track id>:
 Вьюшка для этого:
