@@ -130,7 +130,7 @@ create table Tags (
 create table Tracks (
     id int not null auto_increment,
     timestamp datetime not null,
-    title varchar(100) not null,
+    title varchar(100) not null, -- index for title
     length_seconds int not null,
     artist_id int not null,
 
@@ -138,7 +138,8 @@ create table Tracks (
     check (timestamp <= sysdate()),
 
     primary key(id),
-    foreign key(artist_id) references Artists(id) on update cascade on delete cascade
+    foreign key(artist_id) references Artists(id) on update cascade on delete cascade,
+    index (title)
 );
 
 Связь между тегами и треками:
@@ -545,11 +546,18 @@ insert into Artists values (<user id>, <nickname>, <date of birth>, <gender>, <p
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <user id>, 'Artists', <user id>, 'create');
 
 Просмотреть всю информацию об артисте:
+create view ArtistsInfo as 
 select Users.id, Users.email, Users.password_hash, Artists.nickname, Artists.date_of_birth, Artists.gender, Artists.premium_subscription_id, Artists.card_details_id 
-    from Users 
-    right join Artists on Users.id = Artists.id;
+from Users 
+right join Artists on Users.id = Artists.id;
+
+select * from ArtistInfo where id = <artist id>;
+
 insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
-(можно вьюшку для этого создать)
+
+Поиск артиста по никнейму:
+select * from Artists where LOWER(nickname) like LOWER("%<search>%");
+select * from ArtistsInfo where LOWER(nickname) like LOWER("%<search>%");
 
 Изменить информацию об артисте:
 update Artists set nickname = <nickname> where id = <artist id>
@@ -579,6 +587,12 @@ right join Artists
 on Tracks.artist_id = Artists.id;
 
 select * from TracksInfo where Tracks.id = <track id>;
+
+Количество треков у артистов:
+select count(Tracks.id) total_tracks, Artists.nickname 
+from Tracks 
+inner join Artists on Artists.id = Tracks.artist_id  
+group by artist_id;
 
 Комментировать трек <track id> от <artist id>:
 insert into Comments (timestamp, contents, artist_id, track_id) values (<current timestamp>, <contents>, <artist id>, <track id>);
@@ -621,7 +635,7 @@ inner join Tracks
 on Tracks.id = TracksToPlaylists.track_id;
 
 Просмотреть все треки в плейлисте <playlist id>:
-select * from TracksPlaylistsInfo where playlist_id = <playlist id>; -- index for playlist_id?
+select * from TracksPlaylistsInfo where playlist_id = <playlist id>;
 
 Создать альбом <title>, <release date> от <artist id>:
 insert into Playlists (title, artist_id) values (<title>, <artist id>);
@@ -640,6 +654,33 @@ select * from AlbumsInfo where id = <album id>;
 Удалить альбом:
 delete from Playlists where id = <album id>;
 
+Посмотреть общую продолжительность треков для каждого артиста:
+select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
+from Tracks 
+inner join Artists on Artists.id = Tracks.artist_id 
+group by artist_id;
+
+Посмотреть общую продолжительность треков для отдельного артиста:
+select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
+from Tracks 
+inner join Artists on Artists.id = Tracks.artist_id 
+where artist_id = <artist id>;
+
+Количество лайков на треке:
+select count(id) num_of_likes from Likes where track_id = <track id>;
+
+Посмотреть топ-10 самых залайканных треков:
+select Tracks.id, Tracks.title, count(Likes.id) as likes_count, 
+    case
+        when count(Likes.id) > 2 then "superstar"
+        else ""
+    end as likes_commentary
+from Likes 
+inner join Tracks on Tracks.id = Likes.track_id 
+group by Likes.track_id 
+order by likes_count desc 
+limit 10;
+
 Приобрести премиум-подписку:
 insert into CardDetails (first_name, last_name, card_number, expiration) values (<first name>, <last name>, <card number>, <expiration date>);
 update Artists set card_details_id = last_inserted_id() where id = <artist id>; -- а что, если инсерт зафейлился? например, card_number уже существует.
@@ -647,7 +688,7 @@ update Artists set card_details_id = last_inserted_id() where id = <artist id>; 
 insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values (<current timestamp>, <current timestamp>, FALSE, <tariff id>);
 
 insert into Payments (subscription_id, timestamp, status, sum, transaction_id) 
-select last_insert_id(), <current timestamp>, 'successful', monthly_payment_dollars 
+select last_insert_id(), <current timestamp>, 'successful', Tariffs.monthly_payment_dollars 
 from Tariffs where id = <tariff id>;
 
 -- после успешной оплаты:
