@@ -12,7 +12,7 @@ insert into Users values (8, 'suse@example.com', '123456', 'artist');
 
 ----------------------
 
---Artists:
+-- Artists:
 insert into Artists values (1, "Zob Rombie", null, 'male', 1, 1);
 insert into Artists values (2, "User2", '1999-01-02', 'male', null, null);
 insert into Artists values (6, "Juno Reactor", null, 'male', null, null);

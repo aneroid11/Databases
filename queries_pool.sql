@@ -1,9 +1,8 @@
--- ЗАПРОСЫ:
-
--- Процедура для логирования:
-
 delimiter //
 
+-- ПРОЦЕДУРЫ:
+
+-- Процедура для логирования:
 create procedure Log (user_id int, object_type enum('Users', 'Artists', 'CardDetails', 'Likes', 'Comments', 'Reports', 'PremiumSubscriptions', 'Payments', 'Tags', 'Tracks', 'Playlists', 'Albums', 'TagsToTracks', 'TagsToPlaylists', 'TracksToPlaylists'), object_id int, action_type enum('create', 'update', 'delete'))
 begin
     insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (CURRENT_TIMESTAMP(), user_id, object_type, object_id, action_type);
@@ -24,7 +23,6 @@ end//
 
 
 --Создать вьюшку для информации об артисте:
-
 create view ArtistsInfo as 
 select Users.id, Users.email, Users.password_hash, Artists.nickname, Artists.date_of_birth, Artists.gender, Artists.premium_subscription_id, Artists.card_details_id 
 from Users 
@@ -32,9 +30,8 @@ right join Artists on Users.id = Artists.id;
 
 
 --Просмотреть всю информацию об артисте:
-
 select * from ArtistInfo where id = <artist id>;
--- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <watching artist id>, 'Artists', <watched artist id>, 'read');
+
 
 --Поиск артиста по никнейму:
 select * from Artists where LOWER(nickname) like LOWER("%<search>%");
@@ -43,13 +40,13 @@ select * from ArtistsInfo where LOWER(nickname) like LOWER("%<search>%");
 
 -- Изменить информацию об артисте:
 update Artists set nickname = <nickname> where id = <artist id>
--- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'edit');
+-- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'update');
 
 
 -- Удалить аккаунт артиста:
 create procedure DeleteArtistAccount(artist_id int)
 begin
-    delete from Artists where id = artist_id;
+    delete from Users where id = artist_id;
     
     -- delete all orphaned PremiumSubscriptions and CardDetails:
     delete from PremiumSubscriptions where id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);    
@@ -286,7 +283,7 @@ begin
     );
 end//
 
--- после успешной оплаты:
+-- после успешной оплаты (триггер):
 update PremiumSubscriptions set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE where id = <subscription id>;
 
 

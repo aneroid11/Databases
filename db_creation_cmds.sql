@@ -231,5 +231,5 @@ create table Actions (
     check (timestamp <= sysdate()),
 
     primary key(id),
-    foreign key(user_id) references Users(id) on update cascade on delete set null
+    -- foreign key(user_id) references Users(id) on update cascade on delete set null
 );
