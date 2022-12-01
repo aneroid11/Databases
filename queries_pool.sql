@@ -272,6 +272,10 @@ begin
 end//
 
 
+-- закрыть подписку
+update PremiumSubscriptions set active = FALSE where id = <id>;//
+
+
 -- Произвести оплату для подписки subscription_id
 create procedure CreatePayment(subscription_id int, amount float, status enum('failed', 'successful'), transaction_id varchar(100))
 begin
