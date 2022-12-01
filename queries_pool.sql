@@ -226,17 +226,30 @@ begin
 end//
 
 
+-- данные премиум-подписки пользователя
+create procedure PremiumSubscriptionInfo(artist_id int)
+begin
+    select * from PremiumSubscriptions where id = (select premium_subscription_id from Artists where id = artist_id);
+end//
 
 
+-- есть ли у пользователя подписка?
+create function ArtistHasSubscription(artist_id int)
+returns boolean
+deterministic
+begin
+    return (select (premium_subscription_id is not null) as has_subscription from Artists where id = artist_id);
+end//
 
--- отвязать данные карты у пользователя:
+
+-- отвязать данные карты у пользователя
 create procedure DeattachCardDetails(artist_id int)
 begin
     delete from CardDetails where id = (select card_details_id from Artists where id = artist_id);
 end//
 
 
--- привязать данные карты к пользователю:
+-- привязать данные карты к пользователю
 create procedure AttachCardDetails(artist_id int, first_name varchar(60), last_name varchar(80), card_number varchar(16), expiration date)
 begin
     -- delete previous card details
@@ -251,13 +264,27 @@ begin
 end//
 
 
--- Приобрести премиум-подписку:
-insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values (<current timestamp>, <current timestamp>, FALSE, <tariff id>);
+-- Создать премиум-подписку для пользователя
+create procedure CreatePremiumSubscription(artist_id int)
+begin
+    insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values (CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), FALSE, 1);
+    
+    if row_count() > 0 then
+        update Artists set premium_subscription_id = last_insert_id() where id = artist_id;
+    end if;
+end//
 
 
-insert into Payments (subscription_id, timestamp, status, sum, transaction_id) 
-select last_insert_id(), <current timestamp>, 'successful', Tariffs.monthly_payment_dollars 
-from Tariffs where id = <tariff id>;
+-- Произвести оплату для подписки p_subscription_id
+-- create procedure CreatePayment(p_subscription_id int, amount float, status enum('failed', 'successful'))
+create procedure CreatePayment(p_subscription_id int, status enum('failed', 'successful'))
+begin
+    insert into Payments (subscription_id, timestamp, status, sum, transaction_id)
+    select p_subscription_id, CURRENT_TIMESTAMP(), status, Tariffs.monthly_payment_dollars 
+    from Tariffs where id = (
+        select id_tariff from PremiumSubscriptions where id = p_subscription_id
+    );
+end//
 
 -- после успешной оплаты:
 update PremiumSubscriptions set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE where id = <subscription id>;

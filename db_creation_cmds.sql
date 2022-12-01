@@ -77,7 +77,7 @@ create table Payments (
     id int not null auto_increment,
     subscription_id int not null,
     timestamp datetime not null,
-    status enum('pending', 'failed', 'successful') not null,
+    status enum('failed', 'successful') not null,
     sum float not null,
     transaction_id varchar(100) not null unique,
 
@@ -226,7 +226,7 @@ create table Actions (
     user_id int,     -- если юзер удаляется, то его действия всё равно сохраняются
     object_type enum('Users', 'Artists', 'CardDetails', 'Likes', 'Comments', 'Reports', 'PremiumSubscriptions', 'Payments', 'Tags', 'Tracks', 'Playlists', 'Albums', 'TagsToTracks', 'TagsToPlaylists', 'TracksToPlaylists') not null,
     object_id int,   -- если объект удаляется, то действия над ним всё равно остаются
-    action_type enum('create', 'read', 'update', 'delete') not null,
+    action_type enum('create', 'update', 'delete') not null,
 
     check (timestamp <= sysdate()),
 
