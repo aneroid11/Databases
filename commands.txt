@@ -1,10 +1,10 @@
---Создать базу данных:
+-- Создать базу данных:
 create database task3;
 use task3;
 
---Создание таблиц:
+-- Создание таблиц:
 
---Пользователи (Users):
+-- Пользователи (Users):
 create table Users (
     id int not null auto_increment,
     email varchar(255) not null unique,
@@ -543,7 +543,7 @@ begin
 end//
 
 
-Регистрация артиста:
+-- Регистрация артиста:
 
 id int not null auto_increment,
 email varchar(255) not null unique,
@@ -598,12 +598,6 @@ begin
 end//
 
 
-id int not null auto_increment,
-    timestamp datetime not null,
-    title varchar(100) not null, -- index for title
-    length_seconds int not null,
-    artist_id int not null,
-
 -- Загрузка артистом треков на сайт:
 create procedure UploadTrack(title varchar(100), length_seconds int, artist_id int)
 begin
@@ -620,24 +614,29 @@ begin
 end//
 
 
-Просмотреть всю информацию о треке <track id>:
-Вьюшка для этого:
+-- Просмотреть всю информацию о треке <track id>:
+-- Вьюшка для этого:
 create view TracksInfo as 
 select Tracks.id, Tracks.timestamp, Tracks.title, Tracks.length_seconds, Artists.nickname 
 from Tracks 
-right join Artists 
+inner join Artists 
 on Tracks.artist_id = Artists.id;
 
 select * from TracksInfo where Tracks.id = <track id>;
 
-Количество треков у артистов:
+
+-- Количество треков у артистов:
 select count(Tracks.id) total_tracks, Artists.nickname 
 from Tracks 
 inner join Artists on Artists.id = Tracks.artist_id  
 group by artist_id;
 
 Комментировать трек <track id> от <artist id>:
-insert into Comments (timestamp, contents, artist_id, track_id) values (<current timestamp>, <contents>, <artist id>, <track id>);
+
+create procedure CommentTrack(contents varchar(500), artist_id int, track_id int)
+begin
+    insert into Comments (timestamp, contents, artist_id, track_id) values (CURRENT_TIMESTAMP(), contents, artist_id, <track_id);
+end//
 
 Отредактировать трек <track id>:
 update Tracks set timestamp = <current timestamp>, title = <new title>, length_seconds = <new length> where id = <track id>;
@@ -648,22 +647,31 @@ delete from Tracks where id = <track id>;
 Лайкнуть трек <track id> от <artist id>:
 insert into Likes (artist_id, track_id) values (<artist id>, <track id>);
 
-Пожаловаться на трек <track id> от <artist id>:
-insert into Reports (title, contents, author_id, report_type, object_id) values (<title>, <contents>, <author id>, 'Tracks', <track id>);
 
-Пожаловаться на артиста <reported artist id> от <reporting artist id>:
-insert into Reports (title, contents, author_id, report_type, object_id) values (<title>, <contents>, <reporting artist id>, 'Artists', <reported artist id>);
+-- Пожаловаться на трек <track id> от <artist id>:
+create procedure ReportTrack(title varchar(50), contents varchar(200), author_id int, track_id int)
+begin
+    insert into Reports (title, contents, author_id, report_type, object_id) values (title, contents, author_id, 'Tracks', track_id);
+end
 
-Создать плейлист от <artist id>:
+-- Пожаловаться на артиста <reported artist id> от <reporting artist id>:
+create procedure ReportArtist(title varchar(50), contents varchar(200), author_id int, reported_artist_id int)
+begin
+    insert into Reports (title, contents, author_id, report_type, object_id) values (title, contents, author_id, 'Artists', reported_artist_id);
+end
+-- insert into Reports (title, contents, author_id, report_type, object_id) values (<title>, <contents>, <reporting artist id>, 'Artists', <reported artist id>);
+
+-- Создать плейлист от <artist id>:
 insert into Playlists (title, artist_id) values (<playlist title>, <artist id>);
 
-Отредактировать плейлист:
+-- Отредактировать плейлист:
 update Playlists set title = <new title> where id = <playlist id>;
 
-Удалить плейлист:
+-- Удалить плейлист:
 delete from Playlists where id = <playlist id>;
 
-Добавить трек <track id> в плейлист <playlist id>:
+-- Добавить трек <track id> в плейлист <playlist id>:e
+create procedure AddTrack
 insert into TracksToPlaylists (track_id, artist_id) values (<track id>, <playlist id>);
 
 Удалить трек <track id> из плейлиста <playlist id>:
