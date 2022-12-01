@@ -116,6 +116,30 @@ for each row
 -- остальные триггеры для логов аналогично
 -- конец триггеров для логов
 
+-- если оплата прошла успешно, продлить подписку
 create trigger ProlongSubscriptionOnPayment after insert on Payments
 for each row
+begin
+    declare prolong_months float;
 
+    -- после успешной оплаты
+    if new.status = "successful" then
+        -- сколько месяцев оплатил пользователь?
+        set prolong_months = new.sum / (
+            select monthly_payment_dollars from Tariffs where id = (
+                select id_tariff from PremiumSubscriptions where id = new.subscription_id
+            )
+        );
+    
+        update PremiumSubscriptions 
+        -- set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE 
+        set end_datetime = DATE_ADD(
+            case 
+                when end_datetime < sysdate() then sysdate()
+                else end_datetime
+            end,
+            interval prolong_months month
+        ), active = TRUE 
+        where id = new.subscription_id;
+    end if;
+end//

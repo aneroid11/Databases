@@ -272,19 +272,30 @@ begin
 end//
 
 
--- Произвести оплату для подписки p_subscription_id
--- create procedure CreatePayment(p_subscription_id int, amount float, status enum('failed', 'successful'))
-create procedure CreatePayment(p_subscription_id int, status enum('failed', 'successful'))
+-- Произвести оплату для подписки subscription_id
+create procedure CreatePayment(subscription_id int, amount float, status enum('failed', 'successful'), transaction_id varchar(100))
 begin
-    insert into Payments (subscription_id, timestamp, status, sum, transaction_id)
-    select p_subscription_id, CURRENT_TIMESTAMP(), status, Tariffs.monthly_payment_dollars 
-    from Tariffs where id = (
-        select id_tariff from PremiumSubscriptions where id = p_subscription_id
-    );
+    insert into Payments (subscription_id, timestamp, status, sum, transaction_id) 
+    values (subscription_id, CURRENT_TIMESTAMP(), status, amount, transaction_id);
 end//
 
--- после успешной оплаты (триггер):
-update PremiumSubscriptions set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE where id = <subscription id>;
+create procedure CreatePaymentForMonth(subscription_id int, status enum('failed', 'successful'), transaction_id varchar(100))
+begin
+    call CreatePayment(
+        subscription_id, 
+        (select monthly_payment_dollars from Tariffs where id = (
+            select id_tariff from PremiumSubscriptions where id = subscription_id
+        )),
+        status,
+        transaction_id
+    );
+
+    -- insert into Payments (subscription_id, timestamp, status, sum, transaction_id)
+    -- select subscription_id, CURRENT_TIMESTAMP(), status, Tariffs.monthly_payment_dollars, transaction_id 
+    -- from Tariffs where id = (
+    --     select id_tariff from PremiumSubscriptions where id = p_subscription_id
+    -- );
+end//
 
 
 -- Просмотреть все жалобы:
