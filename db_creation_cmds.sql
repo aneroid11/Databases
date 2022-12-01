@@ -112,7 +112,7 @@ create table Likes (
     artist_id int,
     track_id int not null,
     
-    -- самолайк разрешён
+    -- check for self-like
 
     primary key(id),
     foreign key(artist_id) references Artists(id) on update cascade on delete set null,

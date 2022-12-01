@@ -145,6 +145,7 @@ begin
 end//
 
 
+-- Проверка на саморепорт
 create procedure CheckSelfReportProc(report_type enum('Tracks', 'Artists'), author_id int, object_id int)
 begin
     if report_type = "Artists" and author_id = object_id then
@@ -153,17 +154,36 @@ begin
     end if;
 end//
 
-
--- Проверка на саморепорт
 create trigger CheckSelfReportIns before insert on Reports
 for each row
 begin
     call CheckSelfReportProc(new.report_type, new.author_id, new.object_id);
 end//
 
-
 create trigger CheckSelfReportUpd before update on Reports
 for each row
 begin
     call CheckSelfReportProc(new.report_type, new.author_id, new.object_id);
+end//
+
+
+-- проверка на самолайк
+create procedure CheckSelfLikeProc(track_id int, author_id int)
+begin
+    if author_id = (select artist_id from Tracks where id = track_id) then
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Self-like is not permitted!';
+    end if;
+end//
+
+create trigger CheckSelfLikeIns before insert on Likes
+for each row
+begin
+    call CheckSelfLikeProc(new.track_id, new.artist_id);
+end//
+
+create trigger CheckSelfLikeUpd before update on Likes
+for each row
+begin
+    call CheckSelfLikeProc(new.track_id, new.artist_id);
 end//
