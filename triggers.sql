@@ -143,3 +143,27 @@ begin
         where id = new.subscription_id;
     end if;
 end//
+
+
+create procedure CheckSelfReportProc(report_type enum('Tracks', 'Artists'), author_id int, object_id int)
+begin
+    if report_type = "Artists" and author_id = object_id then
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Self-report is not permitted!';
+    end if;
+end//
+
+
+-- Проверка на саморепорт
+create trigger CheckSelfReportIns before insert on Reports
+for each row
+begin
+    call CheckSelfReportProc(new.report_type, new.author_id, new.object_id);
+end//
+
+
+create trigger CheckSelfReportUpd before update on Reports
+for each row
+begin
+    call CheckSelfReportProc(new.report_type, new.author_id, new.object_id);
+end//

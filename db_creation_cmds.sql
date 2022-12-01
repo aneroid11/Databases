@@ -105,6 +105,7 @@ create table Reports (
     foreign key(author_id) references Artists(id) on update cascade on delete cascade
 );
 
+
 Лайки:
 create table Likes (
     id int not null auto_increment,
