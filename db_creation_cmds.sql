@@ -170,12 +170,14 @@ create table Comments (
     foreign key(track_id) references Tracks(id) on delete cascade on update cascade
 );
 
-Плейлисты:
+-- Плейлисты:
 create table Playlists (
     id int not null auto_increment,
     title varchar(100) not null,
     artist_id int not null,
 
+    -- unique(title, artist_id), -- soundcloud allows for repeating playlist names
+    
     primary key(id),
     foreign key(artist_id) references Artists(id) on delete cascade on update cascade
 );

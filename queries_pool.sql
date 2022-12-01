@@ -1,6 +1,6 @@
---ЗАПРОСЫ:
+-- ЗАПРОСЫ:
 
---Процедура для логирования:
+-- Процедура для логирования:
 
 delimiter //
 
@@ -11,13 +11,6 @@ end//
 
 
 -- Регистрация артиста:
-
-id int not null auto_increment,
-email varchar(255) not null unique,
-password_hash varchar(255) not null,
-nickname varchar(100) not null unique,
-date_of_birth date,
-gender enum('male', 'female', 'other') not null,
 
 create procedure RegisterArtist(email varchar(255), password_hash varchar(255), nickname varchar(100), date_of_birth date, gender enum('male', 'female', 'other'))
 begin
@@ -54,13 +47,13 @@ update Artists set nickname = <nickname> where id = <artist id>
 
 
 -- Удалить аккаунт артиста:
-create procedure DeleteArtistAccount(id int)
+create procedure DeleteArtistAccount(artist_id int)
 begin
-    delete from Artists where Artists.id = id;
+    delete from Artists where id = artist_id;
     
     -- delete all orphaned PremiumSubscriptions and CardDetails:
-    delete from PremiumSubscriptions where PremiumSubscriptions.id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);    
-    delete from CardDetails where CardDetails.id not in (select card_details_id from Artists where card_details_id is not null);
+    delete from PremiumSubscriptions where id not in (select premium_subscription_id from Artists where premium_subscription_id is not null);    
+    delete from CardDetails where id not in (select card_details_id from Artists where card_details_id is not null);
     -- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'delete');
 end//
 
@@ -137,13 +130,13 @@ update Playlists set title = <new title> where id = <playlist id>;
 delete from Playlists where id = <playlist id>;
 
 -- Добавить трек <track id> в плейлист <playlist id>:
-create procedure AddTrack(track_id int, playlist_id int)
+create procedure AddTrackToPlaylist(track_id int, playlist_id int)
 begin
     insert into TracksToPlaylists (track_id, playlist_id) values (track_id, playlist_id);
 end//
 
-Удалить трек <track id> из плейлиста <playlist id>:
-create or replace procedure DeleteFromPlaylist(p_track_id int, p_playlist_id int)
+-- Удалить трек <track id> из плейлиста <playlist id>:
+create procedure DeleteFromPlaylist(p_track_id int, p_playlist_id int)
 begin
     -- delete from TracksToPlaylists where track_id = track_id and playlist_id = playlist_id; -- this will delete all TracksToPlaylists
     delete from TracksToPlaylists where track_id = p_track_id and playlist_id = p_playlist_id;
@@ -156,58 +149,111 @@ from TracksToPlaylists
 inner join Tracks 
 on Tracks.id = TracksToPlaylists.track_id;
 
-Просмотреть все треки в плейлисте <playlist id>:
+-- Просмотреть все треки в плейлисте <playlist id>:
 select * from TracksPlaylistsInfo where playlist_id = <playlist id>;
 
-Создать альбом <title>, <release date> от <artist id>:
-insert into Playlists (title, artist_id) values (<title>, <artist id>);
-insert into Albums values (last_inserted_id(), <release date>);
+-- Создать альбом <title>, <release date> от <artist id>:
+create procedure CreateAlbum(title varchar(100), artist_id int, release_date date)
+begin
+    insert into Playlists (title, artist_id) values (title, artist_id);
+    
+    if row_count() > 0 then
+        -- previous insert was successful
+        insert into Albums values (last_insert_id(), release_date);
+    end if;
+end//
 
-Вьюшка для информации об альбомах:
+
+-- Вьюшка для информации об альбомах:
 create view AlbumsInfo as 
 select Albums.id, Albums.release_date, Playlists.title, Artists.nickname as author_name 
 from Albums 
 inner join Playlists on Albums.id = Playlists.id 
 inner join Artists on Playlists.artist_id = Artists.id;
 
-Просмотреть информацию об альбоме:
+-- Просмотреть информацию об альбоме:
 select * from AlbumsInfo where id = <album id>;
 
-Удалить альбом:
-delete from Playlists where id = <album id>;
+-- Удалить плейлист/альбом:
+create procedure DeletePlaylist(playlist_id int)
+begin
+    delete from Playlists where id = playlist_id;
+end//
 
-Посмотреть общую продолжительность треков для каждого артиста:
-select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
-from Tracks 
-inner join Artists on Artists.id = Tracks.artist_id 
-group by artist_id;
+-- Посмотреть общую продолжительность треков для каждого артиста:
+create procedure TracksTotalLength()
+begin
+    select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
+    from Tracks 
+    inner join Artists on Artists.id = Tracks.artist_id 
+    group by artist_id;
+end//
 
-Посмотреть общую продолжительность треков для отдельного артиста:
-select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
-from Tracks 
-inner join Artists on Artists.id = Tracks.artist_id 
-where artist_id = <artist id>;
+-- Посмотреть общую продолжительность треков для отдельного артиста:
+create procedure ArtistTracksTotalLength(p_artist_id int)
+begin
+    -- why is this not working when in procedure, but working when not?
+    select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id  
+    -- select sum(Tracks.length_seconds) total_tracks_time
+    from Tracks 
+    inner join Artists on Artists.id = Tracks.artist_id 
+    where artist_id = p_artist_id
+    -- doesn't work without group by (in procedure)
+    group by artist_id;
+end//
 
-Количество лайков на треке:
-select count(id) num_of_likes from Likes where track_id = <track id>;
 
-Посмотреть топ-10 самых залайканных треков:
-select Tracks.id, Tracks.title, count(Likes.id) as likes_count, 
+-- Количество лайков на треке:
+create procedure LikesOnTrack(p_track_id int)
+begin
+    select count(id) num_of_likes from Likes where track_id = p_track_id;
+end//
+
+
+-- Посмотреть топ-10 самых залайканных треков:
+create procedure TopLikedTracks(num_of_tracks int)
+begin
+    select Tracks.id, Tracks.title, count(Likes.id) as likes_count, 
     case
         when count(Likes.id) > 2 then "superstar"
         else ""
     end as commentary
-from Likes 
-inner join Tracks on Tracks.id = Likes.track_id 
-group by Likes.track_id 
-order by likes_count desc 
-limit 10;
+    from Likes 
+    inner join Tracks on Tracks.id = Likes.track_id 
+    group by Likes.track_id 
+    order by likes_count desc 
+    limit num_of_tracks;
+end//
 
-Приобрести премиум-подписку:
-insert into CardDetails (first_name, last_name, card_number, expiration) values (<first name>, <last name>, <card number>, <expiration date>);
-update Artists set card_details_id = last_inserted_id() where id = <artist id>; -- а что, если инсерт зафейлился? например, card_number уже существует.
 
+
+
+
+-- отвязать данные карты у пользователя:
+create procedure DeattachCardDetails(artist_id int)
+begin
+    delete from CardDetails where id = (select card_details_id from Artists where id = artist_id);
+end//
+
+
+-- привязать данные карты к пользователю:
+create procedure AttachCardDetails(artist_id int, first_name varchar(60), last_name varchar(80), card_number varchar(16), expiration date)
+begin
+    -- delete previous card details
+    call DeattachCardDetails(artist_id);
+    
+    insert into CardDetails (first_name, last_name, card_number, expiration) values (first_name, last_name, card_number, expiration);
+    
+    if row_count() > 0 then
+        -- previous insert was successful
+        update Artists set card_details_id = last_insert_id() where id = artist_id;
+    end if;
+end//
+
+
+-- Приобрести премиум-подписку:
 insert into PremiumSubscriptions (start_datetime, end_datetime, active, id_tariff) values (<current timestamp>, <current timestamp>, FALSE, <tariff id>);
+
 
 insert into Payments (subscription_id, timestamp, status, sum, transaction_id) 
 select last_insert_id(), <current timestamp>, 'successful', Tariffs.monthly_payment_dollars 
@@ -216,16 +262,15 @@ from Tariffs where id = <tariff id>;
 -- после успешной оплаты:
 update PremiumSubscriptions set end_datetime = DATE_ADD(end_datetime, interval 1 month), active = TRUE where id = <subscription id>;
 
-Просмотреть все жалобы:
+
+-- Просмотреть все жалобы:
 select * from Reports;
 
-Просмотреть жалобы на пользователя <user id>:
+-- Просмотреть жалобы на пользователя <user id>:
 select * from Reports where object_id = <user id> and report_type = "Artists";
 
-Просмотреть жалобы на трек <track id>:
+-- Просмотреть жалобы на трек <track id>:
 select * from Reports where object_id = <track id> and report_type = 'Tracks';
 
-Просмотреть действия пользователя:
+-- Просмотреть действия пользователя:
 select * from Actions where user_id = <user id> order by timestamp;
-
-
