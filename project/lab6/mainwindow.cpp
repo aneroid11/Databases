@@ -1,10 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "startingpage.h"
-#include "signuppage.h"
-
 #include <QPushButton>
+
+const int STARTING_PAGE_ID = 0;
+const int SIGNIN_ID = 1;
+const int SIGNUP_ID = 2;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,4 +17,14 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(SIGNIN_ID);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }

@@ -10,6 +10,18 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -17,30 +29,42 @@
    <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>100</y>
-      <width>671</width>
-      <height>321</height>
+      <x>0</x>
+      <y>0</y>
+      <width>800</width>
+      <height>600</height>
      </rect>
     </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="StartingPage" name="page_2"/>
-    <widget class="SignUpPage" name="page"/>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>20</y>
-      <width>76</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>text label</string>
-    </property>
+    <widget class="QWidget" name="page">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>160</y>
+        <width>411</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>page_1_push_button</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>170</y>
+        <width>351</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>page_2_push_button</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -55,20 +79,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>SignUpPage</class>
-   <extends>QWidget</extends>
-   <header>signuppage.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>StartingPage</class>
-   <extends>QWidget</extends>
-   <header>startingpage.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
