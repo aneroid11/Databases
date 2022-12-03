@@ -19,6 +19,12 @@ private slots:
 
     void on_signInButton_clicked();
 
+    void on_signUpPageButton_clicked();
+
+    void on_signUpButton_clicked();
+
+    void on_submitButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
