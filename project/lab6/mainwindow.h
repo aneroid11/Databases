@@ -16,7 +16,6 @@ public:
     ~MainWindow();
 
 private slots:
-
     void on_signInButton_clicked();
 
     void on_signUpPageButton_clicked();
@@ -25,7 +24,11 @@ private slots:
 
     void on_submitButton_clicked();
 
+    void on_stackedWidget_currentChanged(int index);
+
 private:
+    void artistPageInit();
+
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 
 #include <QPushButton>
+#include <QDebug>
+#include <QMessageBox>
 
 const int STARTING_PAGE_ID = 0;
 const int SIGNIN_ID = 1;
@@ -39,7 +41,23 @@ void MainWindow::on_signUpButton_clicked()
 
 void MainWindow::on_submitButton_clicked()
 {
-    srand(time(nullptr));
-    int id[3] = { ADMIN_ACC_PAGE_ID, ARTIST_ACC_PAGE_ID, MODERATOR_ACC_PAGE_ID };
-    ui->stackedWidget->setCurrentIndex(id[rand() % 3]);
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::artistPageInit()
+{
+    ui->label_3->setText(QString("artist") + QString::number(rand()));
+}
+
+
+void MainWindow::on_stackedWidget_currentChanged(int index)
+{
+    qDebug() << "on_stackedWidget_currentChanged()\n";
+
+    switch (index)
+    {
+    case ARTIST_ACC_PAGE_ID:
+        artistPageInit();
+        break;
+    }
 }
