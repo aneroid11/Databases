@@ -19,12 +19,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_signInButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(SIGNIN_ID);
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
