@@ -16,17 +16,34 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_signInButton_clicked();
+    void on_starting_signInButton_clicked();
 
-    void on_signUpPageButton_clicked();
+    void on_starting_signUpButton_clicked();
 
-    void on_signUpButton_clicked();
+    void on_signUp_signUpButton_clicked();
 
-    void on_submitButton_clicked();
+    void on_signIn_signInButton_clicked();
 
     void on_stackedWidget_currentChanged(int index);
 
+    void on_artistAcc_signOffButton_clicked();
+
+    void on_artistAcc_deleteAccountButton_clicked();
+
+    void on_artistAcc_accountButton_clicked();
+
+    void on_artistAccDetails_cancelButton_clicked();
+
+    void on_artistAccDetails_saveChangesButton_clicked();
+
+    void on_artistAcc_allTracksButton_clicked();
+
+    void on_allTracks_exitButton_clicked();
+
 private:
+    bool areYouSure();
+    void showMsg(QString msg);
+
     void artistPageInit();
 
     Ui::MainWindow *ui;

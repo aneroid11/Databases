@@ -5,12 +5,16 @@
 #include <QDebug>
 #include <QMessageBox>
 
-const int STARTING_PAGE_ID = 0;
-const int SIGNIN_ID = 1;
-const int SIGNUP_ID = 2;
-const int ARTIST_ACC_PAGE_ID = 3;
-const int MODERATOR_ACC_PAGE_ID = 4;
-const int ADMIN_ACC_PAGE_ID = 5;
+enum {
+    STARTING_PAGE_ID,
+    SIGNIN_PAGE_ID,
+    SIGNUP_PAGE_ID,
+    ARTIST_ACC_PAGE_ID,
+    MODERATOR_ACC_PAGE_ID,
+    ADMIN_ACC_PAGE_ID,
+    ARTIST_ACC_DETAILS_PAGE_ID,
+    ALL_TRACKS_PAGE_ID
+};
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,31 +28,47 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_signInButton_clicked()
+bool MainWindow::areYouSure()
 {
-    ui->stackedWidget->setCurrentIndex(SIGNIN_ID);
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Are you sure?", "Do you really want to do that?",
+                                  QMessageBox::Yes|QMessageBox::No);
+    return reply == QMessageBox::Yes;
 }
 
-void MainWindow::on_signUpPageButton_clicked()
+void MainWindow::showMsg(QString msg)
+{
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Message");
+    msgBox.setText(msg);
+    msgBox.exec();
+}
+
+void MainWindow::on_starting_signInButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(SIGNIN_PAGE_ID);
+}
+
+void MainWindow::on_starting_signUpButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(SIGNUP_PAGE_ID);
+}
+
+void MainWindow::on_signUp_signUpButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
 
-void MainWindow::on_signUpButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(SIGNUP_ID);
-}
-
-void MainWindow::on_submitButton_clicked()
+void MainWindow::on_signIn_signInButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }
 
 void MainWindow::artistPageInit()
 {
-    ui->label_3->setText(QString("artist") + QString::number(rand()));
+    ui->artistAcc_nicknameLabel->setText(QString("artist") + QString::number(rand()));
 }
-
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
@@ -60,4 +80,46 @@ void MainWindow::on_stackedWidget_currentChanged(int index)
         artistPageInit();
         break;
     }
+}
+
+void MainWindow::on_artistAcc_signOffButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
+}
+
+void MainWindow::on_artistAcc_deleteAccountButton_clicked()
+{
+    if (areYouSure()) {
+        ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
+
+        showMsg("Your account was deleted");
+    }
+}
+
+void MainWindow::on_artistAcc_accountButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+}
+
+void MainWindow::on_artistAccDetails_cancelButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::on_artistAccDetails_saveChangesButton_clicked()
+{
+    if (areYouSure())
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    }
+}
+
+void MainWindow::on_artistAcc_allTracksButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ALL_TRACKS_PAGE_ID);
+}
+
+void MainWindow::on_allTracks_exitButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }
