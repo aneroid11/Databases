@@ -293,12 +293,6 @@ begin
         status,
         transaction_id
     );
-
-    -- insert into Payments (subscription_id, timestamp, status, sum, transaction_id)
-    -- select subscription_id, CURRENT_TIMESTAMP(), status, Tariffs.monthly_payment_dollars, transaction_id 
-    -- from Tariffs where id = (
-    --     select id_tariff from PremiumSubscriptions where id = p_subscription_id
-    -- );
 end//
 
 

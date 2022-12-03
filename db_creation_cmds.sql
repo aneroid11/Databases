@@ -96,10 +96,8 @@ create table Reports (
     author_id int not null,
     report_type enum('Tracks', 'Artists') not null,
     object_id int not null,
-
-    -- check (not (report_type = 'Artists' and object_id = author_id))  -- нельзя репортнуть себя
-    -- и такой чек нельзя использовать вместе с on update ... или on delete ...
-    -- это нужно проверять с помощью триггеров. или делать referential actions с помощью триггеров.
+    
+    -- check for self-report
 
     primary key(id),
     foreign key(author_id) references Artists(id) on update cascade on delete cascade
