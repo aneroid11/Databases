@@ -40,6 +40,16 @@ private slots:
 
     void on_allTracks_exitButton_clicked();
 
+    void on_artistAcc_myTracksButton_clicked();
+
+    void on_myTracks_backButton_clicked();
+
+    void on_myTracks_listenButton_clicked();
+
+    void on_myTracks_deleteButton_clicked();
+
+    void on_myTracks_detailsButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);

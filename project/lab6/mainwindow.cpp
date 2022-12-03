@@ -13,7 +13,9 @@ enum {
     MODERATOR_ACC_PAGE_ID,
     ADMIN_ACC_PAGE_ID,
     ARTIST_ACC_DETAILS_PAGE_ID,
-    ALL_TRACKS_PAGE_ID
+    ALL_TRACKS_PAGE_ID,
+    MY_TRACKS_PAGE_ID,
+    MY_TRACK_EDIT_PAGE_ID
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -122,4 +124,33 @@ void MainWindow::on_artistAcc_allTracksButton_clicked()
 void MainWindow::on_allTracks_exitButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::on_artistAcc_myTracksButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
+}
+
+void MainWindow::on_myTracks_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::on_myTracks_listenButton_clicked()
+{
+    showMsg("...wonderful music plays...");
+}
+
+void MainWindow::on_myTracks_deleteButton_clicked()
+{
+    if (areYouSure())
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        showMsg("The track was deleted");
+    }
+}
+
+void MainWindow::on_myTracks_detailsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(MY_TRACK_EDIT_PAGE_ID);
 }
