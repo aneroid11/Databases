@@ -70,6 +70,10 @@ private slots:
 
     void on_reports_deleteButton_clicked();
 
+    void on_adminAcc_artistsButton_clicked();
+
+    void on_adminAcc_tracksButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
@@ -77,6 +81,8 @@ private:
     void artistPageInit();
     void adminPageInit();
     void reportsPageInit();
+    void artistsPageInit();
+    void allTracksPageInit();
 
     void deleteCurrAcc();
 

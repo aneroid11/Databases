@@ -8,19 +8,20 @@
 #include <QList>
 
 enum {
-    STARTING_PAGE_ID,
-    SIGNIN_PAGE_ID,
-    SIGNUP_PAGE_ID,
-    ARTIST_ACC_PAGE_ID,
-    MODERATOR_ACC_PAGE_ID,
-    ADMIN_ACC_PAGE_ID,
-    ARTIST_ACC_DETAILS_PAGE_ID,
-    ALL_TRACKS_PAGE_ID,
-    MY_TRACKS_PAGE_ID,
-    MY_TRACK_EDIT_PAGE_ID,
-    MY_PLAYLISTS_PAGE_ID,
-    CREATE_ADMIN_PAGE_ID,
-    REPORTS_PAGE_ID
+    STARTING_PAGE_ID = 0,
+    SIGNIN_PAGE_ID = 1,
+    SIGNUP_PAGE_ID = 2,
+    ARTIST_ACC_PAGE_ID = 3,
+    MODERATOR_ACC_PAGE_ID = 4,
+    ADMIN_ACC_PAGE_ID = 5,
+    ARTIST_ACC_DETAILS_PAGE_ID = 6,
+    ALL_TRACKS_PAGE_ID = 7,
+    MY_TRACKS_PAGE_ID = 8,
+    MY_TRACK_EDIT_PAGE_ID = 9,
+    MY_PLAYLISTS_PAGE_ID = 10,
+    CREATE_ADMIN_PAGE_ID = 11,
+    REPORTS_PAGE_ID = 12,
+    ARTISTS_PAGE_ID = 13
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -186,6 +187,21 @@ void MainWindow::reportsPageInit()
     fillReportsList();
 }
 
+void MainWindow::artistsPageInit()
+{
+
+}
+
+void MainWindow::allTracksPageInit()
+{
+    const QString role = db->getCurrUserRole();
+
+    bool admRole = role == "admin";
+    ui->allTracks_likeButton->setDisabled(admRole);
+    ui->allTracks_commentButton->setDisabled(admRole);
+    ui->allTracks_reportButton->setDisabled(admRole);
+}
+
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
     qDebug() << "on_stackedWidget_currentChanged()\n";
@@ -201,6 +217,11 @@ void MainWindow::on_stackedWidget_currentChanged(int index)
     case REPORTS_PAGE_ID:
         reportsPageInit();
         break;
+    case ARTISTS_PAGE_ID:
+        artistsPageInit();
+        break;
+    case ALL_TRACKS_PAGE_ID:
+        allTracksPageInit();
     }
 }
 
@@ -259,7 +280,14 @@ void MainWindow::on_artistAcc_allTracksButton_clicked()
 
 void MainWindow::on_allTracks_exitButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    if (db->getCurrUserRole() == "admin")
+    {
+        ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    }
 }
 
 void MainWindow::on_artistAcc_myTracksButton_clicked()
@@ -392,4 +420,15 @@ void MainWindow::on_reports_deleteButton_clicked()
     fillReportsList();
 
     showMsg("The report was deleted!");
+}
+
+void MainWindow::on_adminAcc_artistsButton_clicked()
+{
+    // show the list of artists
+    ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+}
+
+void MainWindow::on_adminAcc_tracksButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ALL_TRACKS_PAGE_ID);
 }
