@@ -167,7 +167,7 @@ void MainWindow::adminPageInit()
     ui->adminAcc_emailLabel->setText(email);
 }
 
-void MainWindow::reportsPageInit()
+void MainWindow::fillReportsList()
 {
     // fill the list of reports
     ui->reports_reportsList->clear();
@@ -179,6 +179,11 @@ void MainWindow::reportsPageInit()
         QString infoStr = QString("%1 - '%2'").arg(rp.id).arg(rp.title);
         ui->reports_reportsList->addItem(infoStr);
     }
+}
+
+void MainWindow::reportsPageInit()
+{
+    fillReportsList();
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -360,13 +365,6 @@ void MainWindow::on_reports_detailsButton_clicked()
     const int rpId = extractIdFromBeginning(currReport);
 
     Report rep = db->getReport(rpId);
-    /*int id;
-    QString title;
-    QString contents;
-    int authorId;
-    QString reportType;
-    int objectId;
-     * */
     QString details =
             QString("Report details:\n\n"
                     "id = %1\n"
@@ -383,4 +381,15 @@ void MainWindow::on_reports_detailsButton_clicked()
             .arg(rep.objectId);
 
     showMsg(details);
+}
+
+void MainWindow::on_reports_deleteButton_clicked()
+{
+    const QString currReport = ui->reports_reportsList->currentItem()->text();
+    const int rpId = extractIdFromBeginning(currReport);
+    db->deleteReport(rpId);
+
+    fillReportsList();
+
+    showMsg("The report was deleted!");
 }

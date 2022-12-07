@@ -46,6 +46,8 @@ public:
     QList<Report> getAllReports();
     Report getReport(int id);
 
+    void deleteReport(int id);
+
 private:
     int numAdmins();
 

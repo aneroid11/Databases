@@ -229,3 +229,10 @@ Report Database::getReport(int id)
 
     return extractReportFromQuery(q);
 }
+
+void Database::deleteReport(int id)
+{
+    QString s = QString("delete from Reports where id = %1;").arg(id);
+    QSqlQuery q;
+    prepareExec(q, s);
+}

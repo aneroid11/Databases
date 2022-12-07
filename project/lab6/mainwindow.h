@@ -68,6 +68,8 @@ private slots:
 
     void on_reports_detailsButton_clicked();
 
+    void on_reports_deleteButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
@@ -77,6 +79,8 @@ private:
     void reportsPageInit();
 
     void deleteCurrAcc();
+
+    void fillReportsList();
 
     int extractIdFromBeginning(QString str);
 
