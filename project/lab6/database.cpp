@@ -131,3 +131,19 @@ QString Database::getCurrUserEmail()
     q.next();
     return q.value(0).toString();
 }
+
+void Database::deleteAccount(int id)
+{
+    if (currUserRole == "artist")
+    {
+        QString qStr = QString("call DeleteArtistAccount(%1);").arg(id);
+        QSqlQuery q;
+        prepareExec(q, qStr);
+    }
+    else if (currUserRole == "admin")
+    {
+        QString qStr = QString("delete from Users where id = %1;").arg(id);
+        QSqlQuery q;
+        prepareExec(q, qStr);
+    }
+}

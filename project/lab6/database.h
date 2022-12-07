@@ -27,6 +27,9 @@ public:
     QString getCurrArtistNickname();
     QString getCurrUserEmail();
 
+    void deleteAccount(int id);
+    void deleteCurrAccount() { deleteAccount(currUserId); }
+
 private:
     void prepareExec(QSqlQuery& q, QString queryStr);
 

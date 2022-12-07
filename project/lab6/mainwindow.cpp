@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->stackedWidget->setCurrentIndex(0);
 
     db = new Database();
 }
@@ -135,7 +136,7 @@ void MainWindow::on_signIn_signInButton_clicked()
         return;
     }
 
-    showMsg("Signed in successfully!");
+    //showMsg("Signed in successfully!");
 
     const QString role = db->getCurrUserRole();
     int newIndex;
@@ -187,6 +188,16 @@ void MainWindow::on_artistAcc_signOffButton_clicked()
 void MainWindow::on_artistAcc_deleteAccountButton_clicked()
 {
     if (areYouSure()) {
+        try
+        {
+            db->deleteCurrAccount();
+        }
+        catch (QString msg)
+        {
+            showMsg(msg);
+            return;
+        }
+
         ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 
         showMsg("Your account was deleted");
