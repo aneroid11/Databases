@@ -130,6 +130,13 @@
         <height>31</height>
        </rect>
       </property>
+      <property name="minimumDate">
+       <date>
+        <year>1900</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
       <property name="displayFormat">
        <string>dd.MM.yyyy</string>
       </property>

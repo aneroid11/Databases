@@ -113,7 +113,6 @@ void MainWindow::on_signUp_signUpButton_clicked()
 void MainWindow::on_signIn_signInButton_clicked()
 {
 
-
     //ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }
 
