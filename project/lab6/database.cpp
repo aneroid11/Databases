@@ -48,6 +48,19 @@ void Database::prepareExec(QSqlQuery& q, QString queryStr)
     }
 }
 
+Report Database::extractReportFromQuery(const QSqlQuery &q)
+{
+    Report newReport;
+    newReport.id = q.value(0).toInt();
+    newReport.title = q.value(1).toString();
+    qDebug() << newReport.title;
+    newReport.contents = q.value(2).toString();
+    newReport.authorId = q.value(3).toInt();
+    newReport.reportType = q.value(4).toString();
+    newReport.objectId = q.value(5).toInt();
+    return newReport;
+}
+
 void Database::signUpArtist(QString email,
                             QString passwordHash,
                             QString nickname,
@@ -190,16 +203,29 @@ QList<Report> Database::getAllReports()
 
     while (q.next())
     {
-        Report newReport;
+        /*Report newReport;
         newReport.id = q.value(0).toInt();
         newReport.title = q.value(1).toString();
         qDebug() << newReport.title;
         newReport.contents = q.value(2).toString();
         newReport.authorId = q.value(3).toInt();
         newReport.reportType = q.value(4).toString();
-        newReport.objectId = q.value(5).toInt();
-        ret.push_back(newReport);
+        newReport.objectId = q.value(5).toInt();*/
+        ret.push_back(extractReportFromQuery(q));
     }
 
     return ret;
+}
+
+Report Database::getReport(int id)
+{
+    QString s = QString("select * from Reports where id = %1;").arg(id);
+    QSqlQuery q;
+    prepareExec(q, s);
+    if (!q.next())
+    {
+        throw QString("No report with such id!");
+    }
+
+    return extractReportFromQuery(q);
 }

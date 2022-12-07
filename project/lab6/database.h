@@ -44,11 +44,14 @@ public:
     void createAdmin(QString email, QString password);
 
     QList<Report> getAllReports();
+    Report getReport(int id);
 
 private:
     int numAdmins();
 
     void prepareExec(QSqlQuery& q, QString queryStr);
+
+    Report extractReportFromQuery(const QSqlQuery& query);
 
     QSqlDatabase db;
 
