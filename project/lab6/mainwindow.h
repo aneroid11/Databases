@@ -54,13 +54,17 @@ private slots:
 
     void on_adminAcc_signOffButton_clicked();
 
-    void on_pushButton_deleteMyAccButton_clicked();
+    void on_adminAcc_deleteMyAccButton_clicked();
 
     void on_adminAcc_createAdminButton_clicked();
 
     void on_createAdmin_cancelButton_clicked();
 
     void on_createAdmin_createButton_clicked();
+
+    void on_adminAcc_reportsButton_clicked();
+
+    void on_reports_backButton_clicked();
 
 private:
     bool areYouSure();

@@ -18,7 +18,8 @@ enum {
     MY_TRACKS_PAGE_ID,
     MY_TRACK_EDIT_PAGE_ID,
     MY_PLAYLISTS_PAGE_ID,
-    CREATE_ADMIN_PAGE_ID
+    CREATE_ADMIN_PAGE_ID,
+    REPORTS_PAGE_ID
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -273,7 +274,7 @@ void MainWindow::on_adminAcc_signOffButton_clicked()
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
 
-void MainWindow::on_pushButton_deleteMyAccButton_clicked()
+void MainWindow::on_adminAcc_deleteMyAccButton_clicked()
 {
     deleteCurrAcc();
 }
@@ -315,4 +316,14 @@ void MainWindow::on_createAdmin_createButton_clicked()
 
     ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
     showMsg("New admin created!");
+}
+
+void MainWindow::on_adminAcc_reportsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(REPORTS_PAGE_ID);
+}
+
+void MainWindow::on_reports_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
 }

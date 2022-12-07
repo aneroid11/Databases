@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>11</number>
+     <number>12</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -399,7 +399,7 @@
        <string>Sign off</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_deleteMyAccButton">
+     <widget class="QPushButton" name="adminAcc_deleteMyAccButton">
       <property name="geometry">
        <rect>
         <x>551</x>
@@ -423,6 +423,19 @@
       </property>
       <property name="text">
        <string>Create admin</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="adminAcc_reportsButton">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>60</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Reports</string>
       </property>
      </widget>
     </widget>
@@ -985,6 +998,57 @@
       </property>
       <property name="text">
        <string>Cancel</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="reportsPage">
+     <widget class="QListWidget" name="reports_reportsList">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>411</width>
+        <height>361</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="reports_backButton">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>50</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Back</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="reports_deleteButton">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>100</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="reports_detailsButton">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>150</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Details</string>
       </property>
      </widget>
     </widget>
