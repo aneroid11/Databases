@@ -15,7 +15,8 @@ enum {
     ARTIST_ACC_DETAILS_PAGE_ID,
     ALL_TRACKS_PAGE_ID,
     MY_TRACKS_PAGE_ID,
-    MY_TRACK_EDIT_PAGE_ID
+    MY_TRACK_EDIT_PAGE_ID,
+    MY_PLAYLISTS_PAGE_ID
 };
 
 MainWindow::MainWindow(QWidget *parent)
