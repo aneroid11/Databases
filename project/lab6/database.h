@@ -20,10 +20,15 @@ public:
     void signInUser(QString email,
                     QString password);
 
+    QString getCurrUserRole() const { return currUserRole; }
+
 private:
     void prepareExec(QSqlQuery& q, QString queryStr);
 
     QSqlDatabase db;
+
+    QString currUserRole = "null";
+    int currUserId = -1;
 };
 
 #endif // DATABASE_H

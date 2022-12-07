@@ -52,7 +52,7 @@ void Database::signUpArtist(QString email,
 
 void Database::signInUser(QString email, QString password)
 {
-    QString queryStr = QString("select id from Users where email = '%1' and password_hash = '%2';")
+    QString queryStr = QString("select id, role from Users where email = '%1' and password_hash = '%2';")
             .arg(email)
             .arg(sha256hash(password));
 
@@ -70,6 +70,9 @@ void Database::signInUser(QString email, QString password)
         qDebug() << q.value(0).toInt() << "\n";
     }
     const int userId = q.value(0).toInt();
+    const QString userRole = q.value(1).toString();
+    currUserId = userId;
+    currUserRole = userRole;
 
     queryStr = QString("set @curr_session_user_id = %1;").arg(userId);
     prepareExec(q, queryStr);

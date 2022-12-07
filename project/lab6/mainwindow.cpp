@@ -136,7 +136,19 @@ void MainWindow::on_signIn_signInButton_clicked()
     }
 
     showMsg("Signed in successfully!");
-    //ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+
+    const QString role = db->getCurrUserRole();
+    int newIndex;
+
+    if (role == "artist") { newIndex = ARTIST_ACC_PAGE_ID; }
+    else if (role == "admin") { newIndex = ADMIN_ACC_PAGE_ID; }
+    else
+    {
+        showMsg(QString("What is this role: %1?").arg(role));
+        return;
+    }
+
+    ui->stackedWidget->setCurrentIndex(newIndex);
 }
 
 void MainWindow::artistPageInit()
