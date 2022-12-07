@@ -20,9 +20,12 @@ public:
     void signInUser(QString email,
                     QString password);
 
+    void signOffCurrUser();
+
     QString getCurrUserRole() const { return currUserRole; }
 
     QString getCurrArtistNickname();
+    QString getCurrUserEmail();
 
 private:
     void prepareExec(QSqlQuery& q, QString queryStr);

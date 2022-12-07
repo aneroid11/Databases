@@ -373,17 +373,30 @@
      </widget>
     </widget>
     <widget class="QWidget" name="adminAccPage">
-     <widget class="QLabel" name="adminAcc_label_5">
+     <widget class="QLabel" name="adminAcc_emailLabel">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>150</y>
-        <width>76</width>
+        <x>10</x>
+        <y>20</y>
+        <width>151</width>
         <height>20</height>
        </rect>
       </property>
       <property name="text">
-       <string>admin</string>
+       <string>email here</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="adminAcc_signOffButton">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>20</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sign off</string>
       </property>
      </widget>
     </widget>

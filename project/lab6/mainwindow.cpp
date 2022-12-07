@@ -157,6 +157,12 @@ void MainWindow::artistPageInit()
     ui->artistAcc_nicknameLabel->setText(nickname);
 }
 
+void MainWindow::adminPageInit()
+{
+    const QString email = db->getCurrUserEmail();
+    ui->adminAcc_emailLabel->setText(email);
+}
+
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
     qDebug() << "on_stackedWidget_currentChanged()\n";
@@ -166,11 +172,15 @@ void MainWindow::on_stackedWidget_currentChanged(int index)
     case ARTIST_ACC_PAGE_ID:
         artistPageInit();
         break;
+    case ADMIN_ACC_PAGE_ID:
+        adminPageInit();
+        break;
     }
 }
 
 void MainWindow::on_artistAcc_signOffButton_clicked()
 {
+    db->signOffCurrUser();
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
 
@@ -238,4 +248,10 @@ void MainWindow::on_myTracks_deleteButton_clicked()
 void MainWindow::on_myTracks_detailsButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(MY_TRACK_EDIT_PAGE_ID);
+}
+
+void MainWindow::on_adminAcc_signOffButton_clicked()
+{
+    db->signOffCurrUser();
+    ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }

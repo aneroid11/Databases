@@ -52,11 +52,14 @@ private slots:
 
     void on_myTracks_detailsButton_clicked();
 
+    void on_adminAcc_signOffButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
 
     void artistPageInit();
+    void adminPageInit();
 
     Ui::MainWindow *ui;
 

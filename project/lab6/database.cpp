@@ -94,6 +94,19 @@ void Database::signInUser(QString email, QString password)
     prepareExec(q, queryStr);
 }
 
+void Database::signOffCurrUser()
+{
+    currUserId = -1;
+    currUserRole = QString();
+
+    QString qStr = "set @curr_session_user_id = NULL;";
+    QSqlQuery q;
+    prepareExec(q, qStr);
+
+    qDebug() << currUserId << " is currUserId";
+    qDebug() << currUserRole << " is currUserRole";
+}
+
 QString Database::getCurrArtistNickname()
 {
     if (currUserId < 0 || currUserRole != "artist")
@@ -105,6 +118,16 @@ QString Database::getCurrArtistNickname()
     QSqlQuery q;
     prepareExec(q, qStr);
     q.next();
+    return q.value(0).toString();
+}
 
+QString Database::getCurrUserEmail()
+{
+    if (currUserId < 0) { return QString(); }
+
+    QString qStr = QString("select email from Users where id = %1").arg(currUserId);
+    QSqlQuery q;
+    prepareExec(q, qStr);
+    q.next();
     return q.value(0).toString();
 }
