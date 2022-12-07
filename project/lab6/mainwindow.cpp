@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "sha256.h"
 
 #include <QPushButton>
 #include <QDebug>
@@ -63,12 +64,57 @@ void MainWindow::on_starting_signUpButton_clicked()
 
 void MainWindow::on_signUp_signUpButton_clicked()
 {
+    try
+    {
+        const QString email = ui->signUp_emailLineEdit->text();
+        if (email.isEmpty())
+        {
+            showMsg("Email line is empty!");
+            return;
+        }
+        const QString pwd = ui->signUp_passwordLineEdit->text();
+        if (pwd.isEmpty())
+        {
+            showMsg("Password line is empty!");
+            return;
+        }
+        const QString nickname = ui->signUp_nicknameLineEdit->text();
+        if (nickname.isEmpty())
+        {
+            showMsg("Nickname line is empty!");
+            return;
+        }
+
+        db->signUpArtist(email, sha256hash(pwd), nickname,
+                         ui->signUp_birthDateEdit->date().toString("yyyy-MM-dd"),
+                         ui->signUp_genderComboBox->currentText());
+    }
+    catch (QString msg)
+    {
+        showMsg(msg);
+        return;
+    }
+
+    /*try
+    {
+
+    }
+    catch (const std::exception& exc)
+    {
+        showMsg(QString("Error: ") + exc.what());
+        return;
+    }*/
+
+    showMsg("Signed up successfully!");
+
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
 
 void MainWindow::on_signIn_signInButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+
+
+    //ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }
 
 void MainWindow::artistPageInit()

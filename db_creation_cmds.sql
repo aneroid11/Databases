@@ -11,9 +11,9 @@ create table Users (
     password_hash varchar(255) not null,
     role enum('artist', 'admin', 'moderator') not null,
 
-    check(email REGEXP '(\w|\.)+@[a-z]+\.[a-z]+'),
+    constraint valid_email check(email REGEXP '(\w|\.)+@[a-z]+\.[a-z]+'),
 
-    primary key(idUsers)
+    primary key(id)
 );
 
 Артисты (Artists):

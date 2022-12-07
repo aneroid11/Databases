@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -121,45 +121,6 @@
        <string>Sign up</string>
       </property>
      </widget>
-     <widget class="QTextEdit" name="signUp_emailTextEdit">
-      <property name="geometry">
-       <rect>
-        <x>270</x>
-        <y>100</y>
-        <width>251</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>email (required)</string>
-      </property>
-     </widget>
-     <widget class="QTextEdit" name="signUp_passwordTextEdit">
-      <property name="geometry">
-       <rect>
-        <x>270</x>
-        <y>160</y>
-        <width>251</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>password (required)</string>
-      </property>
-     </widget>
-     <widget class="QTextEdit" name="signUp_nicknameTextEdit">
-      <property name="geometry">
-       <rect>
-        <x>270</x>
-        <y>220</y>
-        <width>251</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>nickname (required)</string>
-      </property>
-     </widget>
      <widget class="QDateEdit" name="signUp_birthDateEdit">
       <property name="geometry">
        <rect>
@@ -222,6 +183,48 @@
       </property>
       <property name="text">
        <string>Gender</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="signUp_passwordLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>160</y>
+        <width>251</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+      <property name="placeholderText">
+       <string>password (required)</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="signUp_emailLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>100</y>
+        <width>251</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>email (required)</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="signUp_nicknameLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>220</y>
+        <width>251</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>nickname (required)</string>
       </property>
      </widget>
     </widget>

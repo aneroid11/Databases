@@ -3,20 +3,17 @@
 
 #include <QSqlDatabase>
 
-class DbConnectException : public std::exception
-{
-public:
-    const char* what() const noexcept
-    {
-        return "Cannot connect to database!";
-    }
-};
-
 class Database
 {
 public:
     Database();
     ~Database();
+
+    void signUpArtist(QString email,
+                      QString passwordHash,
+                      QString nickname,
+                      QString dateOfBirth,
+                      QString gender);
 
 private:
     QSqlDatabase db;

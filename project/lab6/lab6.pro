@@ -19,16 +19,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     database.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    sha256.cpp
 
 HEADERS += \
     database.h \
     mainwindow.h \
+    sha256.h \
     signuppage.h \
     startingpage.h
 
 FORMS += \
     mainwindow.ui
+
+LIBS += -lcrypto++
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
