@@ -32,6 +32,22 @@ Database::~Database()
     }
 }
 
+void Database::prepareExec(QSqlQuery& q, QString queryStr)
+{
+    if (!q.prepare(queryStr))
+    {
+        QSqlError err = q.lastError();
+        qDebug() << err.databaseText() << "\n";
+        throw QString(err.databaseText());
+    }
+    if (!q.exec())
+    {
+        QSqlError err = q.lastError();
+        qDebug() << err.databaseText() << "\n";
+        throw QString(err.databaseText());
+    }
+}
+
 void Database::signUpArtist(QString email,
                             QString passwordHash,
                             QString nickname,
@@ -78,18 +94,17 @@ void Database::signInUser(QString email, QString password)
     prepareExec(q, queryStr);
 }
 
-void Database::prepareExec(QSqlQuery& q, QString queryStr)
+QString Database::getCurrArtistNickname()
 {
-    if (!q.prepare(queryStr))
+    if (currUserId < 0 || currUserRole != "artist")
     {
-        QSqlError err = q.lastError();
-        qDebug() << err.databaseText() << "\n";
-        throw QString(err.databaseText());
+        return QString();
     }
-    if (!q.exec())
-    {
-        QSqlError err = q.lastError();
-        qDebug() << err.databaseText() << "\n";
-        throw QString(err.databaseText());
-    }
+
+    QString qStr = QString("select nickname from Artists where id = %1").arg(currUserId);
+    QSqlQuery q;
+    prepareExec(q, qStr);
+    q.next();
+
+    return q.value(0).toString();
 }

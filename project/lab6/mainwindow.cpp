@@ -153,7 +153,8 @@ void MainWindow::on_signIn_signInButton_clicked()
 
 void MainWindow::artistPageInit()
 {
-    ui->artistAcc_nicknameLabel->setText(QString("artist") + QString::number(rand()));
+    const QString nickname = db->getCurrArtistNickname();
+    ui->artistAcc_nicknameLabel->setText(nickname);
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)

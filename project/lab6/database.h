@@ -22,12 +22,14 @@ public:
 
     QString getCurrUserRole() const { return currUserRole; }
 
+    QString getCurrArtistNickname();
+
 private:
     void prepareExec(QSqlQuery& q, QString queryStr);
 
     QSqlDatabase db;
 
-    QString currUserRole = "null";
+    QString currUserRole = QString();
     int currUserId = -1;
 };
 
