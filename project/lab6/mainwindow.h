@@ -54,12 +54,16 @@ private slots:
 
     void on_adminAcc_signOffButton_clicked();
 
+    void on_pushButton_deleteMyAccButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
 
     void artistPageInit();
     void adminPageInit();
+
+    void deleteCurrAcc();
 
     Ui::MainWindow *ui;
 

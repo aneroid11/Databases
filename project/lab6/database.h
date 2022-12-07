@@ -31,6 +31,8 @@ public:
     void deleteCurrAccount() { deleteAccount(currUserId); }
 
 private:
+    int numAdmins();
+
     void prepareExec(QSqlQuery& q, QString queryStr);
 
     QSqlDatabase db;

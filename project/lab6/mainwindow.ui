@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -397,6 +397,19 @@
       </property>
       <property name="text">
        <string>Sign off</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_deleteMyAccButton">
+      <property name="geometry">
+       <rect>
+        <x>551</x>
+        <y>60</y>
+        <width>201</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete my account</string>
       </property>
      </widget>
     </widget>

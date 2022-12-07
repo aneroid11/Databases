@@ -132,6 +132,15 @@ QString Database::getCurrUserEmail()
     return q.value(0).toString();
 }
 
+int Database::numAdmins()
+{
+    QString qStr = QString("select count(id) from Users where role = 'admin';");
+    QSqlQuery q;
+    prepareExec(q, qStr);
+    q.next();
+    return q.value(0).toInt();
+}
+
 void Database::deleteAccount(int id)
 {
     if (currUserRole == "artist")
@@ -142,8 +151,15 @@ void Database::deleteAccount(int id)
     }
     else if (currUserRole == "admin")
     {
+        if (numAdmins() < 2)
+        {
+            throw QString("Cannot have no admins!");
+        }
+
         QString qStr = QString("delete from Users where id = %1;").arg(id);
         QSqlQuery q;
         prepareExec(q, qStr);
     }
+
+    signOffCurrUser();
 }

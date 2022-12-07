@@ -185,7 +185,7 @@ void MainWindow::on_artistAcc_signOffButton_clicked()
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
 }
 
-void MainWindow::on_artistAcc_deleteAccountButton_clicked()
+void MainWindow::deleteCurrAcc()
 {
     if (areYouSure()) {
         try
@@ -202,6 +202,11 @@ void MainWindow::on_artistAcc_deleteAccountButton_clicked()
 
         showMsg("Your account was deleted");
     }
+}
+
+void MainWindow::on_artistAcc_deleteAccountButton_clicked()
+{
+    deleteCurrAcc();
 }
 
 void MainWindow::on_artistAcc_accountButton_clicked()
@@ -265,4 +270,9 @@ void MainWindow::on_adminAcc_signOffButton_clicked()
 {
     db->signOffCurrUser();
     ui->stackedWidget->setCurrentIndex(STARTING_PAGE_ID);
+}
+
+void MainWindow::on_pushButton_deleteMyAccButton_clicked()
+{
+    deleteCurrAcc();
 }
