@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "database.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -57,5 +59,7 @@ private:
     void artistPageInit();
 
     Ui::MainWindow *ui;
+
+    Database* db;
 };
 #endif // MAINWINDOW_H

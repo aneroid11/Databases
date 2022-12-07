@@ -24,11 +24,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    db = new Database();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete db;
 }
 
 bool MainWindow::areYouSure()
