@@ -4,6 +4,17 @@
 #include <QSqlDatabase>
 #include <QString>
 #include <QSqlQuery>
+#include <QList>
+
+struct Report
+{
+    int id;
+    QString title;
+    QString contents;
+    int authorId;
+    QString reportType;
+    int objectId;
+};
 
 class Database
 {
@@ -31,6 +42,8 @@ public:
     void deleteCurrAccount() { deleteAccount(currUserId); }
 
     void createAdmin(QString email, QString password);
+
+    QList<Report> getAllReports();
 
 private:
     int numAdmins();

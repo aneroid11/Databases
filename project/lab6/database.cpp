@@ -172,3 +172,34 @@ void Database::createAdmin(QString email, QString password)
     QSqlQuery q;
     prepareExec(q, qStr);
 }
+
+/*  int id;
+    QString title;
+    QString contents;
+    int authorId;
+    QString reportType;
+    int objectId;
+ * */
+
+QList<Report> Database::getAllReports()
+{
+    QString s = QString("select * from Reports;");
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<Report> ret;
+
+    while (q.next())
+    {
+        Report newReport;
+        newReport.id = q.value(0).toInt();
+        newReport.title = q.value(1).toString();
+        qDebug() << newReport.title;
+        newReport.contents = q.value(2).toString();
+        newReport.authorId = q.value(3).toInt();
+        newReport.reportType = q.value(4).toString();
+        newReport.objectId = q.value(5).toInt();
+        ret.push_back(newReport);
+    }
+
+    return ret;
+}

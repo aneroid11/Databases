@@ -72,6 +72,7 @@ private:
 
     void artistPageInit();
     void adminPageInit();
+    void reportsPageInit();
 
     void deleteCurrAcc();
 

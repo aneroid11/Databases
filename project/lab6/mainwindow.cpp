@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QMessageBox>
+#include <QList>
 
 enum {
     STARTING_PAGE_ID,
@@ -166,6 +167,20 @@ void MainWindow::adminPageInit()
     ui->adminAcc_emailLabel->setText(email);
 }
 
+void MainWindow::reportsPageInit()
+{
+    // fill the list of reports
+    ui->reports_reportsList->clear();
+
+    QList<Report> reports = db->getAllReports();
+
+    for (const Report& rp : reports)
+    {
+        QString infoStr = QString("%1 - '%2'").arg(rp.id).arg(rp.title);
+        ui->reports_reportsList->addItem(infoStr);
+    }
+}
+
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
     qDebug() << "on_stackedWidget_currentChanged()\n";
@@ -177,6 +192,9 @@ void MainWindow::on_stackedWidget_currentChanged(int index)
         break;
     case ADMIN_ACC_PAGE_ID:
         adminPageInit();
+        break;
+    case REPORTS_PAGE_ID:
+        reportsPageInit();
         break;
     }
 }
