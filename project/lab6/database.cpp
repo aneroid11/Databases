@@ -3,6 +3,7 @@
 
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlDriver>
 #include <QSqlResult>
 #include <QDebug>
 
@@ -13,6 +14,7 @@ Database::Database()
     db.setDatabaseName("task3");
     db.setUserName("root");
     db.setPassword("msql_pss_rt");
+    db.setPort(3306);
     bool ok = db.open();
 
     if (!ok)
@@ -50,11 +52,7 @@ void Database::signUpArtist(QString email,
 
 void Database::signInUser(QString email, QString password)
 {
-    // проверить, есть ли юзер с таким емейлом
-    // если есть, проверить его пароль
-    // если совпадает, то выставить @curr_session_user_id = user id.
-
-    QString queryStr = QString("select 1 from Users where email = '%1' and passwordHash = %2")
+    QString queryStr = QString("select id from Users where email = '%1' and password_hash = '%2';")
             .arg(email)
             .arg(sha256hash(password));
 
@@ -67,13 +65,17 @@ void Database::signInUser(QString email, QString password)
     {
         throw QString("No such user!");
     }
+    else
+    {
+        qDebug() << q.value(0).toInt() << "\n";
+    }
     const int userId = q.value(0).toInt();
 
     queryStr = QString("set @curr_session_user_id = %1;").arg(userId);
     prepareExec(q, queryStr);
 }
 
-void Database::prepareExec(QSqlQuery q, QString queryStr)
+void Database::prepareExec(QSqlQuery& q, QString queryStr)
 {
     if (!q.prepare(queryStr))
     {

@@ -64,27 +64,27 @@ void MainWindow::on_starting_signUpButton_clicked()
 
 void MainWindow::on_signUp_signUpButton_clicked()
 {
+    const QString email = ui->signUp_emailLineEdit->text();
+    if (email.isEmpty())
+    {
+        showMsg("Email line is empty!");
+        return;
+    }
+    const QString pwd = ui->signUp_passwordLineEdit->text();
+    if (pwd.isEmpty())
+    {
+        showMsg("Password line is empty!");
+        return;
+    }
+    const QString nickname = ui->signUp_nicknameLineEdit->text();
+    if (nickname.isEmpty())
+    {
+        showMsg("Nickname line is empty!");
+        return;
+    }
+
     try
     {
-        const QString email = ui->signUp_emailLineEdit->text();
-        if (email.isEmpty())
-        {
-            showMsg("Email line is empty!");
-            return;
-        }
-        const QString pwd = ui->signUp_passwordLineEdit->text();
-        if (pwd.isEmpty())
-        {
-            showMsg("Password line is empty!");
-            return;
-        }
-        const QString nickname = ui->signUp_nicknameLineEdit->text();
-        if (nickname.isEmpty())
-        {
-            showMsg("Nickname line is empty!");
-            return;
-        }
-
         db->signUpArtist(email, sha256hash(pwd), nickname,
                          ui->signUp_birthDateEdit->date().toString("yyyy-MM-dd"),
                          ui->signUp_genderComboBox->currentText());
@@ -112,7 +112,30 @@ void MainWindow::on_signUp_signUpButton_clicked()
 
 void MainWindow::on_signIn_signInButton_clicked()
 {
+    const QString email = ui->signIn_emailLineEdit->text();
+    if (email.isEmpty())
+    {
+        showMsg("Email line is empty!");
+        return;
+    }
+    const QString pwd = ui->signIn_passwordLineEdit->text();
+    if (pwd.isEmpty())
+    {
+        showMsg("Password line is empty!");
+        return;
+    }
 
+    try
+    {
+        db->signInUser(email, pwd);
+    }
+    catch (QString msg)
+    {
+        showMsg(msg);
+        return;
+    }
+
+    showMsg("Signed in successfully!");
     //ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }
 

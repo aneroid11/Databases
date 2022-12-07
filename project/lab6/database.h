@@ -21,7 +21,7 @@ public:
                     QString password);
 
 private:
-    void prepareExec(QSqlQuery q, QString queryStr);
+    void prepareExec(QSqlQuery& q, QString queryStr);
 
     QSqlDatabase db;
 };
