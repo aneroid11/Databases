@@ -17,7 +17,8 @@ enum {
     ALL_TRACKS_PAGE_ID,
     MY_TRACKS_PAGE_ID,
     MY_TRACK_EDIT_PAGE_ID,
-    MY_PLAYLISTS_PAGE_ID
+    MY_PLAYLISTS_PAGE_ID,
+    CREATE_ADMIN_PAGE_ID
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -275,4 +276,43 @@ void MainWindow::on_adminAcc_signOffButton_clicked()
 void MainWindow::on_pushButton_deleteMyAccButton_clicked()
 {
     deleteCurrAcc();
+}
+
+void MainWindow::on_adminAcc_createAdminButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(CREATE_ADMIN_PAGE_ID);
+}
+
+void MainWindow::on_createAdmin_cancelButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+}
+
+void MainWindow::on_createAdmin_createButton_clicked()
+{
+    const QString email = ui->createAdmin_emailLineEdit->text();
+    if (email.isEmpty())
+    {
+        showMsg("Email is empty!");
+        return;
+    }
+    const QString password = ui->createAdmin_passwordLineEdit->text();
+    if (password.isEmpty())
+    {
+        showMsg("Password is empty!");
+        return;
+    }
+
+    try
+    {
+        db->createAdmin(email, password);
+    }
+    catch (QString msg)
+    {
+        showMsg(msg);
+        return;
+    }
+
+    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    showMsg("New admin created!");
 }

@@ -79,7 +79,7 @@ void Database::signInUser(QString email, QString password)
 
     if (!q.next())
     {
-        throw QString("No such user!");
+        throw QString("No user with such email and/or password!");
     }
     else
     {
@@ -162,4 +162,13 @@ void Database::deleteAccount(int id)
     }
 
     signOffCurrUser();
+}
+
+void Database::createAdmin(QString email, QString password)
+{
+    QString qStr = QString("insert into Users (email, password_hash, role) values ('%1', '%2', 'admin');")
+            .arg(email)
+            .arg(sha256hash(password));
+    QSqlQuery q;
+    prepareExec(q, qStr);
 }

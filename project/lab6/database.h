@@ -30,6 +30,8 @@ public:
     void deleteAccount(int id);
     void deleteCurrAccount() { deleteAccount(currUserId); }
 
+    void createAdmin(QString email, QString password);
+
 private:
     int numAdmins();
 

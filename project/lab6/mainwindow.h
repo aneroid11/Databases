@@ -56,6 +56,12 @@ private slots:
 
     void on_pushButton_deleteMyAccButton_clicked();
 
+    void on_adminAcc_createAdminButton_clicked();
+
+    void on_createAdmin_cancelButton_clicked();
+
+    void on_createAdmin_createButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
