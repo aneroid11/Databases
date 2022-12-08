@@ -291,3 +291,10 @@ void Database::deleteReport(int id)
     QSqlQuery q;
     prepareExec(q, s);
 }
+
+void Database::deleteTrack(int id)
+{
+    QString s = QString("delete from Tracks where id = %1;").arg(id);
+    QSqlQuery q;
+    prepareExec(q, s);
+}

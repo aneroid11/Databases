@@ -73,6 +73,8 @@ public:
 
     void deleteReport(int id);
 
+    void deleteTrack(int id);
+
 private:
     int numAdmins();
 

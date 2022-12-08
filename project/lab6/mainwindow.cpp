@@ -438,7 +438,15 @@ void MainWindow::on_reports_detailsButton_clicked()
 
 void MainWindow::on_reports_deleteButton_clicked()
 {
-    const QString currReport = ui->reports_reportsList->currentItem()->text();
+    QListWidgetItem* item = ui->reports_reportsList->currentItem();
+    if (item == nullptr)
+    {
+        showMsg("You didn't select any report!");
+        return;
+    }
+
+    const QString currReport = item->text();
+
     const int rpId = extractIdFromBeginning(currReport);
     db->deleteReport(rpId);
 
@@ -456,4 +464,25 @@ void MainWindow::on_adminAcc_artistsButton_clicked()
 void MainWindow::on_adminAcc_tracksButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(ALL_TRACKS_PAGE_ID);
+}
+
+void MainWindow::on_allTracks_deleteButton_clicked()
+{
+    if (areYouSure())
+    {
+        QListWidgetItem* item = ui->allTracks_tracksListWidget->currentItem();
+        if (!item)
+        {
+            showMsg("You didn't select anything!");
+            return;
+        }
+
+        const QString itemStr = item->text();
+        const int trackId = extractIdFromBeginning(itemStr);
+
+        db->deleteTrack(trackId);
+
+        showMsg("The track was deleted");
+        fillTracksList();
+    }
 }

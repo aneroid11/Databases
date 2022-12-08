@@ -74,6 +74,8 @@ private slots:
 
     void on_adminAcc_tracksButton_clicked();
 
+    void on_allTracks_deleteButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
