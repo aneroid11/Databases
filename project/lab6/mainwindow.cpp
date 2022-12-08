@@ -21,7 +21,8 @@ enum {
     MY_PLAYLISTS_PAGE_ID = 10,
     CREATE_ADMIN_PAGE_ID = 11,
     REPORTS_PAGE_ID = 12,
-    ARTISTS_PAGE_ID = 13
+    ARTISTS_PAGE_ID = 13,
+    COMMENTS_PAGE_ID = 14
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -627,4 +628,14 @@ void MainWindow::on_artistAccDetails_tracksButton_clicked()
 {
     myTracksPageInit(ui->artistAccDetails_idLabel->text().toInt());
     ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
+}
+
+void MainWindow::on_artistAccDetails_commentsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(COMMENTS_PAGE_ID);
+}
+
+void MainWindow::on_comments_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
 }

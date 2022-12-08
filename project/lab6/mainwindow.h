@@ -83,6 +83,10 @@ private slots:
 
     void on_artistAccDetails_tracksButton_clicked();
 
+    void on_artistAccDetails_commentsButton_clicked();
+
+    void on_comments_backButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
