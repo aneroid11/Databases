@@ -244,6 +244,21 @@ void Database::createAdmin(QString email, QString password)
     prepareExecWithBinding(q, qStr, { email, sha256hash(password) });
 }
 
+QList<Report> Database::getReportsByArtist(const int artistId)
+{
+    QString s = QString("select * from Reports where author_id = %1;").arg(artistId);
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<Report> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractReportFromQuery(q));
+    }
+
+    return ret;
+}
+
 QList<Report> Database::getAllReports()
 {
     QString s = QString("select * from Reports;");

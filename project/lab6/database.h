@@ -77,6 +77,7 @@ public:
 
     void createAdmin(QString email, QString password);
 
+    QList<Report> getReportsByArtist(const int artistId);
     QList<Report> getAllReports();
     Report getReport(int id);
 

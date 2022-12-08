@@ -169,17 +169,20 @@ void MainWindow::adminPageInit()
     ui->adminAcc_emailLabel->setText(email);
 }
 
-void MainWindow::fillReportsList()
+void MainWindow::fillReportsList(QListWidget *listWidget, const QList<Report> &reports)
 {
-    ui->reports_reportsList->clear();
-
-    QList<Report> reports = db->getAllReports();
+    listWidget->clear();
 
     for (const Report& rp : reports)
     {
         QString infoStr = QString("%1 - '%2'").arg(rp.id).arg(rp.title);
-        ui->reports_reportsList->addItem(infoStr);
+        listWidget->addItem(infoStr);
     }
+}
+
+void MainWindow::fillReportsList()
+{
+    fillReportsList(ui->reports_reportsList, db->getAllReports());
 }
 
 void MainWindow::fillTracksList(QListWidget *listWidget, const QList<TrackInfo> &tracks)
@@ -233,9 +236,16 @@ void MainWindow::fillCommentsList(QListWidget *listWidget, const QList<DataRow> 
     }
 }
 
-void MainWindow::reportsPageInit()
+void MainWindow::reportsPageInit(const int artistId)
 {
-    fillReportsList();
+    if (artistId < 0)
+    {
+        fillReportsList();
+    }
+    else
+    {
+        fillReportsList(ui->reports_reportsList, db->getReportsByArtist(artistId));
+    }
 }
 
 void MainWindow::artistsPageInit()
@@ -325,9 +335,6 @@ void MainWindow::on_stackedWidget_currentChanged(int index)
         break;
     case ADMIN_ACC_PAGE_ID:
         adminPageInit();
-        break;
-    case REPORTS_PAGE_ID:
-        reportsPageInit();
         break;
     case ARTISTS_PAGE_ID:
         artistsPageInit();
@@ -503,6 +510,7 @@ void MainWindow::on_createAdmin_createButton_clicked()
 
 void MainWindow::on_adminAcc_reportsButton_clicked()
 {
+    reportsPageInit();
     ui->stackedWidget->setCurrentIndex(REPORTS_PAGE_ID);
 }
 
@@ -680,4 +688,11 @@ void MainWindow::on_comments_deleteButton_clicked()
             fillCommentsList(ui->comments_commentsList, db->getCommentsBy(ui->comments_idLabel->text().toInt()));
         }
     }
+}
+
+void MainWindow::on_artistAccDetails_reportsButton_clicked()
+{
+    reportsPageInit(ui->artistAccDetails_idLabel->text().toInt());
+    ui->stackedWidget->setCurrentIndex(REPORTS_PAGE_ID);
+    //showMsg("reports");
 }

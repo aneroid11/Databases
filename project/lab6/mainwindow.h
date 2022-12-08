@@ -89,6 +89,8 @@ private slots:
 
     void on_comments_deleteButton_clicked();
 
+    void on_artistAccDetails_reportsButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -97,7 +99,7 @@ private:
 
     void artistPageInit();
     void adminPageInit();
-    void reportsPageInit();
+    void reportsPageInit(const int artistId = -1);
     void artistsPageInit();
     void allTracksPageInit();
     void artistAccDetailsPageInit(const int artistId);
@@ -106,6 +108,7 @@ private:
 
     void deleteCurrAcc();
 
+    void fillReportsList(QListWidget* listWidget, const QList<Report>& reports);
     void fillReportsList();
     void fillTracksList(QListWidget* listWidget, const QList<TrackInfo>& tracks);
     void fillTracksList();
