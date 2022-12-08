@@ -407,8 +407,14 @@ void MainWindow::on_myTracks_deleteButton_clicked()
 {
     if (areYouSure())
     {
-        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
-        showMsg("The track was deleted");
+        int id;
+        if ((id = getCurrentItemId(ui->myTracks_tracksListWidget)) >= 0)
+        {
+            db->deleteTrack(id);
+            fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(id));
+
+            showMsg("The track was deleted!");
+        }
     }
 }
 
