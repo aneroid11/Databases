@@ -240,10 +240,13 @@ void MainWindow::reportsPageInit(const int artistId)
 {
     if (artistId < 0)
     {
+        ui->reports_titleLabel->setText("All reports:");
         fillReportsList();
     }
     else
     {
+        ui->reports_titleLabel->setText("Reports by:");
+        ui->reports_artistIdLabel->setText(QString::number(artistId));
         fillReportsList(ui->reports_reportsList, db->getReportsByArtist(artistId));
     }
 }
@@ -516,7 +519,14 @@ void MainWindow::on_adminAcc_reportsButton_clicked()
 
 void MainWindow::on_reports_backButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    if (ui->reports_titleLabel->text() == "All reports:")
+    {
+        ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+    }
 }
 
 int MainWindow::extractIdFromBeginning(QString str)
@@ -565,7 +575,14 @@ void MainWindow::on_reports_deleteButton_clicked()
     const int rpId = extractIdFromBeginning(currReport);
     db->deleteReport(rpId);
 
-    fillReportsList();
+    if (ui->reports_titleLabel->text() == "All reports:")
+    {
+        fillReportsList();
+    }
+    else
+    {
+        fillReportsList(ui->reports_reportsList, db->getReportsByArtist(ui->reports_artistIdLabel->text().toInt()));
+    }
 
     showMsg("The report was deleted!");
 }
