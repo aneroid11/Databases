@@ -708,6 +708,19 @@
        <string>Filter by tag</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="allTracks_deleteButton">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>320</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="myTracksPage">
      <widget class="QListWidget" name="myTracks_tracksListWidget">

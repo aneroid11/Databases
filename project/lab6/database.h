@@ -16,6 +16,18 @@ struct Report
     int objectId;
 };
 
+struct Artist
+{
+    int id;
+    QString email;
+    QString passwordHash;
+    QString nickname;
+    QString dateOfBirth;
+    QString gender;
+    int premiumSubscriptionId;
+    int cardDetailsId;
+};
+
 class Database
 {
 public:
@@ -46,6 +58,8 @@ public:
     QList<Report> getAllReports();
     Report getReport(int id);
 
+    QList<Artist> getAllArtists();
+
     void deleteReport(int id);
 
 private:
@@ -54,6 +68,7 @@ private:
     void prepareExec(QSqlQuery& q, QString queryStr);
 
     Report extractReportFromQuery(const QSqlQuery& query);
+    Artist extractArtistFromQuery(const QSqlQuery& q);
 
     QSqlDatabase db;
 

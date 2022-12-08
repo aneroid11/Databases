@@ -61,6 +61,14 @@ Report Database::extractReportFromQuery(const QSqlQuery &q)
     return newReport;
 }
 
+Artist Database::extractArtistFromQuery(const QSqlQuery &q)
+{
+    Artist a;
+    a.id = q.value(0).toInt();
+    a.email = q.value(1).toString();
+    a.passwordHash = q.value(2).toString();
+}
+
 void Database::signUpArtist(QString email,
                             QString passwordHash,
                             QString nickname,
@@ -88,6 +96,8 @@ void Database::signInUser(QString email, QString password)
     qDebug() << queryStr;
 
     QSqlQuery q;
+    //q.prepare("select id, role from Users where email = :email and password_hash = :pwd_hash;");
+    //q.bindValue();
     prepareExec(q, queryStr);
 
     if (!q.next())
@@ -186,14 +196,6 @@ void Database::createAdmin(QString email, QString password)
     prepareExec(q, qStr);
 }
 
-/*  int id;
-    QString title;
-    QString contents;
-    int authorId;
-    QString reportType;
-    int objectId;
- * */
-
 QList<Report> Database::getAllReports()
 {
     QString s = QString("select * from Reports;");
@@ -203,14 +205,6 @@ QList<Report> Database::getAllReports()
 
     while (q.next())
     {
-        /*Report newReport;
-        newReport.id = q.value(0).toInt();
-        newReport.title = q.value(1).toString();
-        qDebug() << newReport.title;
-        newReport.contents = q.value(2).toString();
-        newReport.authorId = q.value(3).toInt();
-        newReport.reportType = q.value(4).toString();
-        newReport.objectId = q.value(5).toInt();*/
         ret.push_back(extractReportFromQuery(q));
     }
 
@@ -228,6 +222,22 @@ Report Database::getReport(int id)
     }
 
     return extractReportFromQuery(q);
+}
+
+QList<Artist> Database::getAllArtists()
+{
+    QString s = QString("select * from ArtistsInfo;");
+    QSqlQuery q;
+    prepareExec(q, s);
+
+    QList<Artist> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractArtistFromQuery(q));
+    }
+
+    return ret;
 }
 
 void Database::deleteReport(int id)

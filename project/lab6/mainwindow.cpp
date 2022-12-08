@@ -200,6 +200,10 @@ void MainWindow::allTracksPageInit()
     ui->allTracks_likeButton->setDisabled(admRole);
     ui->allTracks_commentButton->setDisabled(admRole);
     ui->allTracks_reportButton->setDisabled(admRole);
+    ui->allTracks_addToPlaylist->setDisabled(admRole);
+    ui->allTracks_filterByTag->setDisabled(admRole);
+
+    ui->allTracks_deleteButton->setDisabled(!admRole);
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
