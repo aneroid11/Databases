@@ -19,7 +19,6 @@ Database::Database()
 
     if (!ok)
     {
-        //throw DbConnectException();
         throw QString("cannot connect to db!");
     }
 }
@@ -40,6 +39,28 @@ void Database::prepareExec(QSqlQuery& q, QString queryStr)
         qDebug() << err.databaseText() << "\n";
         throw QString(err.databaseText());
     }
+    if (!q.exec())
+    {
+        QSqlError err = q.lastError();
+        qDebug() << err.databaseText() << "\n";
+        throw QString(err.databaseText());
+    }
+}
+
+void Database::prepareExecWithBinding(QSqlQuery &q, QString qStr, const QList<QVariant> &params)
+{
+    if (!q.prepare(qStr))
+    {
+        QSqlError err = q.lastError();
+        qDebug() << err.databaseText() << "\n";
+        throw QString(err.databaseText());
+    }
+
+    for (int i = 0; i < params.size(); i++)
+    {
+        q.bindValue(i, params[i]);
+    }
+
     if (!q.exec())
     {
         QSqlError err = q.lastError();
@@ -75,30 +96,34 @@ void Database::signUpArtist(QString email,
                             QString dateOfBirth,
                             QString gender)
 {
-    QString queryStr = QString("call RegisterArtist("
+    /*QString queryStr = QString("call RegisterArtist("
                                "'%1', '%2', '%3', '%4', '%5');")
             .arg(email)
             .arg(passwordHash)
             .arg(nickname)
             .arg(dateOfBirth)
-            .arg(gender);
+            .arg(gender);*/
 
     QSqlQuery q;
-    prepareExec(q, queryStr);
+    //prepareExec(q, queryStr);
+    prepareExecWithBinding(q,
+                           "call RegisterArtist(:email, :pwdHash, :nickname, :dateOfBirth, :gender);",
+                           { email, passwordHash, nickname, dateOfBirth, gender });
 }
 
 void Database::signInUser(QString email, QString password)
 {
-    QString queryStr = QString("select id, role from Users where email = '%1' and password_hash = '%2';")
+    /*QString queryStr = QString("select id, role from Users where email = '%1' and password_hash = '%2';")
             .arg(email)
-            .arg(sha256hash(password));
+            .arg(sha256hash(password));*/
 
-    qDebug() << queryStr;
+    //qDebug() << queryStr;
 
     QSqlQuery q;
-    //q.prepare("select id, role from Users where email = :email and password_hash = :pwd_hash;");
-    //q.bindValue();
-    prepareExec(q, queryStr);
+    //prepareExec(q, queryStr);
+    prepareExecWithBinding(q,
+                           "select id, role from Users where email = :email and password_hash = :pwdHash;",
+                           { email, sha256hash(password) });
 
     if (!q.next())
     {
@@ -113,8 +138,7 @@ void Database::signInUser(QString email, QString password)
     currUserId = userId;
     currUserRole = userRole;
 
-    queryStr = QString("set @curr_session_user_id = %1;").arg(userId);
-    prepareExec(q, queryStr);
+    prepareExec(q, QString("set @curr_session_user_id = %1;").arg(userId));
 }
 
 void Database::signOffCurrUser()
@@ -189,11 +213,12 @@ void Database::deleteAccount(int id)
 
 void Database::createAdmin(QString email, QString password)
 {
-    QString qStr = QString("insert into Users (email, password_hash, role) values ('%1', '%2', 'admin');")
+    /*QString qStr = QString("insert into Users (email, password_hash, role) values ('%1', '%2', 'admin');")
             .arg(email)
-            .arg(sha256hash(password));
+            .arg(sha256hash(password));*/
+    QString qStr = "insert into Users (email, password_hash, role) values (:email, :pwdHash, 'admin');";
     QSqlQuery q;
-    prepareExec(q, qStr);
+    prepareExecWithBinding(q, qStr, { email, sha256hash(password) });
 }
 
 QList<Report> Database::getAllReports()

@@ -66,6 +66,7 @@ private:
     int numAdmins();
 
     void prepareExec(QSqlQuery& q, QString queryStr);
+    void prepareExecWithBinding(QSqlQuery& q, QString qStr, const QList<QVariant> &params);
 
     Report extractReportFromQuery(const QSqlQuery& query);
     Artist extractArtistFromQuery(const QSqlQuery& q);
