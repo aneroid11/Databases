@@ -378,12 +378,23 @@ void MainWindow::on_allTracks_exitButton_clicked()
 
 void MainWindow::on_myTracks_backButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    if (db->getCurrUserRole() == "admin")
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    }
 }
 
 void MainWindow::on_myTracks_listenButton_clicked()
 {
-    showMsg("...wonderful music plays...");
+    int trackId;
+    if ((trackId = getCurrentItemId(ui->myTracks_tracksListWidget)) >= 0)
+    {
+        showMsg("...wonderful music plays...");
+    }
 }
 
 void MainWindow::on_myTracks_deleteButton_clicked()
