@@ -97,6 +97,9 @@ public:
 
     void deleteRecordFromTable(QString tableName, const int id);
 
+    QList<DataRow> getAllPlaylists();
+    QList<DataRow> getPlaylistsBy(const int artistId);
+
 private:
     int numAdmins();
 

@@ -236,6 +236,35 @@ void MainWindow::fillCommentsList(QListWidget *listWidget, const QList<DataRow> 
     }
 }
 
+void MainWindow::fillPlaylistsList(QListWidget *listWidget, const QList<DataRow> &playlists)
+{
+    listWidget->clear();
+
+    for (const DataRow& p : playlists)
+    {
+        const QString releaseDate = p.data["release_date"].toString();
+        QString info;
+        if (releaseDate.isNull() || releaseDate.isEmpty())
+        {
+            // this is a playlist
+            info = QString("%1 - '%2', by %3")
+                    .arg(p.data["id"].toInt())
+                    .arg(p.data["title"].toString())
+                    .arg(p.data["nickname"].toString());
+        }
+        else
+        {
+            // this is an album
+            info = QString("%1 - '%2', by %3 (album, %4)")
+                    .arg(p.data["id"].toInt())
+                    .arg(p.data["title"].toString())
+                    .arg(p.data["nickname"].toString())
+                    .arg(p.data["release_date"].toInt());
+        }
+        listWidget->addItem(info);
+    }
+}
+
 void MainWindow::reportsPageInit(const int artistId)
 {
     if (artistId < 0)
@@ -325,6 +354,18 @@ void MainWindow::commentsPageInit(const int artistId)
     ui->comments_idLabel->setText(QString::number(artistId));
 
     fillCommentsList(ui->comments_commentsList, db->getCommentsBy(artistId));
+}
+
+void MainWindow::playlistsPageInit(const int artistId)
+{
+    if (artistId < 0)
+    {
+        fillPlaylistsList(ui->playlists_playlistsList, db->getAllPlaylists());
+    }
+    else
+    {
+        fillPlaylistsList(ui->playlists_playlistsList, db->getPlaylistsBy(artistId));
+    }
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -716,6 +757,7 @@ void MainWindow::on_artistAccDetails_reportsButton_clicked()
 
 void MainWindow::on_artistAccDetails_playlistsButton_clicked()
 {
+    playlistsPageInit(ui->artistAccDetails_idLabel->text().toInt());
     ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
 }
 

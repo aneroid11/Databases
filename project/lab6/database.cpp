@@ -384,3 +384,41 @@ void Database::deleteRecordFromTable(QString tableName, const int id)
     QSqlQuery q;
     prepareExec(q, s);
 }
+
+QList<DataRow> Database::getAllPlaylists()
+{
+    QString s =
+            QString("select Playlists.id, Playlists.title, Playlists.artist_id, Albums.release_date, Artists.nickname "
+                    "from Playlists left join Albums on Playlists.id = Albums.id "
+                    "left join Artists on artist_id = Artists.id;");
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<DataRow> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractDataRowFromQuery(q));
+    }
+
+    return ret;
+}
+
+QList<DataRow> Database::getPlaylistsBy(const int artistId)
+{
+    QString s =
+            QString("select Playlists.id, Playlists.title, Playlists.artist_id, Albums.release_date, Artists.nickname "
+                    "from Playlists "
+                    "left join Albums on Playlists.id = Albums.id "
+                    "left join Artists on artist_id = Artists.id "
+                    "where artist_id = %1;").arg(artistId);
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<DataRow> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractDataRowFromQuery(q));
+    }
+
+    return ret;
+}

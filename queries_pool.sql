@@ -160,6 +160,8 @@ begin
     end if;
 end//
 
+-- Просмотреть все плейлисты и альбомы
+select Playlists.id, Playlists.title, Playlists.artist_id, Albums.release_date, Artists.nickname from Playlists left join Albums on Playlists.id = Albums.id left join Artists on artist_id = Artists.id;
 
 -- Вьюшка для информации об альбомах:
 create view AlbumsInfo as 

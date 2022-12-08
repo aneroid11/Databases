@@ -109,6 +109,7 @@ private:
     void artistAccDetailsPageInit(const int artistId);
     void myTracksPageInit(const int artistId);
     void commentsPageInit(const int artistId);
+    void playlistsPageInit(const int artistId = -1);
 
     void deleteCurrAcc();
 
@@ -118,6 +119,7 @@ private:
     void fillTracksList();
     void fillArtistsList();
     void fillCommentsList(QListWidget* listWidget, const QList<DataRow>& comments);
+    void fillPlaylistsList(QListWidget* listWidget, const QList<DataRow>& playlists);
 
     int extractIdFromBeginning(QString str);
 
