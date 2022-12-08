@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidget>
 
 #include "database.h"
 
@@ -83,6 +84,8 @@ private slots:
     void on_artists_deleteButton_clicked();
 
 private:
+    int getCurrentItemId(QListWidget* list);
+
     bool areYouSure();
     void showMsg(QString msg);
 
@@ -91,6 +94,7 @@ private:
     void reportsPageInit();
     void artistsPageInit();
     void allTracksPageInit();
+    void artistAccDetailsPageInit(const int artistId);
 
     void deleteCurrAcc();
 

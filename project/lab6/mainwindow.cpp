@@ -227,7 +227,7 @@ void MainWindow::allTracksPageInit()
 {
     const QString role = db->getCurrUserRole();
 
-    bool admRole = role == "admin";
+    const bool admRole = role == "admin";
     ui->allTracks_likeButton->setDisabled(admRole);
     ui->allTracks_commentButton->setDisabled(admRole);
     ui->allTracks_reportButton->setDisabled(admRole);
@@ -237,6 +237,23 @@ void MainWindow::allTracksPageInit()
     ui->allTracks_deleteButton->setDisabled(!admRole);
 
     fillTracksList();
+}
+
+void MainWindow::artistAccDetailsPageInit(const int artistId)
+{
+    const QString role = db->getCurrUserRole();
+    const bool admRole = role == "admin";
+
+    ui->artistAccDetails_saveChangesButton->setDisabled(admRole);
+    ui->artistAccDetails_birthDateEdit->setDisabled(admRole);
+    ui->artistAccDetails_genderComboBox->setDisabled(admRole);
+    ui->artistAccDetails_emailLineEdit->setDisabled(admRole);
+    ui->artistAccDetails_passwordLineEdit->setDisabled(admRole);
+    ui->artistAccDetails_nicknameLineEdit->setDisabled(admRole);
+
+    // fill the data
+    Artist info = db->getArtistInfo(artistId);
+    ui->artistAccDetails_nicknameLineEdit->setText(info.nickname);
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -294,6 +311,7 @@ void MainWindow::on_artistAcc_deleteAccountButton_clicked()
 
 void MainWindow::on_artistAcc_accountButton_clicked()
 {
+    artistAccDetailsPageInit(db->getCurrUserId());
     ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
 }
 
@@ -506,7 +524,19 @@ void MainWindow::on_artists_backButton_clicked()
 
 void MainWindow::on_artists_detailsButton_clicked()
 {
-    showMsg("artist details");
+    QListWidgetItem* item = ui->artists_artistsList->currentItem();
+    if (!item)
+    {
+        showMsg("You didn't select anything!");
+        return;
+    }
+
+    int id;
+    if ((id = getCurrentItemId(ui->artists_artistsList)) >= 0)
+    {
+        artistAccDetailsPageInit(id);
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+    }
 }
 
 void MainWindow::on_artists_deleteButton_clicked()
@@ -528,4 +558,18 @@ void MainWindow::on_artists_deleteButton_clicked()
         showMsg("Artist was deleted");
         fillArtistsList();
     }
+}
+
+int MainWindow::getCurrentItemId(QListWidget *list)
+{
+    QListWidgetItem* item = list->currentItem();
+    if (!item)
+    {
+        showMsg("You didn't select anything!");
+        return -1;
+    }
+
+    const QString itemStr = item->text();
+    const int id = extractIdFromBeginning(itemStr);
+    return id;
 }

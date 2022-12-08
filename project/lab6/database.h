@@ -68,12 +68,15 @@ public:
     Report getReport(int id);
 
     QList<Artist> getAllArtists();
+    Artist getArtistInfo(const int id);
 
     QList<TrackInfo> getAllTracksInfo();
 
     void deleteReport(int id);
 
     void deleteTrack(int id);
+
+    int getCurrUserId() const { return currUserId; }
 
 private:
     int numAdmins();

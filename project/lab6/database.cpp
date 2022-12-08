@@ -263,6 +263,16 @@ QList<Artist> Database::getAllArtists()
     return ret;
 }
 
+Artist Database::getArtistInfo(const int id)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "select * from ArtistsInfo where id = :id", { id });
+
+    if (!q.next()) { throw QString("No artist with id = %1!").arg(id); }
+
+    return extractArtistFromQuery(q);
+}
+
 QList<TrackInfo> Database::getAllTracksInfo()
 {
     QSqlQuery q;
