@@ -498,3 +498,34 @@ void MainWindow::on_allTracks_deleteButton_clicked()
         fillTracksList();
     }
 }
+
+void MainWindow::on_artists_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+}
+
+void MainWindow::on_artists_detailsButton_clicked()
+{
+    showMsg("artist details");
+}
+
+void MainWindow::on_artists_deleteButton_clicked()
+{
+    if (areYouSure())
+    {
+        QListWidgetItem* item = ui->artists_artistsList->currentItem();
+        if (!item)
+        {
+            showMsg("You didn't select anything!");
+            return;
+        }
+
+        const QString itemStr = item->text();
+        const int artistId = extractIdFromBeginning(itemStr);
+
+        db->deleteAccount(artistId);
+
+        showMsg("Artist was deleted");
+        fillArtistsList();
+    }
+}

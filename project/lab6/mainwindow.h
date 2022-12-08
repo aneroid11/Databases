@@ -76,6 +76,12 @@ private slots:
 
     void on_allTracks_deleteButton_clicked();
 
+    void on_artists_backButton_clicked();
+
+    void on_artists_detailsButton_clicked();
+
+    void on_artists_deleteButton_clicked();
+
 private:
     bool areYouSure();
     void showMsg(QString msg);
