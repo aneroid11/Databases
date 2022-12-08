@@ -90,6 +90,7 @@ private:
 
     void fillReportsList();
     void fillTracksList();
+    void fillArtistsList();
 
     int extractIdFromBeginning(QString str);
 

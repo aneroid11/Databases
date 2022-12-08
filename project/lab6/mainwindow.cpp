@@ -189,8 +189,6 @@ void MainWindow::fillTracksList()
 
     for (const TrackInfo& t : tracks)
     {
-        //QString infoStr = QString("%1 - '%2'").arg(rp.id).arg(rp.title);
-        //ui->reports_reportsList->addItem(infoStr);
         QString info = QString("%1 - %2 - %3 (%4 sec), %5")
                 .arg(t.id)
                 .arg(t.artistNickname)
@@ -202,6 +200,19 @@ void MainWindow::fillTracksList()
     }
 }
 
+void MainWindow::fillArtistsList()
+{
+    ui->artists_artistsList->clear();
+
+    QList<Artist> artists = db->getAllArtists();
+
+    for (const Artist& a : artists)
+    {
+        QString info = QString("%1 - %2").arg(a.id).arg(a.nickname);
+        ui->artists_artistsList->addItem(info);
+    }
+}
+
 void MainWindow::reportsPageInit()
 {
     fillReportsList();
@@ -209,6 +220,7 @@ void MainWindow::reportsPageInit()
 
 void MainWindow::artistsPageInit()
 {
+    fillArtistsList();
 }
 
 void MainWindow::allTracksPageInit()

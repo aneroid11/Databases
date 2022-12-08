@@ -88,6 +88,12 @@ Artist Database::extractArtistFromQuery(const QSqlQuery &q)
     a.id = q.value(0).toInt();
     a.email = q.value(1).toString();
     a.passwordHash = q.value(2).toString();
+    a.nickname = q.value(3).toString();
+    a.dateOfBirth = q.value(4).toString();
+    a.gender = q.value(5).toString();
+    a.premiumSubscriptionId = q.value(6).toInt();
+    a.cardDetailsId = q.value(7).toInt();
+    return a;
 }
 
 void Database::signUpArtist(QString email,
@@ -96,14 +102,6 @@ void Database::signUpArtist(QString email,
                             QString dateOfBirth,
                             QString gender)
 {
-    /*QString queryStr = QString("call RegisterArtist("
-                               "'%1', '%2', '%3', '%4', '%5');")
-            .arg(email)
-            .arg(passwordHash)
-            .arg(nickname)
-            .arg(dateOfBirth)
-            .arg(gender);*/
-
     QSqlQuery q;
     //prepareExec(q, queryStr);
     prepareExecWithBinding(q,
