@@ -317,7 +317,14 @@ void MainWindow::on_artistAcc_accountButton_clicked()
 
 void MainWindow::on_artistAccDetails_cancelButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    if (db->getCurrUserRole() == "artist")
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+    }
 }
 
 void MainWindow::on_artistAccDetails_saveChangesButton_clicked()
