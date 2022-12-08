@@ -312,6 +312,7 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
     ui->artistAccDetails_emailLineEdit->setDisabled(admRole);
     ui->artistAccDetails_passwordLineEdit->setDisabled(admRole);
     ui->artistAccDetails_nicknameLineEdit->setDisabled(admRole);
+    ui->artistAccDetails_playlistsButton->setDisabled(admRole);
 
     // fill the data
     Artist info = db->getArtistInfo(artistId);
@@ -358,15 +359,15 @@ void MainWindow::commentsPageInit(const int artistId)
 
 void MainWindow::playlistsPageInit(const int artistId)
 {
-    const QString role = db->getCurrUserRole();
-    const bool admin = role == "admin";
+    /*const QString role = db->getCurrUserRole();
+    const bool admin = role == "admin";*/
 
-    ui->playlists_deleteButton->setDisabled(admin);
+    //ui->playlists_deleteButton->setDisabled(admin);
+    ui->playlists_deleteButton->setDisabled(artistId < 0);
 
     if (artistId < 0)
     {
         ui->playlists_titleLabel->setText("All playlists:");
-        ui->playlists_deleteButton->setDisabled(true);
         fillPlaylistsList(ui->playlists_playlistsList, db->getAllPlaylists());
     }
     else
