@@ -96,6 +96,17 @@ Artist Database::extractArtistFromQuery(const QSqlQuery &q)
     return a;
 }
 
+TrackInfo Database::extractTrackInfoFromQuery(const QSqlQuery &q)
+{
+    TrackInfo info;
+    info.id = q.value(0).toInt();
+    info.timestamp = q.value(1).toString();
+    info.title = q.value(2).toString();
+    info.lengthSeconds = q.value(3).toInt();
+    info.artistNickname = q.value(4).toString();
+    return info;
+}
+
 void Database::signUpArtist(QString email,
                             QString passwordHash,
                             QString nickname,
@@ -273,6 +284,22 @@ Artist Database::getArtistInfo(const int id)
     return extractArtistFromQuery(q);
 }
 
+QList<TrackInfo> Database::getTracksInfo(const int artistId)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q,
+                           "select * from TracksInfo where nickname = (select nickname from Artists where id = :artistId);",
+                           QList<QVariant> { artistId });
+    QList<TrackInfo> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractTrackInfoFromQuery(q));
+    }
+
+    return ret;
+}
+
 QList<TrackInfo> Database::getAllTracksInfo()
 {
     QSqlQuery q;
@@ -281,13 +308,7 @@ QList<TrackInfo> Database::getAllTracksInfo()
 
     while (q.next())
     {
-        TrackInfo info;
-        info.id = q.value(0).toInt();
-        info.timestamp = q.value(1).toString();
-        info.title = q.value(2).toString();
-        info.lengthSeconds = q.value(3).toInt();
-        info.artistNickname = q.value(4).toString();
-        ret.push_back(info);
+        ret.push_back(extractTrackInfoFromQuery(q));
     }
 
     return ret;

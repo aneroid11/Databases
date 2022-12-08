@@ -71,6 +71,7 @@ public:
     Artist getArtistInfo(const int id);
 
     QList<TrackInfo> getAllTracksInfo();
+    QList<TrackInfo> getTracksInfo(const int artistId);
 
     void deleteReport(int id);
 
@@ -86,6 +87,7 @@ private:
 
     Report extractReportFromQuery(const QSqlQuery& query);
     Artist extractArtistFromQuery(const QSqlQuery& q);
+    TrackInfo extractTrackInfoFromQuery(const QSqlQuery& q);
 
     QSqlDatabase db;
 

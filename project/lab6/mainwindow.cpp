@@ -277,7 +277,7 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
 
 void MainWindow::myTracksPageInit(const int artistId)
 {
-
+    fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
