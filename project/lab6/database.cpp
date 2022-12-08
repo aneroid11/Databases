@@ -422,3 +422,10 @@ QList<DataRow> Database::getPlaylistsBy(const int artistId)
 
     return ret;
 }
+
+void Database::deletePlaylist(const int id)
+{
+    QString s = QString("call DeletePlaylist(%1);").arg(id);
+    QSqlQuery q;
+    prepareExec(q, s);
+}

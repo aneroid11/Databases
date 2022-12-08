@@ -100,6 +100,8 @@ public:
     QList<DataRow> getAllPlaylists();
     QList<DataRow> getPlaylistsBy(const int artistId);
 
+    void deletePlaylist(const int id);
+
 private:
     int numAdmins();
 

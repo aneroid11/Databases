@@ -95,6 +95,8 @@ private slots:
 
     void on_playlists_backButton_clicked();
 
+    void on_playlists_deleteButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

@@ -358,12 +358,21 @@ void MainWindow::commentsPageInit(const int artistId)
 
 void MainWindow::playlistsPageInit(const int artistId)
 {
+    const QString role = db->getCurrUserRole();
+    const bool admin = role == "admin";
+
+    ui->playlists_deleteButton->setDisabled(admin);
+
     if (artistId < 0)
     {
+        ui->playlists_titleLabel->setText("All playlists:");
+        ui->playlists_deleteButton->setDisabled(true);
         fillPlaylistsList(ui->playlists_playlistsList, db->getAllPlaylists());
     }
     else
     {
+        ui->playlists_titleLabel->setText("Playlists by:");
+        ui->playlists_artistIdLabel->setText(QString::number(artistId));
         fillPlaylistsList(ui->playlists_playlistsList, db->getPlaylistsBy(artistId));
     }
 }
@@ -764,5 +773,35 @@ void MainWindow::on_artistAccDetails_playlistsButton_clicked()
 void MainWindow::on_playlists_backButton_clicked()
 {
     // TODO: add check for title
-    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+    if (ui->playlists_titleLabel->text() == "All playlists:")
+    {
+        ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+    }
+}
+
+void MainWindow::on_playlists_deleteButton_clicked()
+{
+    if (areYouSure())
+    {
+        int id;
+        if ((id = getCurrentItemId(ui->playlists_playlistsList)) >= 0)
+        {
+            db->deletePlaylist(id);
+
+            if (ui->playlists_titleLabel->text() == "All playlists:")
+            {
+                fillPlaylistsList(ui->playlists_playlistsList, db->getAllPlaylists());
+            }
+            else
+            {
+                fillPlaylistsList(ui->playlists_playlistsList, db->getPlaylistsBy(ui->playlists_artistIdLabel->text().toInt()));
+            }
+
+            showMsg("The playlist was deleted!");
+        }
+    }
 }
