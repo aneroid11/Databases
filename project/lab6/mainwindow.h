@@ -91,6 +91,10 @@ private slots:
 
     void on_artistAccDetails_reportsButton_clicked();
 
+    void on_artistAccDetails_playlistsButton_clicked();
+
+    void on_playlists_backButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

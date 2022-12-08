@@ -18,7 +18,7 @@ enum {
     ALL_TRACKS_PAGE_ID = 7,
     MY_TRACKS_PAGE_ID = 8,
     MY_TRACK_EDIT_PAGE_ID = 9,
-    MY_PLAYLISTS_PAGE_ID = 10,
+    PLAYLISTS_PAGE_ID = 10,
     CREATE_ADMIN_PAGE_ID = 11,
     REPORTS_PAGE_ID = 12,
     ARTISTS_PAGE_ID = 13,
@@ -712,4 +712,15 @@ void MainWindow::on_artistAccDetails_reportsButton_clicked()
     reportsPageInit(ui->artistAccDetails_idLabel->text().toInt());
     ui->stackedWidget->setCurrentIndex(REPORTS_PAGE_ID);
     //showMsg("reports");
+}
+
+void MainWindow::on_artistAccDetails_playlistsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
+}
+
+void MainWindow::on_playlists_backButton_clicked()
+{
+    // TODO: add check for title
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
 }
