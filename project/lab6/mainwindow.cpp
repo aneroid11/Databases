@@ -306,6 +306,10 @@ void MainWindow::myTracksPageInit(const int artistId)
 void MainWindow::commentsPageInit(const int artistId)
 {
     ui->comments_detailsButton->hide();
+    ui->comments_idTextLabel->hide();
+    ui->comments_idLabel->hide();
+
+    ui->comments_idLabel->setText(QString::number(artistId));
 
     fillCommentsList(ui->comments_commentsList, db->getCommentsBy(artistId));
 }
@@ -662,4 +666,18 @@ void MainWindow::on_artistAccDetails_commentsButton_clicked()
 void MainWindow::on_comments_backButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+}
+
+void MainWindow::on_comments_deleteButton_clicked()
+{
+    if (areYouSure())
+    {
+        int id;
+        if ((id = getCurrentItemId(ui->comments_commentsList)) >= 0)
+        {
+            db->deleteRecordFromTable("Comments", id);
+            showMsg("The comment was deleted");
+            fillCommentsList(ui->comments_commentsList, db->getCommentsBy(ui->comments_idLabel->text().toInt()));
+        }
+    }
 }

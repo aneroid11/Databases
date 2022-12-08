@@ -94,6 +94,8 @@ public:
 
     QList<DataRow> getCommentsBy(const int artistId);
 
+    void deleteRecordFromTable(QString tableName, const int id);
+
 private:
     int numAdmins();
 

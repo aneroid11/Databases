@@ -92,7 +92,7 @@ group by artist_id;
 
 create procedure CommentTrack(contents varchar(500), artist_id int, track_id int)
 begin
-    insert into Comments (timestamp, contents, artist_id, track_id) values (CURRENT_TIMESTAMP(), contents, artist_id, <track_id);
+    insert into Comments (timestamp, contents, artist_id, track_id) values (CURRENT_TIMESTAMP(), contents, artist_id, track_id);
 end//
 
 -- Отредактировать трек <track id>:

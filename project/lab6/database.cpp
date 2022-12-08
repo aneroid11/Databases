@@ -362,3 +362,10 @@ QList<DataRow> Database::getCommentsBy(const int artistId)
 
     return ret;
 }
+
+void Database::deleteRecordFromTable(QString tableName, const int id)
+{
+    QString s = QString("delete from %1 where id = %2;").arg(tableName).arg(id);
+    QSqlQuery q;
+    prepareExec(q, s);
+}

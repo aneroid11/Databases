@@ -87,6 +87,8 @@ private slots:
 
     void on_comments_backButton_clicked();
 
+    void on_comments_deleteButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
