@@ -43,8 +43,6 @@ private slots:
 
     void on_allTracks_exitButton_clicked();
 
-    void on_artistAcc_myTracksButton_clicked();
-
     void on_myTracks_backButton_clicked();
 
     void on_myTracks_listenButton_clicked();
@@ -83,6 +81,8 @@ private slots:
 
     void on_artists_deleteButton_clicked();
 
+    void on_artistAccDetails_tracksButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -95,10 +95,12 @@ private:
     void artistsPageInit();
     void allTracksPageInit();
     void artistAccDetailsPageInit(const int artistId);
+    void myTracksPageInit(const int artistId);
 
     void deleteCurrAcc();
 
     void fillReportsList();
+    void fillTracksList(QListWidget* listWidget, const QList<TrackInfo>& tracks);
     void fillTracksList();
     void fillArtistsList();
 

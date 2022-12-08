@@ -181,11 +181,9 @@ void MainWindow::fillReportsList()
     }
 }
 
-void MainWindow::fillTracksList()
+void MainWindow::fillTracksList(QListWidget *listWidget, const QList<TrackInfo> &tracks)
 {
-    ui->allTracks_tracksListWidget->clear();
-
-    QList<TrackInfo> tracks = db->getAllTracksInfo();
+    listWidget->clear();
 
     for (const TrackInfo& t : tracks)
     {
@@ -196,8 +194,13 @@ void MainWindow::fillTracksList()
                 .arg(t.lengthSeconds)
                 .arg(t.timestamp);
 
-        ui->allTracks_tracksListWidget->addItem(info);
+        listWidget->addItem(info);
     }
+}
+
+void MainWindow::fillTracksList()
+{
+    fillTracksList(ui->allTracks_tracksListWidget, db->getAllTracksInfo());
 }
 
 void MainWindow::fillArtistsList()
@@ -253,6 +256,7 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
 
     // fill the data
     Artist info = db->getArtistInfo(artistId);
+    ui->artistAccDetails_idLabel->setText(QString::number(info.id));
     ui->artistAccDetails_nicknameLineEdit->setText(info.nickname);
     //ui->artistAccDetails_passwordLineEdit->setText(info.passwordHash);
     ui->artistAccDetails_emailLineEdit->setText(info.email);
@@ -269,6 +273,11 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
     }
 
     ui->artistAccDetails_genderComboBox->setCurrentText(info.gender);
+}
+
+void MainWindow::myTracksPageInit(const int artistId)
+{
+
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -365,11 +374,6 @@ void MainWindow::on_allTracks_exitButton_clicked()
     {
         ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
     }
-}
-
-void MainWindow::on_artistAcc_myTracksButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
 }
 
 void MainWindow::on_myTracks_backButton_clicked()
@@ -594,4 +598,10 @@ int MainWindow::getCurrentItemId(QListWidget *list)
     const QString itemStr = item->text();
     const int id = extractIdFromBeginning(itemStr);
     return id;
+}
+
+void MainWindow::on_artistAccDetails_tracksButton_clicked()
+{
+    myTracksPageInit(ui->artistAccDetails_idLabel->text().toInt());
+    ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
 }
