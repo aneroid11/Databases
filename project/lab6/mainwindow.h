@@ -108,7 +108,7 @@ private:
     void fillTracksList(QListWidget* listWidget, const QList<TrackInfo>& tracks);
     void fillTracksList();
     void fillArtistsList();
-    //void fillCommentsList(QListWidget* listWidget, const QList<Comment>& comments);
+    void fillCommentsList(QListWidget* listWidget, const QList<DataRow>& comments);
 
     int extractIdFromBeginning(QString str);
 

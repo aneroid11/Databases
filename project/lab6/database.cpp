@@ -341,3 +341,24 @@ void Database::deleteTrack(int id)
     QSqlQuery q;
     prepareExec(q, s);
 }
+
+QList<DataRow> Database::getCommentsBy(const int artistId)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "select * from Comments where artist_id = :artistId order by timestamp desc;", { artistId });
+    QList<DataRow> ret;
+
+    while (q.next())
+    {
+        DataRow row = extractDataRowFromQuery(q);
+
+        for (QString key : row.data.keys())
+        {
+            qDebug() << key << ": " << row.data[key];
+        }
+
+        ret.push_back(row);
+    }
+
+    return ret;
+}

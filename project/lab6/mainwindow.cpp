@@ -217,6 +217,22 @@ void MainWindow::fillArtistsList()
     }
 }
 
+void MainWindow::fillCommentsList(QListWidget *listWidget, const QList<DataRow> &comments)
+{
+    listWidget->clear();
+
+    for (const DataRow& c : comments)
+    {
+        QString info = QString("%1 - artist id: %2, track id: %3, %4, contents: '%5'")
+                .arg(c.data["id"].toInt())
+                .arg(c.data["artist_id"].toInt())
+                .arg(c.data["track_id"].toInt())
+                .arg(c.data["timestamp"].toString())
+                .arg(c.data["contents"].toString());
+        listWidget->addItem(info);
+    }
+}
+
 void MainWindow::reportsPageInit()
 {
     fillReportsList();
@@ -289,7 +305,9 @@ void MainWindow::myTracksPageInit(const int artistId)
 
 void MainWindow::commentsPageInit(const int artistId)
 {
-    //fillCommen
+    ui->comments_detailsButton->hide();
+
+    fillCommentsList(ui->comments_commentsList, db->getCommentsBy(artistId));
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
