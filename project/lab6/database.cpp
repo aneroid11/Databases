@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlDriver>
+#include <QSqlRecord>
 #include <QSqlResult>
 #include <QDebug>
 
@@ -105,6 +106,19 @@ TrackInfo Database::extractTrackInfoFromQuery(const QSqlQuery &q)
     info.lengthSeconds = q.value(3).toInt();
     info.artistNickname = q.value(4).toString();
     return info;
+}
+
+DataRow Database::extractDataRowFromQuery(const QSqlQuery &q)
+{
+    DataRow ret;
+    const int numColumns = q.record().count();
+
+    for (int i = 0; i < numColumns; i++)
+    {
+        ret.data[q.record().fieldName(i)] = q.value(i);
+    }
+
+    return ret;
 }
 
 void Database::signUpArtist(QString email,

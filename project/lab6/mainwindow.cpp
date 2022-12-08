@@ -287,6 +287,11 @@ void MainWindow::myTracksPageInit(const int artistId)
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }
 
+void MainWindow::commentsPageInit(const int artistId)
+{
+    //fillCommen
+}
+
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
     qDebug() << "on_stackedWidget_currentChanged()\n";
@@ -632,6 +637,7 @@ void MainWindow::on_artistAccDetails_tracksButton_clicked()
 
 void MainWindow::on_artistAccDetails_commentsButton_clicked()
 {
+    commentsPageInit(ui->artistAccDetails_idLabel->text().toInt());
     ui->stackedWidget->setCurrentIndex(COMMENTS_PAGE_ID);
 }
 

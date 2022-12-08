@@ -154,7 +154,7 @@ create table TagsToTracks (
     foreign key(id_track) references Tracks(id) on update cascade on delete cascade
 );
 
-Комментарии:
+-- Комментарии:
 create table Comments (
     id int not null auto_increment,
     timestamp datetime not null,

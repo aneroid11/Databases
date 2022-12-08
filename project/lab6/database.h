@@ -5,6 +5,7 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QList>
+#include <QMap>
 
 struct Report
 {
@@ -35,6 +36,18 @@ struct TrackInfo
     QString title;
     int lengthSeconds;
     QString artistNickname;
+};
+
+/*struct Comment
+{
+
+};*/
+
+struct DataRow
+{
+    //QList<QVariant> data;
+    // columns names and values
+    QMap<QString, QVariant> data;
 };
 
 class Database
@@ -79,6 +92,8 @@ public:
 
     int getCurrUserId() const { return currUserId; }
 
+    QList<DataRow> getCommentsBy(const int artistId);
+
 private:
     int numAdmins();
 
@@ -88,6 +103,7 @@ private:
     Report extractReportFromQuery(const QSqlQuery& query);
     Artist extractArtistFromQuery(const QSqlQuery& q);
     TrackInfo extractTrackInfoFromQuery(const QSqlQuery& q);
+    DataRow extractDataRowFromQuery(const QSqlQuery& q);
 
     QSqlDatabase db;
 
