@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -294,9 +294,9 @@
      <widget class="QPushButton" name="artistAcc_allTracksButton">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>670</x>
         <y>70</y>
-        <width>161</width>
+        <width>111</width>
         <height>32</height>
        </rect>
       </property>
@@ -304,38 +304,12 @@
        <string>All tracks</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="artistAcc_myTracksButton">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>70</y>
-        <width>112</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>My tracks</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="artistAcc_myPlaylistsButton">
+     <widget class="QPushButton" name="artistAcc_artistsButton">
       <property name="geometry">
        <rect>
         <x>340</x>
         <y>70</y>
         <width>121</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>My playlists</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="artistAcc_artistsButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>120</y>
-        <width>161</width>
         <height>32</height>
        </rect>
       </property>

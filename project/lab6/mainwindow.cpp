@@ -277,6 +277,12 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
 
 void MainWindow::myTracksPageInit(const int artistId)
 {
+    const bool admin = db->getCurrUserRole() == "admin";
+
+    ui->myTracks_uploadTrackButton->setDisabled(admin);
+    ui->myTracks_addToPlaylistButton->setDisabled(admin);
+    ui->myTracks_detailsButton->setDisabled(admin);
+
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }
 
