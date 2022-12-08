@@ -28,6 +28,15 @@ struct Artist
     int cardDetailsId;
 };
 
+struct TrackInfo
+{
+    int id;
+    QString timestamp;
+    QString title;
+    int lengthSeconds;
+    QString artistNickname;
+};
+
 class Database
 {
 public:
@@ -59,6 +68,8 @@ public:
     Report getReport(int id);
 
     QList<Artist> getAllArtists();
+
+    QList<TrackInfo> getAllTracksInfo();
 
     void deleteReport(int id);
 

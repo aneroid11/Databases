@@ -265,6 +265,26 @@ QList<Artist> Database::getAllArtists()
     return ret;
 }
 
+QList<TrackInfo> Database::getAllTracksInfo()
+{
+    QSqlQuery q;
+    prepareExec(q, "select * from TracksInfo;");
+    QList<TrackInfo> ret;
+
+    while (q.next())
+    {
+        TrackInfo info;
+        info.id = q.value(0).toInt();
+        info.timestamp = q.value(1).toString();
+        info.title = q.value(2).toString();
+        info.lengthSeconds = q.value(3).toInt();
+        info.artistNickname = q.value(4).toString();
+        ret.push_back(info);
+    }
+
+    return ret;
+}
+
 void Database::deleteReport(int id)
 {
     QString s = QString("delete from Reports where id = %1;").arg(id);

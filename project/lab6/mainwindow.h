@@ -87,6 +87,7 @@ private:
     void deleteCurrAcc();
 
     void fillReportsList();
+    void fillTracksList();
 
     int extractIdFromBeginning(QString str);
 

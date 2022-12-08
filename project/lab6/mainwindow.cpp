@@ -170,7 +170,6 @@ void MainWindow::adminPageInit()
 
 void MainWindow::fillReportsList()
 {
-    // fill the list of reports
     ui->reports_reportsList->clear();
 
     QList<Report> reports = db->getAllReports();
@@ -182,6 +181,27 @@ void MainWindow::fillReportsList()
     }
 }
 
+void MainWindow::fillTracksList()
+{
+    ui->allTracks_tracksListWidget->clear();
+
+    QList<TrackInfo> tracks = db->getAllTracksInfo();
+
+    for (const TrackInfo& t : tracks)
+    {
+        //QString infoStr = QString("%1 - '%2'").arg(rp.id).arg(rp.title);
+        //ui->reports_reportsList->addItem(infoStr);
+        QString info = QString("%1 - %2 - %3 (%4 sec), %5")
+                .arg(t.id)
+                .arg(t.artistNickname)
+                .arg(t.title)
+                .arg(t.lengthSeconds)
+                .arg(t.timestamp);
+
+        ui->allTracks_tracksListWidget->addItem(info);
+    }
+}
+
 void MainWindow::reportsPageInit()
 {
     fillReportsList();
@@ -189,7 +209,6 @@ void MainWindow::reportsPageInit()
 
 void MainWindow::artistsPageInit()
 {
-
 }
 
 void MainWindow::allTracksPageInit()
@@ -204,6 +223,8 @@ void MainWindow::allTracksPageInit()
     ui->allTracks_filterByTag->setDisabled(admRole);
 
     ui->allTracks_deleteButton->setDisabled(!admRole);
+
+    fillTracksList();
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
