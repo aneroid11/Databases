@@ -254,6 +254,21 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
     // fill the data
     Artist info = db->getArtistInfo(artistId);
     ui->artistAccDetails_nicknameLineEdit->setText(info.nickname);
+    //ui->artistAccDetails_passwordLineEdit->setText(info.passwordHash);
+    ui->artistAccDetails_emailLineEdit->setText(info.email);
+    qDebug() << info.dateOfBirth;
+
+    ui->artistAccDetails_birthDateEdit->show();
+    if (info.dateOfBirth.isNull() || info.dateOfBirth.isEmpty())
+    {
+        ui->artistAccDetails_birthDateEdit->hide();
+    }
+    else
+    {
+        ui->artistAccDetails_birthDateEdit->setDate(QDate::fromString(info.dateOfBirth, "yyyy-MM-dd"));
+    }
+
+    ui->artistAccDetails_genderComboBox->setCurrentText(info.gender);
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
