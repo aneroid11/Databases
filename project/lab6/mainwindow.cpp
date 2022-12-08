@@ -259,7 +259,7 @@ void MainWindow::fillPlaylistsList(QListWidget *listWidget, const QList<DataRow>
                     .arg(p.data["id"].toInt())
                     .arg(p.data["title"].toString())
                     .arg(p.data["nickname"].toString())
-                    .arg(p.data["release_date"].toInt());
+                    .arg(p.data["release_date"].toDate().toString("yyyy-MM-dd"));
         }
         listWidget->addItem(info);
     }
