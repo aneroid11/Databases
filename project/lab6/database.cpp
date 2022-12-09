@@ -347,7 +347,12 @@ int Database::numLikesOnTrack(const int trackId)
     QSqlQuery q;
     prepareExec(q, QString("call LikesOnTrack(%1);").arg(trackId));
     q.next();
-    return q.value(0).toInt();
+
+    qDebug() << q.size();
+    const int numLikes = q.value(0).toInt();
+    qDebug() << "likes on" << trackId << ":" << numLikes;
+
+    return numLikes;
 }
 
 QList<DataRow> Database::getCommentsOnTrack(const int trackId)
