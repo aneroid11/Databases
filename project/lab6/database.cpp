@@ -429,3 +429,27 @@ void Database::deletePlaylist(const int id)
     QSqlQuery q;
     prepareExec(q, s);
 }
+
+void Database::updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender)
+{
+    Artist a = getArtistInfo(id);
+    QString passwordHash;
+
+    if (email.isNull() || email.isEmpty()) { email = a.email; }
+    if (nickname.isNull() || nickname.isEmpty()) { nickname = a.nickname; }
+    if (password.isNull() || password.isEmpty()) { passwordHash = a.passwordHash; }
+    else                                         { passwordHash = sha256hash(password); }
+    if (dateOfBirth.isNull() || dateOfBirth.isEmpty()) { dateOfBirth = a.dateOfBirth; }
+    if (gender.isNull() || gender.isEmpty()) { gender = a.gender; }
+
+    QSqlQuery q;
+    prepareExecWithBinding(q,
+                           "update Artists set nickname = :nickname, "
+                           "date_of_birth = :dateOfBirth, gender = :gender "
+                           "where id = :id;",
+                           QList<QVariant>{ nickname, dateOfBirth, gender, id });
+    prepareExecWithBinding(q,
+                           "update Users set email = :email, password_hash = :passwordHash "
+                           "where id = :id;",
+                           QList<QVariant>{ email, passwordHash, id });
+}

@@ -39,7 +39,7 @@ select * from ArtistsInfo where LOWER(nickname) like LOWER("%<search>%");
 
 
 -- Изменить информацию об артисте:
-update Artists set nickname = <nickname> where id = <artist id>
+update Artists set nickname = <nickname> where id = <artist id>;
 -- insert into Actions (timestamp, user_id, object_type, object_id, action_type) values (<current timestamp>, <artist id>, 'Artists', <artist id>, 'update');
 
 

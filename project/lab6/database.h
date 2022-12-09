@@ -102,6 +102,8 @@ public:
 
     void deletePlaylist(const int id);
 
+    void updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender);
+
 private:
     int numAdmins();
 

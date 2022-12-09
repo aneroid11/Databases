@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -551,6 +551,9 @@
         <width>251</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
       </property>
       <property name="readOnly">
        <bool>false</bool>

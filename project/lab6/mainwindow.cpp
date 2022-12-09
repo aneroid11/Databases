@@ -472,7 +472,27 @@ void MainWindow::on_artistAccDetails_saveChangesButton_clicked()
 {
     if (areYouSure())
     {
-        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        //ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        // get data from the page and save it.
+
+        const int id = ui->artistAccDetails_idLabel->text().toInt();
+        const QString email = ui->artistAccDetails_emailLineEdit->text();
+        const QString nickname = ui->artistAccDetails_nicknameLineEdit->text();
+        const QString password = ui->artistAccDetails_passwordLineEdit->text();
+        const QString dateOfBirth = ui->artistAccDetails_birthDateEdit->date().toString("yyyy-MM-dd");
+        const QString gender = ui->artistAccDetails_genderComboBox->currentText();
+
+        try
+        {
+            db->updateArtist(id, email, nickname, password, dateOfBirth, gender);
+        }
+        catch (QString msg)
+        {
+            showMsg(msg);
+            return;
+        }
+
+        showMsg("Changes saved.");
     }
 }
 
