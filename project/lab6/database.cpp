@@ -345,7 +345,7 @@ TrackInfo Database::getTrackInfo(const int id)
 int Database::numLikesOnTrack(const int trackId)
 {
     QSqlQuery q;
-    prepareExec(q, QString("call LikesOnTrack(%1);").arg(trackId));
+    prepareExec(q, QString("select count(id) num_of_likes from Likes where track_id = %1;").arg(trackId));
     q.next();
 
     qDebug() << q.size();
@@ -502,4 +502,28 @@ void Database::updateArtist(int id, QString email, QString nickname, QString pas
                            "update Users set email = :email, password_hash = :passwordHash "
                            "where id = :id;",
                            QList<QVariant>{ email, passwordHash, id });
+}
+
+QStringList Database::getTrackTags(const int trackId)
+{
+    QString s = QString("select name from Tags "
+                        "inner join TagsToTracks "
+                        "on TagsToTracks.id_tag = Tags.id "
+                        "where id_track = %1;").arg(trackId);
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<DataRow> rows;
+
+    while (q.next())
+    {
+        rows.push_back(extractDataRowFromQuery(q));
+    }
+
+    QStringList ret;
+    for (const DataRow& r : rows)
+    {
+        ret.push_back(r.data["name"].toString());
+    }
+
+    return ret;
 }

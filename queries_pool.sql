@@ -70,6 +70,9 @@ begin
     insert into TagsToTracks (id_tag, id_track) select id, track_id from Tags where name = tag_name;
 end//
 
+-- Теги трека:
+select name from Tags inner join TagsToTracks on TagsToTracks.id_tag = Tags.id where id_track = 15;
+
 
 -- Просмотреть всю информацию о треке <track id>:
 -- Вьюшка для этого:

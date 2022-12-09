@@ -110,6 +110,8 @@ public:
 
     void updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender);
 
+    QStringList getTrackTags(const int trackId);
+
 private:
     int numAdmins();
 

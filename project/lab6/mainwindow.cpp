@@ -405,6 +405,13 @@ void MainWindow::myTrackEditPageInit(const int trackId)
     ui->myTrackEdit_numLikes->setText(QString::number(likes));
 
     ui->myTrackEdit_trackIdLabel->setText(QString::number(trackId));
+
+    ui->myTrackEdit_tags->clear();
+    QStringList tags = db->getTrackTags(trackId);
+    for (QString t : tags)
+    {
+        ui->myTrackEdit_tags->addItem(t);
+    }
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
