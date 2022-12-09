@@ -869,7 +869,14 @@ void MainWindow::on_playlists_backButton_clicked()
     // TODO: add check for title
     if (ui->playlists_titleLabel->text() == "All playlists:")
     {
-        ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+        if (db->getCurrUserRole() == "admin")
+        {
+            ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+        }
+        else
+        {
+            ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        }
     }
     else
     {
@@ -942,6 +949,7 @@ void MainWindow::on_myTrackEdit_backButton_clicked()
     ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
 }
 
+
 void MainWindow::on_myTrackEdit_commentsButton_clicked()
 {
     const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
@@ -1012,4 +1020,10 @@ void MainWindow::on_myTrackEdit_saveButton_clicked()
         return;
     }
     db->updateTrackTitle(trackId, ui->myTrackEdit_titleLineEdit->text());
+}
+
+void MainWindow::on_artistAcc_allPlaylistsButton_clicked()
+{
+    playlistsPageInit(-1);
+    ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
 }

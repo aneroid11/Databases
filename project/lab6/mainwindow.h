@@ -111,6 +111,8 @@ private slots:
 
     void on_myTrackEdit_saveButton_clicked();
 
+    void on_artistAcc_allPlaylistsButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
