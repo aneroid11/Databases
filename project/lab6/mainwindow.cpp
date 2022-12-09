@@ -349,6 +349,13 @@ void MainWindow::myTracksPageInit(const int artistId)
     ui->myTracks_addToPlaylistButton->setDisabled(admin);
     ui->myTracks_detailsButton->setDisabled(admin);
 
+    ui->myTracks_artistId->setText(QString::number(artistId));
+
+    const bool disableBtns = !admin && artistId != db->getCurrUserId();
+    ui->myTracks_deleteButton->setDisabled(disableBtns);
+    ui->myTracks_detailsButton->setDisabled(disableBtns);
+    ui->myTracks_uploadTrackButton->setDisabled(disableBtns);
+
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }
 
@@ -444,7 +451,16 @@ void MainWindow::on_artistAccDetails_cancelButton_clicked()
 {
     if (db->getCurrUserRole() == "artist")
     {
-        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        const int artistId = ui->artistAccDetails_idLabel->text().toInt();
+
+        if (artistId == db->getCurrUserId())
+        {
+            ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        }
+        else
+        {
+            ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+        }
     }
     else
     {
@@ -485,7 +501,16 @@ void MainWindow::on_myTracks_backButton_clicked()
     }
     else
     {
-        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        const int artistId = ui->myTracks_artistId->text().toInt();
+
+        if (artistId == db->getCurrUserId())
+        {
+            ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+        }
+        else
+        {
+            ui->stackedWidget->setCurrentIndex(ARTIST_ACC_DETAILS_PAGE_ID);
+        }
     }
 }
 
@@ -678,7 +703,14 @@ void MainWindow::on_allTracks_deleteButton_clicked()
 
 void MainWindow::on_artists_backButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    if (db->getCurrUserRole() == "admin")
+    {
+        ui->stackedWidget->setCurrentIndex(ADMIN_ACC_PAGE_ID);
+    }
+    else
+    {
+        ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+    }
 }
 
 void MainWindow::on_artists_detailsButton_clicked()

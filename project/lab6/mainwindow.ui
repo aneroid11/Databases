@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -782,9 +782,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>70</y>
         <width>411</width>
-        <height>541</height>
+        <height>481</height>
        </rect>
       </property>
       <item>
@@ -874,6 +874,32 @@
       </property>
       <property name="text">
        <string>Add to playlist</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Tracks by:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="myTracks_artistId">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>19</y>
+        <width>101</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
