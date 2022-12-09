@@ -23,7 +23,8 @@ enum {
     CREATE_ADMIN_PAGE_ID = 11,
     REPORTS_PAGE_ID = 12,
     ARTISTS_PAGE_ID = 13,
-    COMMENTS_PAGE_ID = 14
+    COMMENTS_PAGE_ID = 14,
+    PLAYLIST_DETAILS_PAGE_ID = 15
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -1026,4 +1027,9 @@ void MainWindow::on_artistAcc_allPlaylistsButton_clicked()
 {
     playlistsPageInit(-1);
     ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
+}
+
+void MainWindow::on_playlists_detailsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(PLAYLIST_DETAILS_PAGE_ID);
 }
