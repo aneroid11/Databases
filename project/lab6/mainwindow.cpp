@@ -900,6 +900,5 @@ void MainWindow::on_myTracks_uploadTrackButton_clicked()
         return;
     }
 
-
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }

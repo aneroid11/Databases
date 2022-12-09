@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -907,11 +907,14 @@
      </widget>
     </widget>
     <widget class="QWidget" name="myTrackEditPage">
-     <widget class="QDateTimeEdit" name="dateTimeEdit">
+     <widget class="QDateTimeEdit" name="myTrackEdit_timestamp">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>20</y>
+        <y>40</y>
         <width>194</width>
         <height>31</height>
        </rect>
@@ -921,39 +924,13 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>20</y>
+        <y>40</y>
         <width>111</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
        <string>Timestamp</string>
-      </property>
-     </widget>
-     <widget class="QTextEdit" name="textEdit">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>70</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>title</string>
-      </property>
-     </widget>
-     <widget class="QTextEdit" name="textEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>120</y>
-        <width>191</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>length</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_2">
@@ -969,7 +946,7 @@
        <string>Likes:</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="myTrackEdit_whoLikedButton">
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -995,7 +972,7 @@
        <string>Tags:</string>
       </property>
      </widget>
-     <widget class="QListWidget" name="listWidget">
+     <widget class="QListWidget" name="myTrackEdit_tags">
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -1020,7 +997,7 @@
        </property>
       </item>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="myTrackEdit_deleteTagButton">
       <property name="geometry">
        <rect>
         <x>610</x>
@@ -1033,7 +1010,7 @@
        <string>Delete</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="myTrackEdit_addNewTagButton">
       <property name="geometry">
        <rect>
         <x>610</x>
@@ -1046,7 +1023,7 @@
        <string>Add new</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="myTrackEdit_commentsButton">
       <property name="geometry">
        <rect>
         <x>340</x>
@@ -1057,6 +1034,84 @@
       </property>
       <property name="text">
        <string>Comments</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="myTrackEdit_titleLineEdit">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>80</y>
+        <width>191</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>title</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>140</y>
+        <width>141</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Length (seconds):</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="myTrackEdit_length">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>140</y>
+        <width>76</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="myTrackEdit_numLikes">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>170</y>
+        <width>76</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="myTrackEdit_saveButton">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>410</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="myTrackEdit_backButton">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>460</y>
+        <width>112</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Back</string>
       </property>
      </widget>
     </widget>
