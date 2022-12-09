@@ -983,3 +983,18 @@ void MainWindow::on_myTrackEdit_addNewTagButton_clicked()
     db->attachTagToTrack(trackId, newTag);
     fillTags(ui->myTrackEdit_tags, trackId);
 }
+
+void MainWindow::on_myTrackEdit_deleteTagButton_clicked()
+{
+    QListWidgetItem* currItem = ui->myTrackEdit_tags->currentItem();
+
+    if (!currItem) { showMsg("You didn't select any tag!"); return; }
+
+    if (!areYouSure()) { return; }
+
+    const QString tag = currItem->text();
+    const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
+
+    db->deattachTagFromTrack(trackId, tag);
+    fillTags(ui->myTrackEdit_tags, trackId);
+}

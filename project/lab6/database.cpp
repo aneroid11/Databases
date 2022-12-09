@@ -547,3 +547,10 @@ void Database::attachTagToTrack(const int trackId, const QString newTag)
     // ?
     catch (QString) {}
 }
+
+void Database::deattachTagFromTrack(const int trackId, const QString tag)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("delete from TagsToTracks where id_tag = "
+                           "(select id from Tags where name = '%1') and id_track = %2;").arg(tag).arg(trackId));
+}
