@@ -806,3 +806,8 @@ void MainWindow::on_playlists_deleteButton_clicked()
         }
     }
 }
+
+void MainWindow::on_artistAcc_artistsButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+}
