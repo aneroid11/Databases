@@ -329,6 +329,45 @@ QList<TrackInfo> Database::getTracksInfo(const int artistId)
     return ret;
 }
 
+TrackInfo Database::getTrackInfo(const int id)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("select * from TracksInfo where id = %1").arg(id));
+
+    if (q.next())
+    {
+        return extractTrackInfoFromQuery(q);
+    }
+
+    throw QString("No track with such id!");
+}
+
+int Database::numLikesOnTrack(const int trackId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("call LikesOnTrack(%1);").arg(trackId));
+    q.next();
+    return q.value(0).toInt();
+}
+
+QList<DataRow> Database::getCommentsOnTrack(const int trackId)
+{
+    //"select Comments.contents, Artists.nickname from Comments inner join Artists on Comments.artist_id = Artists.id where track_id = 5;"
+    QSqlQuery q;
+    prepareExec(q, QString("select Comments.contents, Artists.nickname "
+                           "from Comments "
+                           "inner join Artists on Comments.artist_id = Artists.id "
+                           "where track_id = %1;").arg(trackId));
+    QList<DataRow> comments;
+
+    while (q.next())
+    {
+        comments.push_back(extractDataRowFromQuery(q));
+    }
+
+    return comments;
+}
+
 QList<TrackInfo> Database::getAllTracksInfo()
 {
     QSqlQuery q;

@@ -95,6 +95,9 @@ begin
     insert into Comments (timestamp, contents, artist_id, track_id) values (CURRENT_TIMESTAMP(), contents, artist_id, track_id);
 end//
 
+-- комментарии к треку:
+select Comments.contents, Artists.nickname from Comments inner join Artists on Comments.artist_id = Artists.id where track_id = 5;
+
 -- Отредактировать трек <track id>:
 update Tracks set timestamp = <current timestamp>, title = <new title>, length_seconds = <new length> where id = <track id>;
 

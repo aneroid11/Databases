@@ -86,6 +86,11 @@ public:
 
     QList<TrackInfo> getAllTracksInfo();
     QList<TrackInfo> getTracksInfo(const int artistId);
+    TrackInfo getTrackInfo(const int id);
+
+    int numLikesOnTrack(const int trackId);
+
+    QList<DataRow> getCommentsOnTrack(const int trackId);
 
     void deleteReport(int id);
 

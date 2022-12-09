@@ -392,6 +392,21 @@ void MainWindow::playlistsPageInit(const int artistId)
     }
 }
 
+void MainWindow::myTrackEditPageInit(const int trackId)
+{
+    TrackInfo info = db->getTrackInfo(trackId);
+    //const QDateTime timestamp = QDateTime::fromString(info.timestamp);
+    ui->myTrackEdit_timestampLabel->setText(info.timestamp);
+
+    ui->myTrackEdit_titleLineEdit->setText(info.title);
+    ui->myTrackEdit_length->setText(QString::number(info.lengthSeconds));
+
+    const int likes = db->numLikesOnTrack(trackId);
+    ui->myTrackEdit_numLikes->setText(QString::number(likes));
+
+    ui->myTrackEdit_trackIdLabel->setText(QString::number(trackId));
+}
+
 void MainWindow::on_stackedWidget_currentChanged(int index)
 {
     qDebug() << "on_stackedWidget_currentChanged()\n";
@@ -561,7 +576,13 @@ void MainWindow::on_myTracks_deleteButton_clicked()
 
 void MainWindow::on_myTracks_detailsButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(MY_TRACK_EDIT_PAGE_ID);
+    int id;
+
+    if ((id = getCurrentItemId(ui->myTracks_tracksListWidget)) >= 0)
+    {
+        myTrackEditPageInit(id);
+        ui->stackedWidget->setCurrentIndex(MY_TRACK_EDIT_PAGE_ID);
+    }
 }
 
 void MainWindow::on_adminAcc_signOffButton_clicked()
@@ -901,4 +922,33 @@ void MainWindow::on_myTracks_uploadTrackButton_clicked()
     }
 
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
+}
+
+void MainWindow::on_myTrackEdit_backButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
+}
+
+void MainWindow::on_myTrackEdit_commentsButton_clicked()
+{
+    const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
+    QList<DataRow> comments = db->getCommentsOnTrack(trackId);
+
+    QString msg;
+
+    if (comments.empty())
+    {
+        msg += "There's no any comments!";
+    }
+    else
+    {
+        for (DataRow c : comments)
+        {
+            const QString nickname = c.data["nickname"].toString();
+            const QString contents = c.data["contents"].toString();
+            msg += QString("%1: '%2'\n").arg(nickname).arg(contents);
+        }
+    }
+
+    showMsg(msg);
 }

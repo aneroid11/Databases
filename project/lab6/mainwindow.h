@@ -101,6 +101,10 @@ private slots:
 
     void on_myTracks_uploadTrackButton_clicked();
 
+    void on_myTrackEdit_backButton_clicked();
+
+    void on_myTrackEdit_commentsButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -116,6 +120,7 @@ private:
     void myTracksPageInit(const int artistId);
     void commentsPageInit(const int artistId);
     void playlistsPageInit(const int artistId = -1);
+    void myTrackEditPageInit(const int trackId);
 
     void deleteCurrAcc();
 
