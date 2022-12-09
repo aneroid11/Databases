@@ -110,6 +110,8 @@ public:
 
     void updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender);
 
+    void updateTrackTitle(int trackId, QString title);
+
     QStringList getTrackTags(const int trackId);
 
     void attachTagToTrack(const int trackId, const QString newTag);

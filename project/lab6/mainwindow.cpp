@@ -938,6 +938,7 @@ void MainWindow::on_myTracks_uploadTrackButton_clicked()
 
 void MainWindow::on_myTrackEdit_backButton_clicked()
 {
+    myTracksPageInit(db->getCurrUserId());
     ui->stackedWidget->setCurrentIndex(MY_TRACKS_PAGE_ID);
 }
 
@@ -997,4 +998,18 @@ void MainWindow::on_myTrackEdit_deleteTagButton_clicked()
 
     db->deattachTagFromTrack(trackId, tag);
     fillTags(ui->myTrackEdit_tags, trackId);
+}
+
+void MainWindow::on_myTrackEdit_saveButton_clicked()
+{
+    if (!areYouSure()) { return; }
+
+    const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
+
+    if (ui->myTrackEdit_titleLineEdit->text().isEmpty())
+    {
+        showMsg("Cannot have empty title!");
+        return;
+    }
+    db->updateTrackTitle(trackId, ui->myTrackEdit_titleLineEdit->text());
 }

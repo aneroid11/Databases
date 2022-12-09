@@ -504,6 +504,12 @@ void Database::updateArtist(int id, QString email, QString nickname, QString pas
                            QList<QVariant>{ email, passwordHash, id });
 }
 
+void Database::updateTrackTitle(int trackId, QString title)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "update Tracks set title = :title where id = :trackId", { title, trackId });
+}
+
 QStringList Database::getTrackTags(const int trackId)
 {
     QString s = QString("select name from Tags "

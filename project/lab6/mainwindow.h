@@ -109,6 +109,8 @@ private slots:
 
     void on_myTrackEdit_deleteTagButton_clicked();
 
+    void on_myTrackEdit_saveButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
