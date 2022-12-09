@@ -121,6 +121,9 @@ public:
     void attachTagToTrack(const int trackId, const QString newTag);
     void deattachTagFromTrack(const int trackId, const QString tag);
 
+    void attachTagToPlaylist(const int playlistId, const QString newTag);
+    void deattachTagFromPlaylist(const int playlistId, const QString tag);
+
 private:
     int numAdmins();
 

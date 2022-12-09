@@ -625,3 +625,30 @@ void Database::deattachTagFromTrack(const int trackId, const QString tag)
     prepareExec(q, QString("delete from TagsToTracks where id_tag = "
                            "(select id from Tags where name = '%1') and id_track = %2;").arg(tag).arg(trackId));
 }
+
+void Database::attachTagToPlaylist(const int playlistId, const QString newTag)
+{
+    QSqlQuery q;
+
+    try
+    {
+        prepareExecWithBinding(q, QString("insert into Tags (name) values (:newTag);"), {newTag});
+    }
+    // ?
+    catch (QString) {}
+
+    try
+    {
+        prepareExecWithBinding(q, QString("insert into TagsToPlaylists (id_tag, id_playlist) "
+                                          "select id, :trackId from Tags where name = :newTag;"), {playlistId, newTag});
+    }
+    // ?
+    catch (QString) {}
+}
+
+void Database::deattachTagFromPlaylist(const int playlistId, const QString tag)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("delete from TagsToPlaylists where id_tag = "
+                           "(select id from Tags where name = '%1') and id_playlist = %2;").arg(tag).arg(playlistId));
+}

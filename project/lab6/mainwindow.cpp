@@ -1094,3 +1094,21 @@ void MainWindow::on_playlistDetails_listen_clicked()
 {
     showMsg("...wonderful music plays...");
 }
+
+void MainWindow::on_playlistDetails_addTag_clicked()
+{
+    bool ok = false;
+    QString newTag;
+
+    while (!ok)
+    {
+        newTag = QInputDialog::getText(this, "New tag", "Enter the new tag", QLineEdit::Normal, QString(), &ok);
+        newTag = newTag.toLower();
+
+        if (newTag.isNull() || newTag.isEmpty()) { ok = false; }
+    }
+
+    const int playlistId = ui->playlistDetails_playlistId->text().toInt();
+    db->attachTagToPlaylist(playlistId, newTag);
+    fillTagsFor(ui->playlistDetails_tags, "Playlists", playlistId);
+}
