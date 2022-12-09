@@ -282,6 +282,9 @@ void MainWindow::reportsPageInit(const int artistId)
 
 void MainWindow::artistsPageInit()
 {
+    const bool admin = db->getCurrUserRole() == "admin";
+    ui->artists_deleteButton->setDisabled(!admin);
+
     fillArtistsList();
 }
 
@@ -304,15 +307,18 @@ void MainWindow::allTracksPageInit()
 void MainWindow::artistAccDetailsPageInit(const int artistId)
 {
     const QString role = db->getCurrUserRole();
-    const bool admRole = role == "admin";
+    const bool disableEdit = (role == "admin") || (artistId != db->getCurrUserId());
 
-    ui->artistAccDetails_saveChangesButton->setDisabled(admRole);
-    ui->artistAccDetails_birthDateEdit->setDisabled(admRole);
-    ui->artistAccDetails_genderComboBox->setDisabled(admRole);
-    ui->artistAccDetails_emailLineEdit->setDisabled(admRole);
-    ui->artistAccDetails_passwordLineEdit->setDisabled(admRole);
-    ui->artistAccDetails_nicknameLineEdit->setDisabled(admRole);
-    ui->artistAccDetails_playlistsButton->setDisabled(admRole);
+    ui->artistAccDetails_saveChangesButton->setDisabled(disableEdit);
+    ui->artistAccDetails_birthDateEdit->setDisabled(disableEdit);
+    ui->artistAccDetails_genderComboBox->setDisabled(disableEdit);
+    ui->artistAccDetails_emailLineEdit->setDisabled(disableEdit);
+    ui->artistAccDetails_passwordLineEdit->setDisabled(disableEdit);
+    ui->artistAccDetails_nicknameLineEdit->setDisabled(disableEdit);
+    ui->artistAccDetails_playlistsButton->setDisabled((role == "admin"));
+
+    ui->artistAccDetails_reportsButton->setDisabled((role != "admin") && (artistId != db->getCurrUserId()));
+    ui->artistAccDetails_commentsButton->setDisabled((role != "admin") && (artistId != db->getCurrUserId()));
 
     // fill the data
     Artist info = db->getArtistInfo(artistId);
