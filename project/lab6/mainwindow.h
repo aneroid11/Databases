@@ -99,6 +99,8 @@ private slots:
 
     void on_artistAcc_artistsButton_clicked();
 
+    void on_myTracks_uploadTrackButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

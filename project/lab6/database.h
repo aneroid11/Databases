@@ -89,6 +89,7 @@ public:
 
     void deleteReport(int id);
 
+    void createTrack(int artistId, QString title, int length);
     void deleteTrack(int id);
 
     int getCurrUserId() const { return currUserId; }

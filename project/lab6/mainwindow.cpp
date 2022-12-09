@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QList>
+#include <QInputDialog>
 
 enum {
     STARTING_PAGE_ID = 0,
@@ -869,4 +870,36 @@ void MainWindow::on_playlists_deleteButton_clicked()
 void MainWindow::on_artistAcc_artistsButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(ARTISTS_PAGE_ID);
+}
+
+void MainWindow::on_myTracks_uploadTrackButton_clicked()
+{
+    bool ok = false;
+    QString title;
+    int length;
+    while (!ok)
+    {
+        title = QInputDialog::getText(this, "Title", "Enter the track title: ", QLineEdit::Normal, QString(), &ok);
+    }
+
+    ok = false;
+    while (!ok)
+    {
+        length = QInputDialog::getInt(this, "Length", "Enter the track length (seconds)", 1, 1, 1000, 1, &ok);
+    }
+
+    const int artistId = ui->myTracks_artistId->text().toInt();
+
+    try
+    {
+        db->createTrack(artistId, title, length);
+    }
+    catch (QString err)
+    {
+        showMsg(err);
+        return;
+    }
+
+
+    fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }

@@ -350,6 +350,12 @@ void Database::deleteReport(int id)
     prepareExec(q, s);
 }
 
+void Database::createTrack(int artistId, QString title, int length)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "call UploadTrack(:title, :length, :artistId);", { title, length, artistId });
+}
+
 void Database::deleteTrack(int id)
 {
     QString s = QString("delete from Tracks where id = %1;").arg(id);
