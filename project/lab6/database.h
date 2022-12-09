@@ -112,6 +112,8 @@ public:
 
     QStringList getTrackTags(const int trackId);
 
+    void attachTagToTrack(const int trackId, const QString newTag);
+
 private:
     int numAdmins();
 

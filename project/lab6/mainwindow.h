@@ -105,6 +105,8 @@ private slots:
 
     void on_myTrackEdit_commentsButton_clicked();
 
+    void on_myTrackEdit_addNewTagButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -131,6 +133,8 @@ private:
     void fillArtistsList();
     void fillCommentsList(QListWidget* listWidget, const QList<DataRow>& comments);
     void fillPlaylistsList(QListWidget* listWidget, const QList<DataRow>& playlists);
+
+    void fillTags(QListWidget* listWidget, const int trackId);
 
     int extractIdFromBeginning(QString str);
 

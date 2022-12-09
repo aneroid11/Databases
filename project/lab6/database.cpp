@@ -527,3 +527,23 @@ QStringList Database::getTrackTags(const int trackId)
 
     return ret;
 }
+
+void Database::attachTagToTrack(const int trackId, const QString newTag)
+{
+    QSqlQuery q;
+
+    try
+    {
+        prepareExecWithBinding(q, QString("insert into Tags (name) values (:newTag);"), {newTag});
+    }
+    // ?
+    catch (QString) {}
+
+    try
+    {
+        prepareExecWithBinding(q, QString("insert into TagsToTracks (id_tag, id_track) "
+                                          "select id, :trackId from Tags where name = :newTag;"), {trackId, newTag});
+    }
+    // ?
+    catch (QString) {}
+}

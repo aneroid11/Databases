@@ -266,6 +266,16 @@ void MainWindow::fillPlaylistsList(QListWidget *listWidget, const QList<DataRow>
     }
 }
 
+void MainWindow::fillTags(QListWidget *listWidget, const int trackId)
+{
+    listWidget->clear();
+    QStringList tags = db->getTrackTags(trackId);
+    for (QString t : tags)
+    {
+        listWidget->addItem(t);
+    }
+}
+
 void MainWindow::reportsPageInit(const int artistId)
 {
     if (artistId < 0)
@@ -406,12 +416,7 @@ void MainWindow::myTrackEditPageInit(const int trackId)
 
     ui->myTrackEdit_trackIdLabel->setText(QString::number(trackId));
 
-    ui->myTrackEdit_tags->clear();
-    QStringList tags = db->getTrackTags(trackId);
-    for (QString t : tags)
-    {
-        ui->myTrackEdit_tags->addItem(t);
-    }
+    fillTags(ui->myTrackEdit_tags, trackId);
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -958,4 +963,23 @@ void MainWindow::on_myTrackEdit_commentsButton_clicked()
     }
 
     showMsg(msg);
+}
+
+void MainWindow::on_myTrackEdit_addNewTagButton_clicked()
+{
+    bool ok = false;
+    QString newTag;
+
+    while (!ok)
+    {
+        newTag = QInputDialog::getText(this, "New tag", "Enter the new tag", QLineEdit::Normal, QString(), &ok);
+        newTag = newTag.toLower();
+
+        if (newTag.isNull() || newTag.isEmpty()) { ok = false; }
+    }
+
+    const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
+
+    db->attachTagToTrack(trackId, newTag);
+    fillTags(ui->myTrackEdit_tags, trackId);
 }
