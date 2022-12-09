@@ -621,26 +621,27 @@ int MainWindow::extractIdFromBeginning(QString str)
 
 void MainWindow::on_reports_detailsButton_clicked()
 {
-    const QString currReport = ui->reports_reportsList->currentItem()->text();
-    const int rpId = extractIdFromBeginning(currReport);
+    int rpId;
+    if ((rpId = getCurrentItemId(ui->reports_reportsList)) >= 0)
+    {
+        Report rep = db->getReport(rpId);
+        QString details =
+                QString("Report details:\n\n"
+                        "id = %1\n"
+                        "type: %2\n"
+                        "title: '%3'\n"
+                        "contents: '%4'\n"
+                        "author id: %5\n"
+                        "reported id: %6")
+                .arg(rep.id)
+                .arg(rep.reportType)
+                .arg(rep.title)
+                .arg(rep.contents)
+                .arg(rep.authorId)
+                .arg(rep.objectId);
 
-    Report rep = db->getReport(rpId);
-    QString details =
-            QString("Report details:\n\n"
-                    "id = %1\n"
-                    "type: %2\n"
-                    "title: '%3'\n"
-                    "contents: '%4'\n"
-                    "author id: %5\n"
-                    "reported id: %6")
-            .arg(rep.id)
-            .arg(rep.reportType)
-            .arg(rep.title)
-            .arg(rep.contents)
-            .arg(rep.authorId)
-            .arg(rep.objectId);
-
-    showMsg(details);
+        showMsg(details);
+    }
 }
 
 void MainWindow::on_reports_deleteButton_clicked()
