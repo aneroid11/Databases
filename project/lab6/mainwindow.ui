@@ -1533,7 +1533,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLabel" name="label_11">
+     <widget class="QLabel" name="playlistDetails_releaseDateLabel">
       <property name="geometry">
        <rect>
         <x>200</x>

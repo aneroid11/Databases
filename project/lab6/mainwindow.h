@@ -148,6 +148,7 @@ private:
     void fillPlaylistsList(QListWidget* listWidget, const QList<DataRow>& playlists);
 
     void fillTags(QListWidget* listWidget, const int trackId);
+    void fillTagsFor(QListWidget *listWidget, const QString type, const int id);
 
     int extractIdFromBeginning(QString str);
 

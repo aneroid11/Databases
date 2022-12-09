@@ -267,6 +267,16 @@ void MainWindow::fillPlaylistsList(QListWidget *listWidget, const QList<DataRow>
     }
 }
 
+void MainWindow::fillTagsFor(QListWidget *listWidget, const QString type, const int id)
+{
+    listWidget->clear();
+    QStringList tags = db->getTagsFor(type, id);
+    for (QString t : tags)
+    {
+        listWidget->addItem(t);
+    }
+}
+
 void MainWindow::fillTags(QListWidget *listWidget, const int trackId)
 {
     listWidget->clear();
@@ -418,6 +428,23 @@ void MainWindow::playlistDetailsPageInit(const int playlistId)
     DataRow pl = db->getPlaylist(playlistId);
     ui->playlistDetails_playlistId->setText(QString::number(playlistId));
     ui->playlistDetails_title->setText(pl.data["title"].toString());
+
+    const QString date = pl.data["release_date"].toString();
+
+    if (date.isEmpty() || date.isNull())
+    {
+        // not an album
+        ui->playlistDetails_releaseDate->hide();
+        ui->playlistDetails_releaseDateLabel->hide();
+    }
+    else
+    {
+        ui->playlistDetails_releaseDate->show();
+        ui->playlistDetails_releaseDateLabel->show();
+        ui->playlistDetails_releaseDate->setDate(QDate::fromString(date, "yyyy-MM-dd"));
+    }
+
+    fillTagsFor(ui->playlistDetails_tags, "Playlists", playlistId);
 }
 
 void MainWindow::myTrackEditPageInit(const int trackId)

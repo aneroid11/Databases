@@ -532,10 +532,37 @@ void Database::updateTrackTitle(int trackId, QString title)
 
 QStringList Database::getTrackTags(const int trackId)
 {
-    QString s = QString("select name from Tags "
+    return getTagsFor("Tracks", trackId);
+    /*QString s = QString("select name from Tags "
                         "inner join TagsToTracks "
                         "on TagsToTracks.id_tag = Tags.id "
                         "where id_track = %1;").arg(trackId);
+    QSqlQuery q;
+    prepareExec(q, s);
+    QList<DataRow> rows;
+
+    while (q.next())
+    {
+        rows.push_back(extractDataRowFromQuery(q));
+    }
+
+    QStringList ret;
+    for (const DataRow& r : rows)
+    {
+        ret.push_back(r.data["name"].toString());
+    }
+
+    return ret;*/
+}
+
+QStringList Database::getTagsFor(QString table, int id)
+{
+    QString idStr = table == "Tracks" ? "id_track" : "id_playlist";
+
+    QString s = QString("select name from Tags "
+                        "inner join TagsTo%1 "
+                        "on TagsTo%1.id_tag = Tags.id "
+                        "where %2 = %3;").arg(table).arg(idStr).arg(id);
     QSqlQuery q;
     prepareExec(q, s);
     QList<DataRow> rows;
