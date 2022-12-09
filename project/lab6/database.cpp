@@ -473,6 +473,26 @@ QList<DataRow> Database::getPlaylistsBy(const int artistId)
     return ret;
 }
 
+DataRow Database::getPlaylist(const int playlistId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("select Playlists.id, Playlists.title, Playlists.artist_id, Albums.release_date, Artists.nickname "
+                           "from Playlists left join Albums on Playlists.id = Albums.id "
+                           "left join Artists on artist_id = Artists.id "
+                           "where Playlists.id = %1;").arg(playlistId));
+
+    q.next();
+    return extractDataRowFromQuery(q);
+}
+
+int Database::idPlaylistOwner(const int playlistId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("select artist_id from Playlists where id = %1").arg(playlistId));
+    q.next();
+    return q.value(0).toInt();
+}
+
 void Database::deletePlaylist(const int id)
 {
     QString s = QString("call DeletePlaylist(%1);").arg(id);

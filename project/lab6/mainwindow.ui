@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>10</number>
+     <number>15</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -1670,7 +1670,7 @@
        <string>Save</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="playlistDetails_addTrack">
       <property name="geometry">
        <rect>
         <x>630</x>

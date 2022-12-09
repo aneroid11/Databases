@@ -403,6 +403,23 @@ void MainWindow::playlistsPageInit(const int artistId)
     }
 }
 
+void MainWindow::playlistDetailsPageInit(const int playlistId)
+{
+    const bool playlistOwner = db->idPlaylistOwner(playlistId) == db->getCurrUserId();
+
+    ui->playlistDetails_title->setDisabled(!playlistOwner);
+    ui->playlistDetails_releaseDate->setDisabled(!playlistOwner);
+    ui->playlistDetails_save->setDisabled(!playlistOwner);
+    ui->playlistDetails_addTag->setDisabled(!playlistOwner);
+    ui->playlistDetails_deleteTag->setDisabled(!playlistOwner);
+    ui->playlistDetails_deleteTrack->setDisabled(!playlistOwner);
+    ui->playlistDetails_addTrack->setDisabled(!playlistOwner);
+
+    DataRow pl = db->getPlaylist(playlistId);
+    ui->playlistDetails_playlistId->setText(QString::number(playlistId));
+    ui->playlistDetails_title->setText(pl.data["title"].toString());
+}
+
 void MainWindow::myTrackEditPageInit(const int trackId)
 {
     TrackInfo info = db->getTrackInfo(trackId);
@@ -1031,5 +1048,20 @@ void MainWindow::on_artistAcc_allPlaylistsButton_clicked()
 
 void MainWindow::on_playlists_detailsButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(PLAYLIST_DETAILS_PAGE_ID);
+    int playlistId;
+    if ((playlistId = getCurrentItemId(ui->playlists_playlistsList)) >= 0)
+    {
+        playlistDetailsPageInit(playlistId);
+        ui->stackedWidget->setCurrentIndex(PLAYLIST_DETAILS_PAGE_ID);
+    }
+}
+
+void MainWindow::on_playlistDetails_exit_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
+}
+
+void MainWindow::on_playlistDetails_listen_clicked()
+{
+    showMsg("...wonderful music plays...");
 }

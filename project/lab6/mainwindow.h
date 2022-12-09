@@ -115,6 +115,10 @@ private slots:
 
     void on_playlists_detailsButton_clicked();
 
+    void on_playlistDetails_exit_clicked();
+
+    void on_playlistDetails_listen_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -130,6 +134,7 @@ private:
     void myTracksPageInit(const int artistId);
     void commentsPageInit(const int artistId);
     void playlistsPageInit(const int artistId = -1);
+    void playlistDetailsPageInit(const int playlistId);
     void myTrackEditPageInit(const int trackId);
 
     void deleteCurrAcc();
