@@ -444,7 +444,9 @@ void MainWindow::playlistDetailsPageInit(const int playlistId)
         ui->playlistDetails_releaseDate->setDate(QDate::fromString(date, "yyyy-MM-dd"));
     }
 
+
     fillTagsFor(ui->playlistDetails_tags, "Playlists", playlistId);
+    fillTracksList(ui->playlistDetails_tracks, db->getTracksFromPlaylistInfo(playlistId));
 }
 
 void MainWindow::myTrackEditPageInit(const int trackId)

@@ -87,6 +87,7 @@ public:
     QList<TrackInfo> getAllTracksInfo();
     QList<TrackInfo> getTracksInfo(const int artistId);
     TrackInfo getTrackInfo(const int id);
+    QList<TrackInfo> getTracksFromPlaylistInfo(int playlistId);
 
     int numLikesOnTrack(const int trackId);
 

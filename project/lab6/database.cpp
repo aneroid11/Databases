@@ -342,6 +342,24 @@ TrackInfo Database::getTrackInfo(const int id)
     throw QString("No track with such id!");
 }
 
+QList<TrackInfo> Database::getTracksFromPlaylistInfo(int playlistId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("select TracksInfo.id, timestamp, title, length_seconds, nickname "
+                           "from TracksInfo "
+                           "inner join TracksToPlaylists "
+                           "on TracksInfo.id = TracksToPlaylists.track_id "
+                           "where playlist_id = %1;").arg(playlistId));
+    QList<TrackInfo> ret;
+
+    while (q.next())
+    {
+        ret.push_back(extractTrackInfoFromQuery(q));
+    }
+
+    return ret;
+}
+
 int Database::numLikesOnTrack(const int trackId)
 {
     QSqlQuery q;
