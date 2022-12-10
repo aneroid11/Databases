@@ -110,6 +110,7 @@ public:
     int idPlaylistOwner(const int playlistId);
 
     void deletePlaylist(const int id);
+    void addTrackToPlaylist(const int playlistId, const int currTrackId);
     void deleteTrackFromPlaylist(const int trackId, const int playlistId);
 
     void updatePlaylistTitle(const int playlistId, const QString newTitle);

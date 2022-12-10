@@ -518,6 +518,13 @@ void Database::deletePlaylist(const int id)
     prepareExec(q, s);
 }
 
+void Database::addTrackToPlaylist(const int playlistId, const int currTrackId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("insert into TracksToPlaylists "
+                           "(track_id, playlist_id) values (%2, %1);").arg(playlistId).arg(currTrackId));
+}
+
 void Database::deleteTrackFromPlaylist(const int trackId, const int playlistId)
 {
     QSqlQuery q;
