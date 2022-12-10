@@ -173,7 +173,7 @@ end//
 create procedure CheckSelfLikeProc(track_id int, author_id int)
 begin
     if author_id = (select artist_id from Tracks where id = track_id) then
-        SIGNAL SQLSTATE '45000'
+        SIGNAL SQLSTATE '45000' -- user-defined exceptions
         SET MESSAGE_TEXT = 'Self-like is not permitted!';
     end if;
 end//
@@ -188,4 +188,24 @@ create trigger CheckSelfLikeUpd before update on Likes
 for each row
 begin
     call CheckSelfLikeProc(new.track_id, new.artist_id);
+end//
+
+-- проверка, не пытается ли пользователь добавить не свой трек в альбом
+create trigger CheckAddingTrackToPlaylist before insert on TracksToPlaylists
+for each row
+begin
+    declare playlist_artist_id int;
+    declare track_artist_id int;
+
+    -- если это альбом
+    if exists (select 1 from Albums where id = new.playlist_id) then
+        -- проверить, совпадает ли айдишник артиста для трека с айдишником артиста для плейлиста
+        set playlist_artist_id = (select artist_id from Playlists where id = new.playlist_id);
+        set track_artist_id = (select artist_id from Tracks where id = new.track_id);
+        
+        if playlist_artist_id != track_artist_id then
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'You cannot add a track that is not yours to an album!';
+        end if;
+    end if;
 end//

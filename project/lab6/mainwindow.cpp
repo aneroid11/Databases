@@ -1193,3 +1193,40 @@ void MainWindow::on_playlistDetails_save_clicked()
         }
     }
 }
+
+void MainWindow::on_allTracks_addToPlaylist_clicked()
+{
+    if (db->getCurrUserRole() == "admin") { return; }
+
+    const int artistId = db->getCurrUserId();
+    QList<DataRow> playlists = db->getPlaylistsBy(artistId);
+    QStringList items;
+
+    for (const DataRow& row : playlists)
+    {
+        items.push_back(QString("%1 - %2").arg(row.data["id"].toInt()).arg(row.data["title"].toString()));
+    }
+
+    bool ok = false;
+    QString selectedPlaylist;
+    while (!ok)
+    {
+        selectedPlaylist = QInputDialog::getItem(this, "Playlist", "Select playlist", items, 0, false, &ok);
+    }
+
+    const int playlistId = extractIdFromBeginning(selectedPlaylist);
+    int currTrackId = getCurrentItemId(ui->allTracks_tracksListWidget);
+
+    if (currTrackId >= 0)
+    {
+        try
+        {
+            db->addTrackToPlaylist(playlistId, currTrackId);
+        }
+        catch (QString msg)
+        {
+            showMsg(msg);
+            return;
+        }
+    }
+}
