@@ -529,7 +529,7 @@ void Database::deleteTrackFromPlaylist(const int trackId, const int playlistId)
 {
     QSqlQuery q;
     prepareExec(q, QString("delete from TracksToPlaylists "
-                           "where track_id = %1 and playlist_id = %2;").arg(trackId, playlistId));
+                           "where track_id = %1 and playlist_id = %2;").arg(trackId).arg(playlistId));
 }
 
 void Database::updatePlaylistTitle(const int playlistId, const QString newTitle)

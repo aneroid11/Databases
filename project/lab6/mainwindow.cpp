@@ -1150,6 +1150,8 @@ void MainWindow::on_playlistDetails_deleteTrack_clicked()
 
         db->deleteTrackFromPlaylist(trackId, playlistId);
     }
+
+    fillTracksList(ui->playlistDetails_tracks, db->getTracksFromPlaylistInfo(playlistId));
 }
 
 void MainWindow::on_playlistDetails_save_clicked()
@@ -1194,7 +1196,7 @@ void MainWindow::on_playlistDetails_save_clicked()
     }
 }
 
-void MainWindow::on_allTracks_addToPlaylist_clicked()
+void MainWindow::addCurrTrackToPlaylist(QListWidget* tracksListWidget)
 {
     if (db->getCurrUserRole() == "admin") { return; }
 
@@ -1215,7 +1217,7 @@ void MainWindow::on_allTracks_addToPlaylist_clicked()
     }
 
     const int playlistId = extractIdFromBeginning(selectedPlaylist);
-    int currTrackId = getCurrentItemId(ui->allTracks_tracksListWidget);
+    int currTrackId = getCurrentItemId(tracksListWidget);
 
     if (currTrackId >= 0)
     {
@@ -1229,4 +1231,14 @@ void MainWindow::on_allTracks_addToPlaylist_clicked()
             return;
         }
     }
+}
+
+void MainWindow::on_allTracks_addToPlaylist_clicked()
+{
+    addCurrTrackToPlaylist(ui->allTracks_tracksListWidget);
+}
+
+void MainWindow::on_myTracks_addToPlaylistButton_clicked()
+{
+    addCurrTrackToPlaylist(ui->myTracks_tracksListWidget);
 }

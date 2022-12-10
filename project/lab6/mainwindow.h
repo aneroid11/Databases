@@ -129,6 +129,8 @@ private slots:
 
     void on_allTracks_addToPlaylist_clicked();
 
+    void on_myTracks_addToPlaylistButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -159,6 +161,8 @@ private:
 
     void fillTags(QListWidget* listWidget, const int trackId);
     void fillTagsFor(QListWidget *listWidget, const QString type, const int id);
+
+    void addCurrTrackToPlaylist(QListWidget* tracksListWidget);
 
     int extractIdFromBeginning(QString str);
 
