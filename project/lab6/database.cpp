@@ -518,6 +518,13 @@ void Database::deletePlaylist(const int id)
     prepareExec(q, s);
 }
 
+void Database::deleteTrackFromPlaylist(const int trackId, const int playlistId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("delete from TracksToPlaylists "
+                           "where track_id = %1 and playlist_id = %2;").arg(trackId, playlistId));
+}
+
 void Database::updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender)
 {
     Artist a = getArtistInfo(id);

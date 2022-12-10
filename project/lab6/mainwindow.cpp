@@ -1112,3 +1112,32 @@ void MainWindow::on_playlistDetails_addTag_clicked()
     db->attachTagToPlaylist(playlistId, newTag);
     fillTagsFor(ui->playlistDetails_tags, "Playlists", playlistId);
 }
+
+void MainWindow::on_playlistDetails_deleteTag_clicked()
+{
+    QListWidgetItem* currItem = ui->playlistDetails_tags->currentItem();
+
+    if (!currItem) { showMsg("You didn't select any tag!"); return; }
+
+    if (!areYouSure()) { return; }
+
+    const QString tag = currItem->text();
+    const int playlistId = ui->playlistDetails_playlistId->text().toInt();
+
+    db->deattachTagFromPlaylist(playlistId, tag);
+    //fillTags(ui->myTrackEdit_tags, pla);
+    fillTagsFor(ui->playlistDetails_tags, "Playlists", playlistId);
+}
+
+void MainWindow::on_playlistDetails_deleteTrack_clicked()
+{
+    int trackId;
+    const int playlistId = ui->playlistDetails_playlistId->text().toInt();
+
+    if ((trackId = getCurrentItemId(ui->playlistDetails_tracks)) >= 0)
+    {
+        if (!areYouSure()) { return; }
+
+        db->deleteTrackFromPlaylist(trackId, playlistId);
+    }
+}
