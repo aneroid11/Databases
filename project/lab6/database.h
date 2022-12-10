@@ -112,6 +112,9 @@ public:
     void deletePlaylist(const int id);
     void deleteTrackFromPlaylist(const int trackId, const int playlistId);
 
+    void updatePlaylistTitle(const int playlistId, const QString newTitle);
+    void updateAlbumReleaseDate(const int playlistId, const QString newDate);
+
     void updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender);
 
     void updateTrackTitle(int trackId, QString title);

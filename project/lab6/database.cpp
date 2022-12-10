@@ -525,6 +525,18 @@ void Database::deleteTrackFromPlaylist(const int trackId, const int playlistId)
                            "where track_id = %1 and playlist_id = %2;").arg(trackId, playlistId));
 }
 
+void Database::updatePlaylistTitle(const int playlistId, const QString newTitle)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "update Playlists set title = :newTitle where id = :playlistId;", { newTitle, playlistId });
+}
+
+void Database::updateAlbumReleaseDate(const int playlistId, const QString newDate)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("update Albums set release_date = '%1' where id = %2;").arg(newDate).arg(playlistId));
+}
+
 void Database::updateArtist(int id, QString email, QString nickname, QString password, QString dateOfBirth, QString gender)
 {
     Artist a = getArtistInfo(id);

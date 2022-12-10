@@ -423,7 +423,7 @@ void MainWindow::playlistDetailsPageInit(const int playlistId)
     ui->playlistDetails_addTag->setDisabled(!playlistOwner);
     ui->playlistDetails_deleteTag->setDisabled(!playlistOwner);
     ui->playlistDetails_deleteTrack->setDisabled(!playlistOwner);
-    ui->playlistDetails_addTrack->setDisabled(!playlistOwner);
+    //ui->playlistDetails_addTrack->setDisabled(!playlistOwner);
 
     DataRow pl = db->getPlaylist(playlistId);
     ui->playlistDetails_playlistId->setText(QString::number(playlistId));
@@ -1087,6 +1087,16 @@ void MainWindow::on_playlists_detailsButton_clicked()
 
 void MainWindow::on_playlistDetails_exit_clicked()
 {
+    if (ui->playlists_titleLabel->text() == "All playlists:")
+    {
+        playlistsPageInit(-1);
+    }
+    else
+    {
+        const int artistId = ui->playlists_artistIdLabel->text().toInt();
+        playlistsPageInit(artistId);
+    }
+
     ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
 }
 
@@ -1139,5 +1149,47 @@ void MainWindow::on_playlistDetails_deleteTrack_clicked()
         if (!areYouSure()) { return; }
 
         db->deleteTrackFromPlaylist(trackId, playlistId);
+    }
+}
+
+void MainWindow::on_playlistDetails_save_clicked()
+{
+    if (!areYouSure()) { return; }
+
+    //const int trackId = ui->myTrackEdit_trackIdLabel->text().toInt();
+    const int playlistId = ui->playlistDetails_playlistId->text().toInt();
+
+    const QString newTitle = ui->playlistDetails_title->text();
+
+    if (newTitle.isEmpty())
+    {
+        showMsg("Cannot have empty title!");
+        return;
+    }
+
+    try
+    {
+        db->updatePlaylistTitle(playlistId, newTitle);
+    }
+    catch (QString msg)
+    {
+        showMsg(msg);
+        return;
+    }
+
+    if (!ui->playlistDetails_releaseDate->isHidden())
+    {
+        // an album
+        const QString newDate = ui->playlistDetails_releaseDate->date().toString("yyyy-MM-dd");
+
+        try
+        {
+            db->updateAlbumReleaseDate(playlistId, newDate);
+        }
+        catch (QString msg)
+        {
+            showMsg(msg);
+            return;
+        }
     }
 }
