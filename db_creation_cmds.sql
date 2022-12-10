@@ -25,7 +25,7 @@ create table Artists (
     premium_subscription_id int unique,     -- one to one relation
     card_details_id int unique,             -- the same here
 
-    check(date_of_birth between '1900-01-01' and sysdate()),
+    constraint valid_date_of_birth check (date_of_birth between '1900-01-01' and sysdate()),
 
     primary key(id),
     foreign key(id) references Users(id) on update cascade on delete cascade,
@@ -41,8 +41,8 @@ create table CardDetails (
     card_number varchar(16) not null unique,
     expiration date not null,
     
-    check (card_number regexp '[0-9]{16}'),
-    check (expiration > sysdate()),
+    constraint valid_card_number check (card_number regexp '[0-9]{16}'),
+    constraint valid_expiration_date check (expiration > sysdate()),
 
     primary key(id)
 );
@@ -55,8 +55,8 @@ create table PremiumSubscriptions (
     active boolean not null,
     id_tariff int not null,
     
-    check (start_datetime < end_datetime and cast(start_datetime as date) > '1900-01-01'),   -- yyyy-mm-dd
-    check (end_datetime > sysdate()),
+    constraint valid_starttime check (start_datetime < end_datetime and cast(start_datetime as date) > '1900-01-01'), -- yyyy-MM-dd
+    constraint valid_endtime check (end_datetime > sysdate()),
 
     primary key(id),
     foreign key(id_tariff) references Tariffs(id) on update cascade on delete restrict
@@ -81,8 +81,8 @@ create table Payments (
     sum float not null,
     transaction_id varchar(100) not null unique,
 
-    check (sum > 0.0),
-    check (timestamp <= sysdate()),
+    constraint sum_greater_than_zero check (sum > 0.0),
+    constraint valid_timestamp check (timestamp <= sysdate()),
 
     primary key(id),
     foreign key(subscription_id) references PremiumSubscriptions(id) on update cascade on delete cascade
@@ -133,8 +133,8 @@ create table Tracks (
     length_seconds int not null,
     artist_id int not null,
 
-    check (length_seconds > 0),
-    check (timestamp <= sysdate()),
+    constraint valid_length check (length_seconds > 0),
+    constraint tracks_valid_timestamp check (timestamp <= sysdate()),
 
     primary key(id),
     foreign key(artist_id) references Artists(id) on update cascade on delete cascade,
@@ -162,7 +162,7 @@ create table Comments (
     artist_id int,
     track_id int not null,
 
-    check (timestamp <= sysdate()),
+    constraint comments_valid_timestamp check (timestamp <= sysdate()),
 
     primary key(id),
     foreign key(artist_id) references Artists(id) on delete set null on update cascade,
@@ -212,7 +212,7 @@ create table Albums (
     id int not null auto_increment,
     release_date date not null,
 
-    check (release_date <= sysdate()),
+    constraint valid_release_date check (release_date <= sysdate()),
 
     primary key(id),
     foreign key(id) references Playlists(id) on update cascade on delete cascade
