@@ -145,6 +145,8 @@ private slots:
 
     void on_allTracks_commentButton_clicked();
 
+    void on_allTracks_reportButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

@@ -135,6 +135,9 @@ public:
     void addLike(const int artistId, const int trackId);
     void addComment(const int artistId, const int trackId, const QString contents);
 
+    void reportTrack(int artistId, int trackId, QString title, QString contents);
+    void reportArtist(int artistId, int reportedArtistId, QString title, QString contents);
+
 private:
     int numAdmins();
 

@@ -705,3 +705,15 @@ void Database::addComment(const int artistId, const int trackId, const QString c
     QSqlQuery q;
     prepareExecWithBinding(q, "call CommentTrack(:contents, :artistId, :trackId);", { contents, artistId, trackId });
 }
+
+void Database::reportTrack(int artistId, int trackId, QString title, QString contents)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "call ReportTrack(:title, :contents, :artistId, :trackId)", {title, contents, artistId, trackId});
+}
+
+void Database::reportArtist(int artistId, int reportedArtistId, QString title, QString contents)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "call ReportArtist(:title, :contents, :artistId, :reportedId)", {title, contents, artistId, reportedArtistId});
+}

@@ -1344,3 +1344,39 @@ void MainWindow::on_allTracks_commentButton_clicked()
         showMsg("You commented this track");
     }
 }
+
+void MainWindow::on_allTracks_reportButton_clicked()
+{
+    const int artistId = db->getCurrUserId();
+
+    int trackId;
+    if ((trackId = getCurrentItemId(ui->allTracks_tracksListWidget)) >= 0)
+    {
+        bool ok = false;
+        QString title;
+        while (!ok)
+        {
+            title = QInputDialog::getText(this, "Title", "Enter the title for the report:", QLineEdit::Normal, QString(), &ok);
+        }
+
+        QString contents;
+        ok = false;
+        while (!ok)
+        {
+            contents = QInputDialog::getText(this, "Contents", "Describe the report:", QLineEdit::Normal, QString(), &ok);
+        }
+
+        try
+        {
+            //db->addComment(artistId, trackId, contents);
+            db->reportTrack(artistId, trackId, title, contents);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+
+        showMsg("You reported this track");
+    }
+}
