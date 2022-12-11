@@ -131,6 +131,8 @@ private slots:
 
     void on_myTracks_addToPlaylistButton_clicked();
 
+    void on_playlists_createButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

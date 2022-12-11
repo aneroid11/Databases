@@ -394,15 +394,13 @@ void MainWindow::commentsPageInit(const int artistId)
 
 void MainWindow::playlistsPageInit(const int artistId)
 {
-    /*const QString role = db->getCurrUserRole();
-    const bool admin = role == "admin";*/
-
-    //ui->playlists_deleteButton->setDisabled(admin);
     ui->playlists_deleteButton->setDisabled(artistId < 0);
+    ui->playlists_createButton->setDisabled(artistId < 0);
 
     if (artistId < 0)
     {
         ui->playlists_titleLabel->setText("All playlists:");
+        ui->playlists_artistIdLabel->setText("");
         fillPlaylistsList(ui->playlists_playlistsList, db->getAllPlaylists());
     }
     else
@@ -1241,4 +1239,9 @@ void MainWindow::on_allTracks_addToPlaylist_clicked()
 void MainWindow::on_myTracks_addToPlaylistButton_clicked()
 {
     addCurrTrackToPlaylist(ui->myTracks_tracksListWidget);
+}
+
+void MainWindow::on_playlists_createButton_clicked()
+{
+    showMsg("get playlist info and create playlist.");
 }
