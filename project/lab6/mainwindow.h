@@ -133,6 +133,12 @@ private slots:
 
     void on_playlists_createButton_clicked();
 
+    void on_playlistCreation_cancel_clicked();
+
+    void on_playlistCreation_create_clicked();
+
+    void on_playlistCreation_isAlbum_stateChanged(int arg1);
+
 private:
     int getCurrentItemId(QListWidget* list);
 

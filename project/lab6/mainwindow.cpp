@@ -24,7 +24,8 @@ enum {
     REPORTS_PAGE_ID = 12,
     ARTISTS_PAGE_ID = 13,
     COMMENTS_PAGE_ID = 14,
-    PLAYLIST_DETAILS_PAGE_ID = 15
+    PLAYLIST_DETAILS_PAGE_ID = 15,
+    PLAYLIST_CREATION_PAGE_ID = 16
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -1243,5 +1244,51 @@ void MainWindow::on_myTracks_addToPlaylistButton_clicked()
 
 void MainWindow::on_playlists_createButton_clicked()
 {
-    showMsg("get playlist info and create playlist.");
+    ui->stackedWidget->setCurrentIndex(PLAYLIST_CREATION_PAGE_ID);
+}
+
+void MainWindow::on_playlistCreation_cancel_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
+}
+
+void MainWindow::on_playlistCreation_create_clicked()
+{
+    const QString title = ui->playlistCreation_title->text();
+    const int artistId = db->getCurrUserId();
+
+    if (ui->playlistCreation_isAlbum->isChecked())
+    {
+        const QDate releaseDate = ui->playlistCreation_releaseDate->date();
+
+        try
+        {
+            db->createAlbum(artistId, title, releaseDate);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+    }
+    else
+    {
+        try
+        {
+            db->createPlaylist(artistId, title);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+    }
+
+    playlistsPageInit(artistId);
+    ui->stackedWidget->setCurrentIndex(PLAYLISTS_PAGE_ID);
+}
+
+void MainWindow::on_playlistCreation_isAlbum_stateChanged(int state)
+{
+    ui->playlistCreation_releaseDate->setDisabled(state == Qt::Unchecked);
 }

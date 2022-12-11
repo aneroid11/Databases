@@ -6,6 +6,7 @@
 #include <QSqlDriver>
 #include <QSqlRecord>
 #include <QSqlResult>
+#include <QDate>
 #include <QDebug>
 
 Database::Database()
@@ -677,4 +678,18 @@ void Database::deattachTagFromPlaylist(const int playlistId, const QString tag)
     QSqlQuery q;
     prepareExec(q, QString("delete from TagsToPlaylists where id_tag = "
                            "(select id from Tags where name = '%1') and id_playlist = %2;").arg(tag).arg(playlistId));
+}
+
+void Database::createPlaylist(const int artistId, const QString title)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "insert into Playlists (title, artist_id) "
+                              "values (:title, :artistId);", { title, artistId });
+}
+
+void Database::createAlbum(const int artistId, const QString title, const QDate releaseDate)
+{
+    createPlaylist(artistId, title);
+    QSqlQuery q;
+    prepareExecWithBinding(q, "insert into Albums values (last_insert_id(), :releaseDate)", { releaseDate });
 }

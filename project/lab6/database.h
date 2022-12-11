@@ -129,6 +129,9 @@ public:
     void attachTagToPlaylist(const int playlistId, const QString newTag);
     void deattachTagFromPlaylist(const int playlistId, const QString tag);
 
+    void createPlaylist(const int artistId, const QString title);
+    void createAlbum(const int artistId, const QString title, const QDate releaseDate);
+
 private:
     int numAdmins();
 
