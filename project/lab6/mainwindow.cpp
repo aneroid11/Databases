@@ -368,6 +368,7 @@ void MainWindow::artistAccDetailsPageInit(const int artistId)
 void MainWindow::myTracksPageInit(const int artistId)
 {
     const bool admin = db->getCurrUserRole() == "admin";
+    qDebug() << db->getCurrUserRole();
 
     ui->myTracks_uploadTrackButton->setDisabled(admin);
     ui->myTracks_addToPlaylistButton->setDisabled(admin);
@@ -378,7 +379,7 @@ void MainWindow::myTracksPageInit(const int artistId)
     const bool disableBtns = !admin && artistId != db->getCurrUserId();
     ui->myTracks_deleteButton->setDisabled(disableBtns);
     ui->myTracks_detailsButton->setDisabled(disableBtns);
-    ui->myTracks_uploadTrackButton->setDisabled(disableBtns);
+    ui->myTracks_uploadTrackButton->setDisabled(admin || disableBtns);
 
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
 }
@@ -626,7 +627,7 @@ void MainWindow::on_myTracks_deleteButton_clicked()
         if ((id = getCurrentItemId(ui->myTracks_tracksListWidget)) >= 0)
         {
             db->deleteTrack(id);
-            fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(id));
+            fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(ui->myTracks_artistId->text().toInt()));
 
             showMsg("The track was deleted!");
         }
