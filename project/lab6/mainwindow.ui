@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>13</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -753,7 +753,7 @@
        <string>Add to playlist</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="allTracks_filterByTag">
+     <widget class="QPushButton" name="allTracks_filterButton">
       <property name="geometry">
        <rect>
         <x>520</x>
@@ -763,7 +763,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Filter by tag</string>
+       <string>Filter</string>
       </property>
      </widget>
      <widget class="QPushButton" name="allTracks_deleteButton">
@@ -777,6 +777,32 @@
       </property>
       <property name="text">
        <string>Delete</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="allTracks_titleFilter">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>270</y>
+        <width>131</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Title</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="allTracks_tagsFilter">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>320</y>
+        <width>131</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
     </widget>

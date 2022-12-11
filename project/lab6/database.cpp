@@ -361,6 +361,23 @@ QList<TrackInfo> Database::getTracksFromPlaylistInfo(int playlistId)
     return ret;
 }
 
+QList<TrackInfo> Database::searchTracksByTitle(QString title)
+{
+    title = QString("%") + title + "%";
+
+    QSqlQuery q;
+    prepareExecWithBinding(q, "select * from TracksInfo where LOWER(title) like LOWER(:title)", {title});
+    QList<TrackInfo> ret;
+    while (q.next())
+    {
+        qDebug() << "extract";
+        ret.push_back(extractTrackInfoFromQuery(q));
+    }
+
+    qDebug() << ret.size();
+    return ret;
+}
+
 int Database::numLikesOnTrack(const int trackId)
 {
     QSqlQuery q;

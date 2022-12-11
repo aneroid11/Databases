@@ -89,6 +89,8 @@ public:
     TrackInfo getTrackInfo(const int id);
     QList<TrackInfo> getTracksFromPlaylistInfo(int playlistId);
 
+    QList<TrackInfo> searchTracksByTitle(QString title);
+
     int numLikesOnTrack(const int trackId);
 
     QList<DataRow> getCommentsOnTrack(const int trackId);

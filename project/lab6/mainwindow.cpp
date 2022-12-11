@@ -321,7 +321,7 @@ void MainWindow::allTracksPageInit()
     ui->allTracks_commentButton->setDisabled(admRole);
     ui->allTracks_reportButton->setDisabled(admRole);
     ui->allTracks_addToPlaylist->setDisabled(admRole);
-    ui->allTracks_filterByTag->setDisabled(admRole);
+    //ui->allTracks_filterByTag->setDisabled(admRole);
 
     ui->allTracks_deleteButton->setDisabled(!admRole);
 
@@ -1396,4 +1396,28 @@ void MainWindow::on_allTracks_reportButton_clicked()
 void MainWindow::on_artists_reportButton_clicked()
 {
     reportArtistOrTrack("Artists", ui->artists_artistsList);
+}
+
+void MainWindow::on_allTracks_filterButton_clicked()
+{
+    const QString title = ui->allTracks_titleFilter->text();
+    qDebug() << title;
+    QList<QListWidgetItem*> tagsItems = ui->allTracks_tagsFilter->selectedItems();
+
+    QStringList tags;
+    for (QListWidgetItem* item : tagsItems)
+    {
+        tags.push_back(item->text());
+    }
+
+    if (title.isEmpty() && tags.isEmpty())
+    {
+        fillTracksList(ui->allTracks_tracksListWidget, db->getAllTracksInfo());
+        return;
+    }
+    if (tags.isEmpty())
+    {
+        fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitle(title));
+        return;
+    }
 }
