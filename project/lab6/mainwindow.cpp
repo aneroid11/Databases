@@ -1292,3 +1292,55 @@ void MainWindow::on_playlistCreation_isAlbum_stateChanged(int state)
 {
     ui->playlistCreation_releaseDate->setDisabled(state == Qt::Unchecked);
 }
+
+void MainWindow::on_allTracks_listenButton_clicked()
+{
+    showMsg("...wonderful music plays...");
+}
+
+void MainWindow::on_allTracks_likeButton_clicked()
+{
+    const int artistId = db->getCurrUserId();
+
+    int trackId;
+    if ((trackId = getCurrentItemId(ui->allTracks_tracksListWidget)) >= 0)
+    {
+        try
+        {
+            db->addLike(artistId, trackId);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+
+        showMsg("You like this track");
+    }
+}
+
+void MainWindow::on_allTracks_commentButton_clicked()
+{
+    const int artistId = db->getCurrUserId();
+
+    int trackId;
+    if ((trackId = getCurrentItemId(ui->allTracks_tracksListWidget)) >= 0)
+    {
+        bool ok = false;
+        QString contents = QInputDialog::getText(this, "Contents", "Enter the comment:", QLineEdit::Normal, QString(), &ok);
+
+        if (!ok) { return; }
+
+        try
+        {
+            db->addComment(artistId, trackId, contents);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+
+        showMsg("You commented this track");
+    }
+}

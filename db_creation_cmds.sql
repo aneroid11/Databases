@@ -110,7 +110,7 @@ create table Likes (
     artist_id int,
     track_id int not null,
     
-    -- check for self-like
+    constraint double_like_check unique (artist_id, track_id),
 
     primary key(id),
     foreign key(artist_id) references Artists(id) on update cascade on delete set null,

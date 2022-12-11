@@ -132,6 +132,9 @@ public:
     void createPlaylist(const int artistId, const QString title);
     void createAlbum(const int artistId, const QString title, const QDate releaseDate);
 
+    void addLike(const int artistId, const int trackId);
+    void addComment(const int artistId, const int trackId, const QString contents);
+
 private:
     int numAdmins();
 

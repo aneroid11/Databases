@@ -139,6 +139,12 @@ private slots:
 
     void on_playlistCreation_isAlbum_stateChanged(int arg1);
 
+    void on_allTracks_listenButton_clicked();
+
+    void on_allTracks_likeButton_clicked();
+
+    void on_allTracks_commentButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

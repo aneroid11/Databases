@@ -693,3 +693,15 @@ void Database::createAlbum(const int artistId, const QString title, const QDate 
     QSqlQuery q;
     prepareExecWithBinding(q, "insert into Albums values (last_insert_id(), :releaseDate)", { releaseDate });
 }
+
+void Database::addLike(const int artistId, const int trackId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("insert into Likes (artist_id, track_id) values (%1, %2)").arg(artistId).arg(trackId));
+}
+
+void Database::addComment(const int artistId, const int trackId, const QString contents)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "call CommentTrack(:contents, :artistId, :trackId);", { contents, artistId, trackId });
+}
