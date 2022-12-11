@@ -147,6 +147,8 @@ private slots:
 
     void on_allTracks_reportButton_clicked();
 
+    void on_artists_reportButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -179,6 +181,8 @@ private:
     void fillTagsFor(QListWidget *listWidget, const QString type, const int id);
 
     void addCurrTrackToPlaylist(QListWidget* tracksListWidget);
+
+    void reportArtistOrTrack(const QString reportType, QListWidget* itemsList);
 
     int extractIdFromBeginning(QString str);
 

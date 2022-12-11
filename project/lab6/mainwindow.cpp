@@ -307,6 +307,7 @@ void MainWindow::artistsPageInit()
 {
     const bool admin = db->getCurrUserRole() == "admin";
     ui->artists_deleteButton->setDisabled(!admin);
+    ui->artists_reportButton->setDisabled(admin);
 
     fillArtistsList();
 }
@@ -1345,12 +1346,12 @@ void MainWindow::on_allTracks_commentButton_clicked()
     }
 }
 
-void MainWindow::on_allTracks_reportButton_clicked()
+void MainWindow::reportArtistOrTrack(const QString reportType, QListWidget* itemsList)
 {
     const int artistId = db->getCurrUserId();
 
-    int trackId;
-    if ((trackId = getCurrentItemId(ui->allTracks_tracksListWidget)) >= 0)
+    int objectId;
+    if ((objectId = getCurrentItemId(itemsList)) >= 0)
     {
         bool ok = false;
         QString title;
@@ -1368,8 +1369,14 @@ void MainWindow::on_allTracks_reportButton_clicked()
 
         try
         {
-            //db->addComment(artistId, trackId, contents);
-            db->reportTrack(artistId, trackId, title, contents);
+            if (reportType == "Tracks")
+            {
+                db->reportTrack(artistId, objectId, title, contents);
+            }
+            else
+            {
+                db->reportArtist(artistId, objectId, title, contents);
+            }
         }
         catch (QString err)
         {
@@ -1377,6 +1384,16 @@ void MainWindow::on_allTracks_reportButton_clicked()
             return;
         }
 
-        showMsg("You reported this track");
+        showMsg("Report was created");
     }
+}
+
+void MainWindow::on_allTracks_reportButton_clicked()
+{
+    reportArtistOrTrack("Tracks", ui->allTracks_tracksListWidget);
+}
+
+void MainWindow::on_artists_reportButton_clicked()
+{
+    reportArtistOrTrack("Artists", ui->artists_artistsList);
 }
