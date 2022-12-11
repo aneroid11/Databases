@@ -278,6 +278,16 @@ void MainWindow::fillTagsFor(QListWidget *listWidget, const QString type, const 
     }
 }
 
+void MainWindow::fillAllTags(QListWidget *listWidget)
+{
+    listWidget->clear();
+    QStringList tags = db->getAllTags();
+    for (QString t : tags)
+    {
+        listWidget->addItem(t);
+    }
+}
+
 void MainWindow::fillTags(QListWidget *listWidget, const int trackId)
 {
     listWidget->clear();
@@ -326,6 +336,7 @@ void MainWindow::allTracksPageInit()
     ui->allTracks_deleteButton->setDisabled(!admRole);
 
     fillTracksList();
+    fillAllTags(ui->allTracks_tagsFilter);
 }
 
 void MainWindow::artistAccDetailsPageInit(const int artistId)
@@ -1421,4 +1432,6 @@ void MainWindow::on_allTracks_filterButton_clicked()
         fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitle(title));
         return;
     }
+
+    //fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitleAndTags(title, tags));
 }

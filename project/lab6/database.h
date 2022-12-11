@@ -124,6 +124,7 @@ public:
 
     QStringList getTrackTags(const int trackId);
     QStringList getTagsFor(QString table, int id);
+    QStringList getAllTags();
 
     void attachTagToTrack(const int trackId, const QString newTag);
     void deattachTagFromTrack(const int trackId, const QString tag);

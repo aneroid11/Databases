@@ -181,6 +181,7 @@ private:
 
     void fillTags(QListWidget* listWidget, const int trackId);
     void fillTagsFor(QListWidget *listWidget, const QString type, const int id);
+    void fillAllTags(QListWidget *listWidget);
 
     void addCurrTrackToPlaylist(QListWidget* tracksListWidget);
 

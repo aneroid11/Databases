@@ -643,6 +643,26 @@ QStringList Database::getTagsFor(QString table, int id)
     return ret;
 }
 
+QStringList Database::getAllTags()
+{
+    QSqlQuery q;
+    prepareExec(q, "select name from Tags;");
+
+    QList<DataRow> rows;
+    while (q.next())
+    {
+        rows.push_back(extractDataRowFromQuery(q));
+    }
+
+    QStringList ret;
+    for (const DataRow& r : rows)
+    {
+        ret.push_back(r.data["name"].toString());
+    }
+
+    return ret;
+}
+
 void Database::attachTagToTrack(const int trackId, const QString newTag)
 {
     QSqlQuery q;
