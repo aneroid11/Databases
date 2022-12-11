@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>16</number>
+     <number>15</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -1545,6 +1545,9 @@
         <height>30</height>
        </rect>
       </property>
+      <property name="displayFormat">
+       <string>MM/dd/yyyy</string>
+      </property>
      </widget>
      <widget class="QLabel" name="playlistDetails_releaseDateLabel">
       <property name="geometry">
@@ -1735,13 +1738,26 @@
        <rect>
         <x>340</x>
         <y>300</y>
-        <width>110</width>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
       <property name="minimumDate">
        <date>
         <year>1900</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
+      <property name="displayFormat">
+       <string>MM/dd/yyyy</string>
+      </property>
+      <property name="calendarPopup">
+       <bool>false</bool>
+      </property>
+      <property name="date">
+       <date>
+        <year>2010</year>
         <month>1</month>
         <day>1</day>
        </date>
