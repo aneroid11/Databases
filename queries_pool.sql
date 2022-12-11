@@ -74,6 +74,19 @@ end//
 select name from Tags inner join TagsToTracks on TagsToTracks.id_tag = Tags.id where id_track = 15;
 
 
+-- Поиск треков по тегам:
+with t1 as 
+(
+select id_tag, id_track from TagsToTracks where 
+id_tag = (select id from Tags where name = 'pop') or 
+id_tag = (select id from Tags where name = 'transe')
+) 
+select TracksInfo.* from t1 
+inner join TracksInfo on TracksInfo.id = t1.id_track 
+group by id_track 
+having count(id_track) = 2;
+
+
 -- Просмотреть всю информацию о треке <track id>:
 -- Вьюшка для этого:
 create view TracksInfo as 
