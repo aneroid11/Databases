@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="startingPage">
      <widget class="QPushButton" name="starting_signUpButton">
@@ -328,6 +328,32 @@
       </property>
       <property name="text">
        <string>All playlists</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="artistAcc_cardDetailsButton">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>120</y>
+        <width>121</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Card details</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="artistAcc_premiumButton">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>120</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Premium</string>
       </property>
      </widget>
     </widget>

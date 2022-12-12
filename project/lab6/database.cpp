@@ -93,8 +93,10 @@ Artist Database::extractArtistFromQuery(const QSqlQuery &q)
     a.nickname = q.value(3).toString();
     a.dateOfBirth = q.value(4).toString();
     a.gender = q.value(5).toString();
+
     a.premiumSubscriptionId = q.value(6).toInt();
     a.cardDetailsId = q.value(7).toInt();
+
     return a;
 }
 

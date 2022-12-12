@@ -1435,3 +1435,14 @@ void MainWindow::on_allTracks_filterButton_clicked()
 
     fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitleAndTags(title, tags));
 }
+
+void MainWindow::on_artistAcc_cardDetailsButton_clicked()
+{
+    const int artistId = db->getCurrUserId();
+    const Artist artistInfo = db->getArtistInfo(artistId);
+
+    if (!artistInfo.cardDetailsId)
+    {
+        showMsg("You don't have any cards attached to your account");
+    }
+}

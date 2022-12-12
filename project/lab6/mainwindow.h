@@ -151,6 +151,8 @@ private slots:
 
     void on_allTracks_filterButton_clicked();
 
+    void on_artistAcc_cardDetailsButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
