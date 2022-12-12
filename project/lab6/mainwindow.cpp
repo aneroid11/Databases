@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget->setCurrentIndex(0);
 
     db = new Database();
+
+    srand(time(nullptr));
 }
 
 MainWindow::~MainWindow()
@@ -1063,6 +1065,27 @@ void MainWindow::on_myTracks_uploadTrackButton_clicked()
 
     const int artistId = ui->myTracks_artistId->text().toInt();
 
+    if (db->artistTracksTotalLength(artistId) + length > 90 * 60)
+    {
+        Artist artistInfo = db->getArtistInfo(artistId);
+
+        if (!artistInfo.premiumSubscriptionId)
+        {
+            showMsg("To upload more than 180 minutes of tracks, you need a premium subscription.");
+            return;
+        }
+        else
+        {
+            DataRow premiumData = db->getFromTableById("PremiumSubscriptions", artistInfo.premiumSubscriptionId);
+
+            if (!premiumData.data["active"].toBool())
+            {
+                showMsg("Your premium subscription expired. Please prolong it to upload more tracks.");
+                return;
+            }
+        }
+    }
+
     try
     {
         db->createTrack(artistId, title, length);
@@ -1643,6 +1666,7 @@ void MainWindow::on_artistAcc_premiumButton_clicked()
             catch (QString err)
             {
                 showMsg(err);
+                return;
             }
 
             if (status == "successful") { showMsg("Your subscription was successfully prolonged for a month."); }

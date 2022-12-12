@@ -476,6 +476,19 @@ QList<TrackInfo> Database::getTracksFromPlaylistInfo(int playlistId)
     return ret;
 }
 
+int Database::artistTracksTotalLength(int artistId)
+{
+    QSqlQuery q;
+    // функции с селектами почему-то результат не возвращают. именно здесь.
+    prepareExec(q, QString("select sum(Tracks.length_seconds) total_tracks_time, Artists.nickname, Tracks.artist_id "
+                           "from Tracks "
+                           "inner join Artists on Artists.id = Tracks.artist_id "
+                           "where artist_id = %1 "
+                           "group by artist_id;").arg(artistId));
+    q.next();
+    return q.value(0).toInt();
+}
+
 QList<TrackInfo> Database::searchTracksByTitle(QString title)
 {
     title = QString("%") + title + "%";

@@ -101,6 +101,8 @@ public:
     TrackInfo getTrackInfo(const int id);
     QList<TrackInfo> getTracksFromPlaylistInfo(int playlistId);
 
+    int artistTracksTotalLength(int artistId);
+
     QList<TrackInfo> searchTracksByTitle(QString title);
     QList<TrackInfo> searchTracksByTitleAndTags(QString title, QStringList tags);
 
