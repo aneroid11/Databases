@@ -787,6 +787,25 @@ int MainWindow::extractIdFromBeginning(QString str)
     return id;
 }
 
+QString MainWindow::getCvv()
+{
+    QString cvv;
+    bool ok = false;
+
+    while (!ok)
+    {
+        cvv = QInputDialog::getText(this, "Enter CVV", "Enter CVV", QLineEdit::Normal, QString(), &ok);
+
+        if (!cvv[0].isDigit() || !cvv[1].isDigit() || !cvv[2].isDigit() || cvv.length() != 3)
+        {
+            ok = false;
+            showMsg("You entered an invalid CVV!");
+        }
+    }
+
+    return cvv;
+}
+
 void MainWindow::on_reports_detailsButton_clicked()
 {
     int rpId;
@@ -1581,5 +1600,52 @@ void MainWindow::on_artistAcc_premiumButton_clicked()
     const int artistId = db->getCurrUserId();
     const Artist artistInfo = db->getArtistInfo(artistId);
 
+    if (!artistInfo.premiumSubscriptionId)
+    {
+        if (yesNoQuestion("You don't have a premium subscription yet. Do you want to create it?"))
+        {
+            if (!artistInfo.cardDetailsId)
+            {
+                showMsg("You didn't attach your card details to your account. You need to attach it to create your subscription.");
+            }
+            else
+            {
+                db->createPremium(artistId);
+                showMsg("Your subscription was created. Please prolong it.");
+            }
+        }
+    }
+    else
+    {
+        DataRow premiumData = db->getFromTableById("PremiumSubscriptions", artistInfo.premiumSubscriptionId);
+        QString text = "Your premium subscription details:\n\n";
+        text += QString("start datetime: %1").arg(premiumData.data["start_datetime"].toDateTime().toString());
+        text += "\n";
+        text += QString("end datetime: %1").arg(premiumData.data["end_datetime"].toDateTime().toString());
+        text += "\n\n\nDo you want to prolong it for a month?";
 
+        if (yesNoQuestion(text))
+        {
+            getCvv();
+
+            QString status = rand() % 100 > 50 ? "successful" : "failed";
+            QString transactionId = sha256hash(QString::number(rand() % 100000000000));
+
+            if (status != "successful")
+            {
+                showMsg("Your payment failed. Please try again later");
+            }
+
+            try
+            {
+                db->createPaymentForMonth(artistInfo.premiumSubscriptionId, status, transactionId);
+            }
+            catch (QString err)
+            {
+                showMsg(err);
+            }
+
+            if (status == "successful") { showMsg("Your subscription was successfully prolonged for a month."); }
+        }
+    }
 }

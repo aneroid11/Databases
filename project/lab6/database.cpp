@@ -417,6 +417,18 @@ void Database::enablePremium(int premiumSubscriptionId)
     prepareExec(q, QString("update PremiumSubscriptions set active = TRUE where id = %1").arg(premiumSubscriptionId));
 }
 
+void Database::createPremium(int artistId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("call CreatePremiumSubscription(%1);").arg(artistId));
+}
+
+void Database::createPaymentForMonth(const int premiumId, const QString status, const QString transactionId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("call CreatePaymentForMonth(%1, '%2', '%3')").arg(premiumId).arg(status).arg(transactionId));
+}
+
 QList<TrackInfo> Database::getTracksInfo(const int artistId)
 {
     QSqlQuery q;

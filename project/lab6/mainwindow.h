@@ -199,6 +199,8 @@ private:
 
     int extractIdFromBeginning(QString str);
 
+    QString getCvv();
+
     Ui::MainWindow *ui;
 
     Database* db;

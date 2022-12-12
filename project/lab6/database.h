@@ -92,6 +92,9 @@ public:
 
     void disablePremium(int premiumSubscriptionId);
     void enablePremium(int premiumSubscriptionId);
+    void createPremium(int artistId);
+
+    void createPaymentForMonth(const int premiumId, const QString status, const QString transactionId);
 
     QList<TrackInfo> getAllTracksInfo();
     QList<TrackInfo> getTracksInfo(const int artistId);
