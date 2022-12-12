@@ -44,6 +44,13 @@ MainWindow::~MainWindow()
     delete db;
 }
 
+bool MainWindow::yesNoQuestion(QString msg)
+{
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Info", msg, QMessageBox::Yes|QMessageBox::No);
+    return reply == QMessageBox::Yes;
+}
+
 bool MainWindow::areYouSure()
 {
     QMessageBox::StandardButton reply;
@@ -1443,6 +1450,9 @@ void MainWindow::on_artistAcc_cardDetailsButton_clicked()
 
     if (!artistInfo.cardDetailsId)
     {
-        showMsg("You don't have any cards attached to your account");
+        if (yesNoQuestion("You don't have any cards attached to your account. Do you want to attach one?"))
+        {
+            showMsg("Get card data and save the card");
+        }
     }
 }

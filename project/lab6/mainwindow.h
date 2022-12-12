@@ -156,6 +156,7 @@ private slots:
 private:
     int getCurrentItemId(QListWidget* list);
 
+    bool yesNoQuestion(QString msg);
     bool areYouSure();
     void showMsg(QString msg);
 
