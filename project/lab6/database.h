@@ -90,6 +90,9 @@ public:
     void insertDataInto(const QString table, const DataRow& data);
     void attachCardDetails(const int artistId, const DataRow& card);
 
+    void disablePremium(int premiumSubscriptionId);
+    void enablePremium(int premiumSubscriptionId);
+
     QList<TrackInfo> getAllTracksInfo();
     QList<TrackInfo> getTracksInfo(const int artistId);
     TrackInfo getTrackInfo(const int id);

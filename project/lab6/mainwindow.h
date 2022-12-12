@@ -157,6 +157,8 @@ private slots:
 
     void on_cardDetails_save_clicked();
 
+    void on_artistAcc_premiumButton_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 

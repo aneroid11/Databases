@@ -405,6 +405,18 @@ void Database::attachCardDetails(const int artistId, const DataRow &card)
                            });
 }
 
+void Database::disablePremium(int premiumSubscriptionId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("update PremiumSubscriptions set active = FALSE where id = %1").arg(premiumSubscriptionId));
+}
+
+void Database::enablePremium(int premiumSubscriptionId)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("update PremiumSubscriptions set active = TRUE where id = %1").arg(premiumSubscriptionId));
+}
+
 QList<TrackInfo> Database::getTracksInfo(const int artistId)
 {
     QSqlQuery q;

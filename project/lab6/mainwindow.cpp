@@ -173,6 +173,26 @@ void MainWindow::artistPageInit()
 {
     const QString nickname = db->getCurrArtistNickname();
     ui->artistAcc_nicknameLabel->setText(nickname);
+
+    const int id = db->getCurrUserId();
+    const Artist info = db->getArtistInfo(id);
+
+    if (info.premiumSubscriptionId)
+    {
+        DataRow premium = db->getFromTableById("PremiumSubscriptions", info.premiumSubscriptionId);
+        const QDateTime endDatetime = premium.data["end_datetime"].toDateTime();
+        const QDateTime now = QDateTime::currentDateTime();
+
+        if (now.secsTo(endDatetime) <= 0)
+        {
+            // premium has expired
+            db->disablePremium(info.premiumSubscriptionId);
+        }
+        else
+        {
+            db->enablePremium(info.premiumSubscriptionId);
+        }
+    }
 }
 
 void MainWindow::adminPageInit()
@@ -1554,4 +1574,12 @@ void MainWindow::on_cardDetails_save_clicked()
 
     showMsg("Data saved");
     ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::on_artistAcc_premiumButton_clicked()
+{
+    const int artistId = db->getCurrUserId();
+    const Artist artistInfo = db->getArtistInfo(artistId);
+
+
 }

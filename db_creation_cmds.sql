@@ -56,7 +56,7 @@ create table PremiumSubscriptions (
     id_tariff int not null,
     
     constraint valid_starttime check (start_datetime < end_datetime and cast(start_datetime as date) > '1900-01-01'), -- yyyy-MM-dd
-    constraint valid_endtime check (end_datetime > sysdate()),
+    constraint valid_endtime check (end_datetime >= start_datetime),
 
     primary key(id),
     foreign key(id_tariff) references Tariffs(id) on update cascade on delete restrict
