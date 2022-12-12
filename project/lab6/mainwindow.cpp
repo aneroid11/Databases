@@ -1433,5 +1433,5 @@ void MainWindow::on_allTracks_filterButton_clicked()
         return;
     }
 
-    //fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitleAndTags(title, tags));
+    fillTracksList(ui->allTracks_tracksListWidget, db->searchTracksByTitleAndTags(title, tags));
 }

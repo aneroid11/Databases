@@ -90,6 +90,7 @@ public:
     QList<TrackInfo> getTracksFromPlaylistInfo(int playlistId);
 
     QList<TrackInfo> searchTracksByTitle(QString title);
+    QList<TrackInfo> searchTracksByTitleAndTags(QString title, QStringList tags);
 
     int numLikesOnTrack(const int trackId);
 

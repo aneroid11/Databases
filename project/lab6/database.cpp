@@ -378,6 +378,54 @@ QList<TrackInfo> Database::searchTracksByTitle(QString title)
     return ret;
 }
 
+QList<TrackInfo> Database::searchTracksByTitleAndTags(QString title, QStringList tags)
+{
+    title = QString("%") + title + "%";
+    const int numTags = tags.size();
+
+    QString qStr = "with t1 as "
+                   "("
+                   "select id_tag, id_track from TagsToTracks where ";
+
+    for (int i = 0; i < numTags; i++)
+    {
+        qStr += "id_tag = (select id from Tags where name = :tag" + QString::number(i);
+        qStr += ")";
+
+        if (i < numTags - 1)
+        {
+            qStr += " or ";
+        }
+    }
+    qStr += ") ";
+    qStr += "select TracksInfo.* from t1 "
+            "inner join TracksInfo on TracksInfo.id = t1.id_track "
+            "group by id_track "
+            "having count(id_track) = :numTags and LOWER(TracksInfo.title) like LOWER(:title);";
+
+    // :tag1, :tag2, :tag3, ...
+    // :numTags, :title
+    QList<QVariant> params;
+    for (auto tag : tags)
+    {
+        params.push_back(tag);
+    }
+    params.push_back(numTags);
+    params.push_back(title);
+
+    qDebug() << qStr;
+
+    QSqlQuery q;
+    prepareExecWithBinding(q, qStr, params);
+    QList<TrackInfo> ret;
+    while (q.next())
+    {
+        ret.push_back(extractTrackInfoFromQuery(q));
+    }
+
+    return ret;
+}
+
 int Database::numLikesOnTrack(const int trackId)
 {
     QSqlQuery q;
