@@ -84,6 +84,12 @@ public:
     QList<Artist> getAllArtists();
     Artist getArtistInfo(const int id);
 
+    DataRow getFromTableById(const QString table, const int id);
+
+    void updateDataIn(const QString table, const int id, const DataRow& data);
+    void insertDataInto(const QString table, const DataRow& data);
+    void attachCardDetails(const int artistId, const DataRow& card);
+
     QList<TrackInfo> getAllTracksInfo();
     QList<TrackInfo> getTracksInfo(const int artistId);
     TrackInfo getTrackInfo(const int id);

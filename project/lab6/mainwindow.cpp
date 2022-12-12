@@ -25,7 +25,9 @@ enum {
     ARTISTS_PAGE_ID = 13,
     COMMENTS_PAGE_ID = 14,
     PLAYLIST_DETAILS_PAGE_ID = 15,
-    PLAYLIST_CREATION_PAGE_ID = 16
+    PLAYLIST_CREATION_PAGE_ID = 16,
+    CARD_DETAILS_PAGE = 17,
+    PREMIUM_PAGE = 18
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -483,6 +485,32 @@ void MainWindow::myTrackEditPageInit(const int trackId)
     ui->myTrackEdit_trackIdLabel->setText(QString::number(trackId));
 
     fillTags(ui->myTrackEdit_tags, trackId);
+}
+
+void MainWindow::cardDetailsInit()
+{
+    const int artistId = db->getCurrUserId();
+    ui->cardDetails_artistId->setText(QString::number(artistId));
+
+    qDebug() << artistId;
+
+    const Artist info = db->getArtistInfo(artistId);
+
+    if (info.cardDetailsId)
+    {
+        ui->cardDetails_cardDetailsId->setText(QString::number(info.cardDetailsId));
+
+        DataRow card = db->getFromTableById("CardDetails", info.cardDetailsId);
+
+        ui->cardDetails_firstName->setText(card.data["first_name"].toString());
+        ui->cardDetails_lastName->setText(card.data["last_name"].toString());
+        ui->cardDetails_number->setText(card.data["card_number"].toString());
+        ui->cardDetails_expDate->setDate(card.data["expiration"].toDate());
+    }
+    else
+    {
+        ui->cardDetails_cardDetailsId->setText("");
+    }
 }
 
 void MainWindow::on_stackedWidget_currentChanged(int index)
@@ -1452,7 +1480,78 @@ void MainWindow::on_artistAcc_cardDetailsButton_clicked()
     {
         if (yesNoQuestion("You don't have any cards attached to your account. Do you want to attach one?"))
         {
-            showMsg("Get card data and save the card");
+            cardDetailsInit();
+            ui->stackedWidget->setCurrentIndex(CARD_DETAILS_PAGE);
         }
     }
+    /*else if (yesNoQuestion("Do you want to deattach your card from your account?"))
+    {
+        // deattach the card
+    }*/
+    else
+    {
+        cardDetailsInit();
+        ui->stackedWidget->setCurrentIndex(CARD_DETAILS_PAGE);
+    }
+}
+
+void MainWindow::on_cardDetails_cancel_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
+}
+
+void MainWindow::on_cardDetails_save_clicked()
+{
+    if (ui->cardDetails_firstName->text().isEmpty())
+    {
+        showMsg("first name cannot be empty!");
+        return;
+    }
+    if (ui->cardDetails_lastName->text().isEmpty())
+    {
+        showMsg("last name cannot be empty!");
+        return;
+    }
+    if (ui->cardDetails_number->text().isEmpty())
+    {
+        showMsg("card number cannot be empty!");
+    }
+
+    DataRow card;
+    card.data["first_name"] = ui->cardDetails_firstName->text();
+    card.data["last_name"] = ui->cardDetails_lastName->text();
+    card.data["card_number"] = ui->cardDetails_number->text();
+    card.data["expiration"] = ui->cardDetails_expDate->date();
+
+    if (!ui->cardDetails_cardDetailsId->text().isEmpty())
+    {
+        const int cardId = ui->cardDetails_cardDetailsId->text().toInt();
+
+        try
+        {
+            db->updateDataIn("CardDetails", cardId, card);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+    }
+    else
+    {
+        try
+        {
+            //db->insertDataInto("CardDetails", card);
+            const int artistId = ui->cardDetails_artistId->text().toInt();
+            db->attachCardDetails(artistId, card);
+        }
+        catch (QString err)
+        {
+            showMsg(err);
+            return;
+        }
+    }
+
+    showMsg("Data saved");
+    ui->stackedWidget->setCurrentIndex(ARTIST_ACC_PAGE_ID);
 }

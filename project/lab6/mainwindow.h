@@ -153,6 +153,10 @@ private slots:
 
     void on_artistAcc_cardDetailsButton_clicked();
 
+    void on_cardDetails_cancel_clicked();
+
+    void on_cardDetails_save_clicked();
+
 private:
     int getCurrentItemId(QListWidget* list);
 
@@ -171,6 +175,7 @@ private:
     void playlistsPageInit(const int artistId = -1);
     void playlistDetailsPageInit(const int playlistId);
     void myTrackEditPageInit(const int trackId);
+    void cardDetailsInit();
 
     void deleteCurrAcc();
 

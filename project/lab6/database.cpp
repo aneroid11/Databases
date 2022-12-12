@@ -316,6 +316,95 @@ Artist Database::getArtistInfo(const int id)
     return extractArtistFromQuery(q);
 }
 
+DataRow Database::getFromTableById(const QString table, const int id)
+{
+    QSqlQuery q;
+    prepareExec(q, QString("select * from %1 where id = %2").arg(table).arg(id));
+    q.next();
+    return extractDataRowFromQuery(q);
+}
+
+void Database::updateDataIn(const QString table, const int id, const DataRow &data)
+{
+    QSqlQuery q;
+    QString qStr = QString("update %1 set ").arg(table);
+
+    int index = 0;
+    for (const QString key : data.data.keys())
+    {
+        qStr += QString("%1 = :data%2 ").arg(key).arg(index);
+
+        index++;
+
+        if (index < data.data.keys().size())
+        {
+            qStr += ", ";
+        }
+    }
+
+    QList<QVariant> params;
+
+    for (const QString key : data.data.keys())
+    {
+        params.push_back(data.data[key]);
+    }
+
+    qStr += QString("where id = %1").arg(id);
+    qDebug() << qStr;
+
+    prepareExecWithBinding(q, qStr, params);
+}
+
+void Database::insertDataInto(const QString table, const DataRow &data)
+{
+    QSqlQuery q;
+    QString qStr = QString("insert into %1 (").arg(table);
+
+    int index = 0;
+    for (const QString key : data.data.keys())
+    {
+        qStr += key + " ";
+        index++;
+
+        if (index < data.data.keys().size())
+        {
+            qStr += ", ";
+        }
+    }
+
+    qStr += ") values (";
+
+    for (int i = 0; i < data.data.keys().size(); i++)
+    {
+        qStr += QString(":data%1 ").arg(i);
+
+        if (i < data.data.keys().size() - 1)
+        {
+            qStr += ", ";
+        }
+    }
+    qStr += ")";
+
+    QList<QVariant> params;
+    for (const QString key : data.data.keys())
+    {
+        params.push_back(data.data[key]);
+    }
+
+    qDebug() << qStr;
+    prepareExecWithBinding(q, qStr, params);
+}
+
+void Database::attachCardDetails(const int artistId, const DataRow &card)
+{
+    QSqlQuery q;
+    prepareExecWithBinding(q, "call AttachCardDetails(:artistId, :firstName, :lastName, :cardNumber, :expiration);",
+                           QList<QVariant>{
+                               artistId, card.data["first_name"], card.data["last_name"], card.data["card_number"],
+                               card.data["expiration"]
+                           });
+}
+
 QList<TrackInfo> Database::getTracksInfo(const int artistId)
 {
     QSqlQuery q;
