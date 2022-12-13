@@ -420,7 +420,7 @@ void MainWindow::myTracksPageInit(const int artistId)
 
     const bool disableBtns = !admin && artistId != db->getCurrUserId();
     ui->myTracks_deleteButton->setDisabled(disableBtns);
-    ui->myTracks_detailsButton->setDisabled(disableBtns);
+    ui->myTracks_detailsButton->setDisabled(admin || disableBtns);
     ui->myTracks_uploadTrackButton->setDisabled(admin || disableBtns);
 
     fillTracksList(ui->myTracks_tracksListWidget, db->getTracksInfo(artistId));
