@@ -150,7 +150,9 @@ end//
 -- Проверка на саморепорт
 create procedure CheckSelfReportProc(report_type enum('Tracks', 'Artists'), author_id int, object_id int)
 begin
-    if report_type = "Artists" and author_id = object_id then
+    if report_type = "Artists" and author_id = object_id or 
+       report_type = "Tracks" and author_id = (select artist_id from Tracks where id = object_id) 
+       then
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Self-report is not permitted!';
     end if;
